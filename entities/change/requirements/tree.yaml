@@ -1,0 +1,37 @@
+# Представление дерева требований SEAF
+entities:
+  seaf.change.requirements:
+    presentations:
+      tree:
+        title: Требования
+        type: plantuml
+        template: templates/tree.puml
+        source: >
+          (
+            $requirements := $."seaf.change.requirements";
+            $merge((
+                [$requirements.$spread().(
+                    $keys()[0]~>$split(".")~>$map(function($v, $limit, $struct) {
+                        {
+                        $struct~>$map(function($pice, $index) {
+                            $index <= $limit ? $pice
+                        })~>$join("."): true
+                        }
+                    })
+                )]
+              )
+            ).$spread().(
+              /* Готовим массив для вывода */
+              $id := $keys()[0];
+              $requirement := $lookup($requirements, $id);
+              {
+                "id": $id,
+                "title": $requirement.title ? $requirement.title : $id,
+                "link": "/entities/seaf.change.requirements/blank?seaf-req-id=" & $id
+              }            
+            )^(id).(
+              /* Готовим PlantUML код для MindMap */
+              $content := " [[" & link & " " & title & "]]";
+              "*" & $join($split(id, ".").("*")) & $content
+            )~>$join("\n");
+          )

@@ -1,0 +1,43 @@
+# Бланк архитектурного компонента
+entities:
+  seaf.app.integrations:
+    presentations:
+      blank:
+        title: Карточка интеграции
+        params:
+          type: object
+          properties:
+            seaf-integration-id:
+              title: Идентификатор интеграции
+              type: string
+          required:
+            - seaf-integration-id
+        type: markdown
+        template: templates/blank.md
+        source: >
+          (
+              $components := components; 
+              $specifications := $."seaf.app.integration_specifications";
+              $id := $params."seaf-integration-id";
+              $lookup($."seaf.app.integrations", $id).(
+                  $from_id := from ? from : "$unknown$"; 
+                  $to_id := to ? to : "$unknown$";
+                  $from := $lookup($components, $from_id);
+                  $to := $lookup($components, $to_id);
+                  $merge([
+                      $,
+                      {
+                          "$id": $id,
+                          "title": title,
+                          "from": $merge([$from ? $from : { "title": $from_id }, { "$id": $from_id}]), 
+                          "to": $merge([$to ? $to : { "title": $to_id }, { "$id": $to_id }]),
+                          "description": description,
+                          "specifications": specifications.[(
+                            $id_spec := $;
+                            $spec := $lookup($specifications, $id_spec);
+                            $merge([$spec ? $spec : { "title": $id_spec }, { "$id": $id_spec} ]); 
+                          )]
+                      }
+                  ])
+              )
+          )

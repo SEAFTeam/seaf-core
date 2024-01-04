@@ -1,0 +1,33 @@
+# Бланк архитектурного компонента
+entities:
+  seaf.app.integration_specifications:
+    presentations:
+      blank:
+        title: Карточка спецификации
+        params:
+          type: object
+          properties:
+            seaf-integration-id:
+              title: Идентификатор спецификации
+              type: string
+          required:
+            - seaf-int-spec-id
+        type: markdown
+        template: templates/blank.md
+        source: >
+          (
+              $components := components; 
+              $specifications := $."seaf.app.integration_specifications";
+              $id := $params."seaf-int-spec-id";
+              $lookup($."seaf.app.integration_specifications", $id).(
+                  $merge([
+                      { "title": $id },
+                      $,
+                      {
+                          "$id": $id,
+                          "async": async ? "Да" : "Нет",
+                          "encryption": encryption ? "Да" : "Нет"
+                      }
+                  ])
+              )
+          )

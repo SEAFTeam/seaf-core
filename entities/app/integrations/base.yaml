@@ -1,0 +1,57 @@
+# Интеграции SEAF
+entities:
+  seaf.app.integrations:
+    title: Интеграции
+    description: Интеграция между компонентами, автоматизированными системами
+    config:
+      root_menu: Архитектура/Прикладная
+    objects:
+      integrations:
+        route: "/"
+        title: Интеграция
+    schema:
+      type: object
+      patternProperties:
+        "^[a-z0-9_\\$][a-z0-9_\\$]*(\\.[a-z0-9_\\$][a-z0-9_\\$]*)*$":
+          type: object
+          properties:
+            title:
+              title: Наименование интеграции
+              type: string
+            description:
+              title: Описание интеграции
+              type: string
+            from:
+              title: Источник
+              description: Идентификатор компонента (или автоматизированной системы) - источника
+              $ref: "#/$rels/components.component"
+            to:
+              title: Приемник
+              description: Идентификатор компонента (или автоматизированной системы) - приемника
+              $ref: "#/$rels/components.component"
+            specifications:
+              title: Спецификации
+              description: Идентификаторы спецификаций интеграции для данной интеграции
+              type: array
+              minItems: 1
+              items:
+                title: Идентификатор спецификации
+                $ref: "#/$rels/seaf.app.integration_specifications.specification"
+            data-objects:
+              title: Объекты данных
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ia.data_objects.data_object"
+          required:
+            - title
+            - description
+            - from
+            - to
+    menu: >
+      (
+        $root_menu := entities."seaf.app.integrations".config.root_menu;
+        [{
+            "link": "/entities/seaf.app.integrations/registry", 
+            "location": $root_menu & "/Интеграции" 
+        }]
+      )

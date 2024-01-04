@@ -1,0 +1,46 @@
+# Бланк архитектурного компонента
+entities:
+  seaf.app.integrations:
+    presentations:
+      registry:
+        title: Реестр интеграций
+        type: table
+        headers:
+          - value: $id
+            text: Идентификатор
+            sortable: true
+            width: 20%
+            link: link
+          - value: title
+            text: Описание
+            sortable: true
+            width: 20%
+          - value: from
+            text: Источник
+            link: from_link
+            sortable: true
+            width: 20%
+          - value: to
+            text: Получатель
+            link: to_link
+            sortable: true
+            width: 20%
+        source: >
+          (
+              $components := components;
+              [$."seaf.app.integrations".$spread().(
+                  $id := $keys()[0];
+                  $from_id := *.from ? *.from : "$unknown$";
+                  $to_id := *.to ? *.to : "$unknown$";
+                  $from := $lookup($components, $from_id);
+                  $to := $lookup($components, $to_id);
+                  $merge([$.*, {
+                      "$id": $id,
+                      "link": "/entities/seaf.app.integrations/blank?seaf-integration-id=" & $id,
+                      "from": $from ? ($from.title ? $from.title : $from_id) : $from_id,
+                      "from_link": $from ? "/entities/components/blank?dh-component-id=" & $from_id,
+                      "to": $to ? ($to.title ? $to.title : $to_id) : $to_id,
+                      "to_link": $to ? "/entities/components/blank?dh-component-id=" & $to_id
+                  }])
+              )]
+          )

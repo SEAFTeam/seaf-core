@@ -1,0 +1,822 @@
+docs:
+  ta_services_tables:
+    location: /Архитектура/Техническая/Технические сервисы
+    source: services.md
+    type: markdown
+
+  seaf.ta.services.dc_region:
+    type: table
+    headers:
+      - value: region_name
+        text: Имя региона
+        sortable: true
+        align: left
+        width: 20%
+
+    source: >
+      (
+        [[$."seaf.ta.services.dc_region".$spread().(
+          $COMPONENT_ID := $keys()[0];
+           $.*.{
+          "region_name": region_name
+            }
+        )]^(id)]
+      )
+
+  seaf.ta.services.dc_az:
+    type: table
+    #location: Таблица тех сервисов (ЦОД)
+    headers:
+      - value: az_name
+        text: Имя зоны доступности
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: az_vendor
+        text: Поставщик
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: region_id
+        text: В какой регион входит зона доступности
+        sortable: true
+        align: left
+        width: 20%
+    source: >
+      (
+        [[$."seaf.ta.services.dc_az".$spread().(
+          $COMPONENT_ID := $keys()[0];
+           $.*.{
+          "az_name": az_name,
+          "az_vendor": az_vendor,
+          "region_id": region_id    
+            }
+        )]^(id)]
+      )
+
+  seaf.ta.services.dc:
+    type: table
+    #location: Таблица тех сервисов (ЦОД)
+    headers:
+      - value: dc_name
+        text: Имя ЦОД/Серверной комнаты
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: dc_ownership
+        text: Тип владения ЦОД
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: dc_type
+        text: Тип ЦОД
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: dc_vendor
+        text: Поставщик
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: dc_address
+        text: Адрес ЦОД
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: dc_rack_qty
+        text: Количество стоек (аренда или владение)
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: dc_tier
+        text: Уровень сертификации ЦОД
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: availabilityzone_id
+        text: В какие зоны доступности входит DC
+        sortable: true
+        align: left
+        width: 20%
+    source: >
+      (
+        [[$."seaf.ta.services.dc".$spread().(
+          $COMPONENT_ID := $keys()[0];
+      	 $.*.{
+      		"id": $COMPONENT_ID ,
+         	"dc_name": dc_name,
+         	"dc_ownership": dc_ownership,
+         	"dc_type": dc_type,
+         	"dc_vendor": dc_vendor,
+         	"dc_address": dc_address,
+         	"dc_rack_qty": dc_rack_qty,
+         	"dc_tier": dc_tier,
+         	"availabilityzone_id": availabilityzone_id
+      	  }
+        )]^(id)]
+      )
+
+  seaf.ta.services.office:
+    type: table
+    headers:
+      - value: name
+        text: Имя компонента
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: address
+        text: Адрес офиса или местоположения
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: description
+        text:  Описание использования
+        sortable: true
+        align: left
+        width: 20%
+
+    source: >
+      (
+        [[$."seaf.ta.services.office".$spread().(
+          $COMPONENT_ID := $keys()[0];
+      	 $.*.{
+      		"id": $COMPONENT_ID ,
+         	"name": name,
+         	"address": address,
+         	"description": description
+      	  }
+        )]^(id)]
+      )
+
+  seaf.ta.services.cluster:
+    type: table
+    headers:
+      - value: availabilityzone_id
+        text: Availability Zone ID
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: description
+        text: Описание кластера
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: cluster_fqdn
+        text: FQDN имя кластера
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: server_id
+        text: Ноды кластера
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: cluster_reservation_type
+        text: Тип резервирования кластера
+        sortable: true
+        align: left
+        width: 20%
+
+    source: >
+      (
+        [[$."seaf.ta.services.cluster".$spread().(
+          $COMPONENT_ID := $keys()[0];
+      	 $.*.{
+      		"id": $COMPONENT_ID,
+            "availabilityzone_id": availabilityzone_id,
+         	"description": description,
+         	"cluster_fqdn": cluster_fqdn,
+         	"server_id": server_id,
+         	"cluster_reservation_type": cluster_reservation_type
+      	  }
+        )]^(id)]
+      )
+
+  seaf.ta.services.storage:
+    type: table
+    #location: Таблица тех сервисов (ЦОД)
+    headers:
+
+      - value: type
+        text: Тип хранилища
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: availabilityzone_id
+        text: Availability Zone ID
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: name
+        text: Имя хранилища
+        sortable: true
+        align: left
+        width: 20%
+
+
+      - value: software
+        text: ПО реализующее SDS
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: sla
+        text: SLA хранилища
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: volume
+        text: Общий объём хранилища в ТБ
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: disk_type
+        text: Тип используемых дисков
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: erasure_coding
+        text: Фактор репликации
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: protocols
+        text: Поддерживаемые протоколы для клиентских подключений
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: server_id
+        text: Сервера составляющие кластер
+        sortable: true
+        align: left
+        width: 20%
+
+    source: >
+      (
+        [[$."seaf.ta.services.storage".$spread().(
+          $COMPONENT_ID := $keys()[0];
+      	 $.*.{
+            "type": type,
+            "availabilityzone_id": availabilityzone_id,
+         	"name": name,
+         	"software": software,
+         	"sla": sla,      
+         	"volume": volume,
+         	"disk_type": disk_type,
+         	"erasure_coding": erasure_coding,
+         	"protocols": protocols,
+         	"server_id": server_id      
+      	  }
+        )]^(id)]
+      )
+  seaf.ta.services.cluster_virtualization:
+    type: table
+    headers:
+      - value: name
+        text: Имя хранилища
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: hypervisor
+        text: Гипервизор
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: availabilityzone_id
+        text: Availability Zone ID
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: oversubscription_rate
+        text: Коэффициент переподписки кластера виртуализации
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: drs_support
+        text: Поддержка DRS кластером виртуализации
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: sdrs_support
+        text: Поддержка SDRS кластером виртуализации
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: server_id
+        text: Список серверов реализующих кластер
+        sortable: true
+        align: left
+        width: 20%
+
+    source: >
+      (
+        [[$."seaf.ta.services.cluster_virtualization".$spread().(
+          $COMPONENT_ID := $keys()[0];
+      	 $.*.{
+            "availabilityzone_id": availabilityzone_id,
+         	"name": name,
+         	"sdrs_support": sdrs_support  ? "Да": "Нет",
+         	"drs_support": drs_support  ? "Да": "Нет",      
+         	"oversubscription_rate": oversubscription_rate,      
+         	"hypervisor": hypervisor,      
+         	"sla": sla,
+         	"server_id": server_id      
+      	  }
+        )]^(id)]
+      )      
+
+  seaf.ta.services.k8s:
+    type: table
+    headers:
+      - value: availabilityzone_id
+        text: Availability Zone ID
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: dc_id
+        text: Datacenter ID
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: is_own
+        text: Кластер куплен как услуга
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: software
+        text: ПО реализующее Kubernetes кластер
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: server_id
+        text: Ноды кластера (ID Серверов)
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: cluster_fqdn
+        text: Имя кластера Kubernetes
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: master_qty
+        text: Количество мастер нод кластера
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: worker_qty
+        text: Количество воркер нод кластера
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: cni
+        text: CNI плагин
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: service_mesh
+        text: Service Mesh
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: cluster_autoscaler
+        text: Работа автомасштабирования воркер нод кластера
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: hpa
+        text: HPA\VPA для деплойментов
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: keys
+        text: Хранилище секретов кластера
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: policy
+        text: ПО для реализации управления политиками
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: auth
+        text: ПО для реализации внешней системой аутентификации
+        sortable: true
+        align: left
+        width: 20%
+
+    source: >
+      (
+        [[$."seaf.ta.services.k8s".$spread().(
+          $COMPONENT_ID := $keys()[0];
+      	 $.*.{
+            "availabilityzone_id": availabilityzone_id,
+            "dc_id": dc_id,
+         	"is_own": is_own ? "Да": "Нет",
+         	"software": software,
+         	"server_id": server_id,
+         	"cluster_fqdn": cluster_fqdn,
+         	"master_qty": master_qty,
+         	"worker_qty": worker_qty,
+         	"cni": cni,
+         	"service_mesh": service_mesh,
+         	"cluster_autoscaler": cluster_autoscaler  ? "Да": "Нет",
+         	"hpa": hpa  ? "Да": "Нет",
+         	"keys": keys,
+         	"policy": policy,
+         	"auth": auth
+      	  }
+        )]^(id)]
+      )      
+
+  seaf.ta.services.network:
+    type: table
+    headers:
+      - value: type
+        text: Тип сети
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: dc_id
+        text: Datacenter ID
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: office_id
+        text: Офис
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: availabilityzone_id
+        text: Availability Zone ID
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: segment
+        text: Сегмент сети
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: vlan
+        text: VLAN
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: ipnetowrk
+        text: IP-сеть и маска
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: ch_number
+        text: Номер канала
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: wan_ip
+        text: Внешняя сеть\IP
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: lan_type
+        text: Тип LAN сети
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: provider
+        text: Оператор связи
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: bandwidth
+        text: Пропускная способность, Мб\с
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: description
+        text: Описание канала связи
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: network_appliance_id
+        text: ID оборудования коммутации сети
+        sortable: true
+        align: left
+        width: 20%
+
+    source: >
+      (
+        [[$."seaf.ta.services.network".$spread().(
+          $COMPONENT_ID := $keys()[0];
+      	 $.*.{
+      		"id": $COMPONENT_ID ,
+         	"type": type,
+            "dc_id": dc_id,
+            "office_id": office_id,
+            "availabilityzone_id": availabilityzone_id,
+            "segment": segment,
+         	"vlan": vlan,
+         	"ipnetowrk": ipnetowrk,
+         	"ch_number": ch_number,
+         	"wan_ip": wan_ip,
+         	"lan_type": lan_type,      
+         	"provider": provider,
+         	"bandwidth": bandwidth,
+         	"description": description,
+         	"network_appliance_id": network_appliance_id
+      	  }
+        )]^(id)]
+      )
+
+     
+
+  seaf.ta.services.network_links:
+    type: table
+    headers:
+
+      - value: sitelinks_id
+        text: Идентификатор линка
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: network_appliance_id1
+        text: Network Appliance ID с одной стороны
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: network_appliance_id2
+        text: Network Appliance ID с другой стороны
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: ch_number
+        text: Номер канала
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: provider
+        text: Оператор связи
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: bandwidth
+        text: Пропускная способность, Мб\с
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: ch_type
+        text: Тип канала
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: type
+        text: Тип канала
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: description
+        text: Описание
+        sortable: true
+        align: left
+        width: 20%
+    source: >
+      (
+        [[$."seaf.ta.services.network_links".$spread().(
+          $COMPONENT_ID := $keys()[0];
+      	 $.*.{
+      		"sitelinks_id": sitelinks_id,
+      		"network_appliance_id1": network_appliance_id1,
+      		"network_appliance_id2": network_appliance_id2,      
+         	"ch_number": ch_number,
+         	"type": type,
+         	"provider": provider,
+         	"bandwidth": bandwidth,
+         	"ch_type": ch_type,
+         	"description": description      
+      	  }
+        )]^(id)]
+      )
+  seaf.ta.services.backup:
+    type: table
+    headers:
+
+      - value: availabilityzone_id
+        text: Availability Zone ID
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: name
+        text: Производитель и название СРК
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: path
+        text: Место хранения РК
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: schedule
+        text: Частота резервного копирования
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: replication
+        text: Репликация в другой ЦОД
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: server_id
+        text: Список серверов реализующих СРК
+        sortable: true
+        align: left
+        width: 20%
+
+    source: >
+      (
+        [[$."seaf.ta.services.backup".$spread().(
+          $COMPONENT_ID := $keys()[0];
+      	 $.*.{
+      		"id": $COMPONENT_ID ,
+         	"availabilityzone_id": availabilityzone_id,
+         	"name": name,
+         	"path": path,
+         	"schedule": schedule,
+         	"server_id": server_id,      
+         	"replication": replication  ? "Да": "Нет"
+      	  }
+        )]^(id)]
+      )
+  seaf.ta.services.monitoring:
+    type: table
+    headers:
+
+      - value: availabilityzone_id
+        text: Availability Zone ID
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: name
+        text: Производитель и название СРК
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: role
+        text: Роль
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: ha
+        text: Высокая доступность системы мониторинга
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: server_id
+        text: Список серверов реализующих СМ
+        sortable: true
+        align: left
+        width: 20%
+
+    source: >
+      (
+        [[$."seaf.ta.services.monitoring".$spread().(
+          $COMPONENT_ID := $keys()[0];
+      	 $.*.{
+         	"availabilityzone_id": availabilityzone_id,
+         	"name": name,
+         	"role": role,
+         	"server_id": server_id,          
+         	"ha": ha  ? "Да": "Нет"
+      	  }
+        )]^(id)]
+      )
+  seaf.ta.services.software:
+    type: table
+    headers:
+
+      - value: vendor
+        text: Производитель ПО
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: name
+        text: Имя ПО
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: type
+        text: Тип лицензии
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: support
+        text: Наличие платной  поддержки вендора\интегратора
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: expiration
+        text: Срок действия лицензий
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: lic_qty
+        text: Количество лицензий
+        sortable: true
+        align: left
+        width: 20%
+
+      - value: server_id
+        text: Список серверов на которых установлена лицензия
+        sortable: true
+        align: left
+        width: 20%
+
+    source: >
+      (
+        [[$."seaf.ta.services.software".$spread().(
+          $COMPONENT_ID := $keys()[0];
+      	 $.*.{
+         	"vendor": vendor,
+         	"name": name,
+         	"type": type,
+         	"support": support,
+         	"expiration": expiration,
+         	"lic_qty": lic_qty,
+         	"server_id": server_id      
+      	  }
+        )]^(id)]
+      )

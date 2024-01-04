@@ -1,0 +1,44 @@
+entities:
+  seaf.ba.processes:
+    title: Бизнес-процессы
+    schema:
+      type: object
+      patternProperties:
+        "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$":
+          type: object
+          properties:
+            title:
+              title: Наименование
+              type: string
+            description:
+              title: Описание
+              type: string
+            systems:
+              title: Системы, обеспечивающие бизнес-процесс
+              type: array
+              items:
+                $ref: "#/$rels/components.component"
+            products:
+              title: Связь с продуктами
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ba.products.products"
+            integrations:
+              title: Связь с интеграционными потоками
+              type: array
+              items:
+                $ref: "#/$rels/seaf.app.integrations.integrations"
+            comments:
+              title: Комментарии, риски, проблемы
+              type: array
+              items:
+                type: string
+          required:
+            - title
+            - description
+            - systems
+    objects:
+      processes:
+        route: "/"
+        title: Бизнес-процесс
+        symbol: "bp"

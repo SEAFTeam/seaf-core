@@ -1,0 +1,5 @@
+docs:
+  seaf.app.overview:
+    type: markdown
+    source: overview.md
+    location: SEAF/Прикладная архитектура

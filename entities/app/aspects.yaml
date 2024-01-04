@@ -1,0 +1,19 @@
+# Прикладная функциональность SEAF
+# Расширяется и кастомизируется метамодель DocHub
+entities:
+  aspects:
+    objects:
+      function:
+        route: "/"
+        title: Функции
+    schema:
+      patternProperties:
+        "^[a-zA-Z][a-zA-Z0-9_-]*(\\.[a-zA-Z][a-zA-Z0-9_-]*)*$":
+          properties:
+            type:
+              title: Тип аспекта
+              type: string
+              enum:
+                - functionality
+                - other
+              default: other

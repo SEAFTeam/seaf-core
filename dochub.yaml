@@ -1,0 +1,19 @@
+# Метаданные пакета
+$package:
+  seaf: # Идентификатор пакета
+    # Краткое название пакета
+    name: SEAF
+    # Поставщик
+    vendor: Sber
+    # Описание
+    description: Sber Enterprise Architect Framework
+    # Версия
+    version: 1.0.0
+    # Зависимости от других пакетов
+    dependencies:
+      dochub: ">=3.8.0"
+
+imports:
+  - functions/root.yaml
+  - entities/root.yaml
+  - docs/root.yaml

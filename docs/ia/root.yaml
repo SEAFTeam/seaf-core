@@ -1,0 +1,6 @@
+docs:
+  seaf.ia.general:
+    description: SEAF Информационная архитектура
+    type: markdown
+    location: SEAF/Информационная архитектура
+    source: ../../entities/ia/README.md

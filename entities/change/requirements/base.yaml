@@ -1,0 +1,70 @@
+# Требования прикладной архитектуры SEAF
+entities:
+  seaf.change.requirements:
+    title: Требования
+    objects:
+      requirement:
+        route: "/"
+        title: Требование
+    schema:
+      type: object
+      patternProperties:
+        "^[a-z0-9_\\$][a-z0-9_\\$]*(\\.[a-z0-9_\\$][a-z0-9_\\$]*)*$":
+          type: object
+          properties:
+            title:
+              title: Название требования
+              type: string
+            type:
+              type: string
+              enum:
+                - business
+                - functional
+                - non-functional
+            functionality:
+              title: Функции обеспечивающие требование
+              type: array
+              items:
+                $ref: "#/$rels/aspects.aspect"
+            description:
+              title: Подробное описание требования
+              type: string
+            verifications:
+              title: Критерии выполнения
+              type: object
+              patternProperties:
+                "^[a-z0-9_\\$][a-z0-9_\\$]*(\\.[a-z0-9_\\$][a-z0-9_\\$]*)*$":
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      title: Название критерия
+                    condition:
+                      type: string
+                      title: Условие выполнения критерия проверки
+                  required:
+                    - title
+                    - condition
+          required:
+            - title
+            - type
+            - description
+            - verifications
+    menu: >
+      (
+        $append(
+          [{
+            "link": "/entities/seaf.change.requirements/tree", 
+            "location": "Изменения/Требования" 
+          }],
+          $seaf_menu_location_by_id(
+              $."seaf.change.requirements",
+              "",
+              "Изменения/Требования/",
+              function($location, $item, $itemId, $collection){{
+                  "location": $location,
+                  "link": "/entities/seaf.change.requirements/blank?seaf-req-id=" & $itemId
+              }}
+          )
+        );
+      )

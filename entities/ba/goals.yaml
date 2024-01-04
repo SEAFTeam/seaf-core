@@ -1,0 +1,24 @@
+entities:
+  seaf.ba.goals:
+    title: Цели
+    description: Бизнес-цели горизонта планирования
+    schema:
+      type: object
+      patternProperties:
+        "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$":
+          type: object
+          properties:
+            goal:
+              title: Цель
+              type: string
+            horizont:
+              title: Горизонт
+              type: string
+          required:
+            - goal
+            - horizont
+    objects:
+      goals:
+        route: "/"
+        title: Цели
+        symbol: "gls"

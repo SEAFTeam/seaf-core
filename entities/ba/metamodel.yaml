@@ -1,0 +1,353 @@
+seaf.ba.ttl:
+
+# Ecosystem _________________________________________________________________________________________________________
+
+  mm.party:
+    title: Участник
+    bage: person_gear_orange
+    hex:
+      =>заинтересован:
+        mm.product:
+    hexQ:
+      seaf.ba.ttl:
+        EVERY=>map:
+          mm.party:
+
+  mm.product:
+    title: Продукт
+    bage: box_heart
+    hex:
+      =>владелец:
+        mm.party:
+      <=использует:
+        mm.product:
+      <=относится к:
+        processes:
+    hexQ:
+      seaf.ba.ttl:
+        EVERY=>map:
+          mm.product:
+
+          
+  ecosystem:
+    title: Экосистема
+    
+    hexV:
+      modes:
+        # - title: Предложения экосистемы
+        #   hexV:
+        #     # mm.parties_interested.hexQ:
+        #     # mm.products_targeted.hexQ:
+        #     mm.parties_providers.hexQ:
+
+        - title: Использование продуктов
+          hexV:
+            mm.party.hexQ:
+            mm.product.hexQ:
+            hexR:
+              nest:
+                - <=использует:
+
+
+# Motivations _________________________________________________________________________________________________________
+
+  mm.goal_need:
+    title: Цель (потребность)
+    bage: rocket
+    hex:
+      <=устанавливает:
+        mm.party:
+    hexQ:
+      seaf.ba.ttl:
+        EVERY=>map:
+          mm.goal_need:
+
+
+  mm.driver:
+    title: Драйвер
+    bage: hurricane
+    hex:
+      =>обуславливают:
+        mm.goal_need:
+      =>воздействует:
+        mm.party:
+    hexQ:
+      seaf.ba.ttl:
+        EVERY=>map:
+          mm.driver:
+
+
+  mm.value:
+    title: Ценность
+    bage: chat_heart
+    hex:
+      =>способствует достижению:
+        mm.goal_need:
+      <=оценивает:
+        mm.party:
+    hexQ:
+      seaf.ba.ttl:
+        EVERY=>map:
+          mm.value:
+
+  motivation:
+    title: Мотивация
+    
+    hexV:
+      mm.party.hexQ:
+      mm.driver.hexQ:
+      mm.goal_need.hexQ:
+      mm.value.hexQ:
+
+
+# Process Map _________________________________________________________________________________________________________
+
+  mm.process:
+    title: Процесс
+    bage: refresh
+    hex:
+      =>реализует:
+        mm.product:
+      =>предшествует:
+        mm.process:
+    hexQ:
+      seaf.ba.ttl:
+        EVERY=>map:
+          mm.process:
+
+  # event:
+  #   title: Событие
+  #   bage: bulb_red
+  #   hexQ:
+  #     seaf.ba.ttl:
+  #       EVERY=>map:
+  #         event:
+
+
+
+  
+  process_map:
+    title: Процессы
+    hexV:
+      modes:
+        - title: Сеть процессов
+          hexV:
+            mm.process.hexQ:
+        - title: Использование ресурсов
+          hexV:
+            mm.process.hexQ:
+            mm.resource.hexQ:
+            hexR:
+              exclude:
+                - enables
+        - title: Процессы по Продуктам
+          hexV:
+            mm.process.hexQ:
+            mm.product.hexQ:
+            hexR:
+              nest:
+                - <=реализует:
+                - <=используется в:
+
+
+  # process_network:
+  #   title: Сеть процессов
+  #   hexV:
+  #     modes:
+  #     - title: Событийная последовательность
+  #       hexV:
+  #         events.hexQ:
+  #         processes.hexQ:
+  #     - title: Поток ценности
+  #       hexV:
+  #         ios.hexQ:
+  #         processes.hexQ:
+  #     - title: Владельцы
+  #       hexV:
+  #         processes.hexQ:
+  #         parties.hexQ:
+  #     - title: Используемые ресурсы
+  #       hexV:
+  #         processes.hexQ:
+  #         org_units.hexQ:
+  #         a_systems.hexQ:
+
+
+
+
+# Capabilities _________________________________________________________________________________________________
+
+  mm.capability:
+    title: Способность
+    bage: hex_olive
+    hex:
+      =>в составе:
+        mm.capability:
+      <=в составе:
+        mm.process:
+    hexQ:
+      seaf.ba.ttl:
+        EVERY=>map:
+          mm.capability:
+
+  capability_map:
+    title: Карта компетенций
+    hexV:
+      modes:
+        - title: Карта способностей
+          hexV:
+            mm.capability.hexQ:
+            hexR:
+              nest:
+                - <=в составе:
+        - title: Процессы по способностям
+          hexV:
+            mm.capability.hexQ:
+            mm.process.hexQ:
+            hexR:
+              nest:
+                - <=в составе:
+        - title: Ресурсные потоки
+          hexV:
+            mm.capability.hexQ:
+            mm.process.hexQ:
+            mm.resource.hexQ:
+            hexR:
+              exclude:
+                - enables
+              nest:
+                - <=в составе:
+
+  # Resources _______________________________________________________
+  mm.resource:
+    title: Ресурс
+    bage: box_sealed_grey
+    hex:
+      =>требуется:
+        mm.party:
+        mm.process:
+      <=производит:
+        mm.party:
+        mm.process:
+      =>тип:
+        mm.resource:
+    hexQ:
+      seaf.ba.ttl:
+        EVERY=>map:
+          mm.resource:
+
+  mm.resource.app_service:
+    title: Ресурс (прикладной сервис)
+    bage: ui_window
+    hex:
+    hexQ:
+      seaf.ba.ttl:
+        EVERY=>type:
+          mm.resource.app_service:
+
+  mm.resource.data: 
+    title: Ресурс (данные)
+    bage: braces_blue
+    hex:
+    hexQ:
+      seaf.ba.ttl:
+        EVERY=>type:
+          mm.resource.data:
+
+  mm.resource.material:
+    title: Ресурс (материальный)
+    bage: box_sealed
+    hex:
+    hexQ:
+      seaf.ba.ttl:
+        EVERY=>type:
+          mm.resource.material:
+
+  mm.resource.money:
+    title: Ресурс (денежные средства)
+    bage: bank_card_green
+    hex:
+    hexQ:
+      seaf.ba.ttl:
+        EVERY=>type:
+          mm.resource.money:
+
+  mm.resource.hr:
+    title: Ресурс (рабочая сила)
+    hex:
+    hexQ:
+      seaf.ba.ttl:
+        EVERY=>type:
+          mm.resource.hr:
+
+  mm.resource.access:
+    title: Ресурс (доступ, право)
+    hex:
+    hexQ:
+      seaf.ba.ttl:
+        EVERY=>type:
+          mm.resource.access:
+
+  mm.resource.rules:
+    title: Ресурс (знания, технология, регулирование)
+    hex:
+    hexQ:
+      seaf.ba.ttl:
+        EVERY=>type:
+          mm.resource.rules:
+
+  mm.resource.service:
+    title: Ресурс (работы, услуги)
+    hex:
+    hexQ:
+      seaf.ba.ttl:
+        EVERY=>type:
+          mm.resource.service:
+
+  
+  resource_registry:
+    title: Реестр ресурсов
+    hexV:
+      modes:
+        - title: Карта прикладных сервисов
+          hexV:
+            mm.resource.app_service.hexQ:
+        - title: Объекты данных
+          hexV:
+            mm.resource.data.hexQ:
+        - title: Платежи
+          hexV:
+            mm.resource.money.hexQ:
+        - title: Материальные объекты
+          hexV:
+            mm.resource.material.hexQ:
+
+        # - title: Полный перечень (draft)
+        #   hexV:
+        #     mm.resource.hexQ:
+        #     hexR:
+        #       nest:
+        #         - <=type:
+
+      # mm.a_system.hexQ: causes error due ttl object is in two or more query results
+
+
+  # OrgUnits ____________________________________________________
+  org_unit:
+    title: Оргединица
+    bage: people_yellow
+    hex:
+      =>используется в:
+        processes:
+      =>относится к:
+        capabilities:
+    hexQ:
+      seaf.ba.ttl:
+        EVERY=>map:
+          org_unit:
+
+
+
+
+
+    

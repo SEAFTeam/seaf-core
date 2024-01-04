@@ -1,0 +1,35 @@
+# Бланк требования
+entities:
+  seaf.change.requirements:
+    presentations:
+      blank:
+        title: Карточка требования
+        params:
+          type: object
+          properties:
+            seaf-req-id:
+              title: Идентификатор требования
+              type: string
+          required:
+            - seaf-req-id
+        type: markdown
+        template: templates/blank.md
+        source: >
+          (
+              $aspects := aspects;
+              $id := $params."seaf-req-id";
+              $lookup($."seaf.change.requirements", $id).{
+                  "id": $id,
+                  "title": title,
+                  "type": type,
+                  "description": description,
+                  "verifications": [verifications.*.$],
+                  "functionality": [functionality[$].(
+                      $id := $;
+                      $lookup($aspects, $id).{
+                          "id": $id,
+                          "title": title ? title : $id
+                      }
+                  )]
+              }
+          )

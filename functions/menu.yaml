@@ -1,0 +1,59 @@
+# Кастомные функции
+functions:
+  seaf_menu_location_by_id:
+    title: Генерация меню по коллекции
+    params:
+      - type: object
+        title: Коллекция объектов
+        description: >
+          Передается коллекция объектов в формате ключ-значение
+        alias: collection
+        required: true
+      - type: string
+        title: Идентификатор
+        alias: id
+        description: >
+          Если идентификатор 'unknown', перебирается вся коллекция
+      - type: string
+        title: Префикс
+        alias: prefix
+        description: >
+          Префикс, которые добавляется ко всем путям меню спереди
+      - title: Функция генерации элемента меню
+        callback: true    # Признак того, что параметр это calback функция
+        params:           # Декларирование параметров, которе передаются я в callback функцию
+          - title: Расположение в меню
+            type: string
+          - title: Элемент коллекции (любой тип)
+          - title: Идентификатор элемента коллекции
+            type: string
+          - title: Коллекция
+            type: object
+        alias: builder
+    code: >
+      (
+          $collection := collection;
+          $prefix := prefix;
+          $arrleft := function($arr ,$count) {
+              $map($arr, function($v, $i) {
+                $i <= $count ? $v
+              })
+          };
+          $expDomains := function($prefix, $domains) {(
+              $location := prefix & $join($map($domains, function($domain, $index) {(
+                  $lookup($collection, $join($arrleft($domains, $index), ".")).title
+              )}), "/");
+              $itemId := $join($domains, ".");
+              $item := $lookup($collection, $itemId);
+              $builder ? $builder($location, $item, $itemId, $collection) : {
+                  "location" : $location
+              };
+          )};
+          [
+            id ? $expDomains($prefix, $split(id, "."))
+               : collection.$spread().($expDomains($prefix, $split($keys()[0], ".")))
+          ]
+      )
+    result:
+      type: array
+      title: Массив элементов меню

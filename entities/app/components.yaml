@@ -1,0 +1,61 @@
+# Прикладной компонент SEAF
+# Расширяется и кастомизируется метамодель DocHub
+entities:
+  components:
+    title: Компонент прикладной архитектуры
+    description: Прикладные компоненты являются составными частями прикладного сервиса
+    # Расширение схемы данных объектов под SEAF
+    schema:
+      $defs:
+        seaf.app.sber.component_type:
+          title: Тип компонента
+          type: string
+          default: component
+          enum:
+            - component
+            - service
+      patternProperties:
+        "^[a-zA-Z][a-zA-Z0-9_-]*(\\.[a-zA-Z][a-zA-Z0-9_-]*)*$":
+          type: object
+          properties:
+            description:
+              title: Описание компонента
+              type: string
+            type:
+              $ref: "#/$defs/seaf.app.sber.component_type"
+            requirements:
+              title: Требования
+              type: array
+              items:
+                $ref: "#/$rels/seaf.change.requirements.requirement"
+            aspects:
+              title: Функциональность
+              type: array
+              items:
+                $ref: "#/$rels/aspects.aspect"
+
+    # Кастомизация презентаций
+    presentations:
+      summary:
+        # Кастомизация виджета сводки по компоненту
+        title: Сводка по компоненту
+        source: >
+          (
+            $component_id := $params.component;
+            $lookup(components, $component_id).(
+                [
+                    {
+                        "title": "Идентификатор",
+                        "content": $component_id
+                    },
+                    {
+                        "title": "Название",
+                        "content": title
+                    },
+                    {
+                        "title": "Описание",
+                        "content": description
+                    }
+                ]
+            )
+          )

@@ -1,0 +1,4 @@
+imports:
+  - base.yaml
+  - blank.yaml
+  - registry.yaml

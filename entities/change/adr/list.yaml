@@ -1,0 +1,37 @@
+# Бланк архитектурного решения
+entities:
+  seaf.change.adr:
+    presentations:
+      list:
+        title: Карточка требования
+        type: table
+        headers:
+          - value: id
+            text: ID
+            sortable: true
+            align: left
+            width: 5%
+            link: link
+          - value: moment
+            text: Дата
+            sortable: true
+            align: left
+            width: 5%
+          - value: title
+            text: Название
+            sortable: true
+            align: left
+            width: 10%
+        source: >
+          (
+              $."seaf.change.adr".$spread().(
+                  $id := $keys()[0];
+                  {
+                      "id": $id,
+                      "moment": *.moment,
+                      "link": "/entities/seaf.change.adr/blank?seaf-adr-id=" & $id,
+                      "title": *.title,
+                      "sort": $toMillis(*.moment)
+                  }
+              )^(sort);
+          )

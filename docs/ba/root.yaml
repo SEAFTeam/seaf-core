@@ -1,0 +1,41 @@
+docs:
+  seaf.ba.main:
+    #location: /Архитектура/Бизнес-архитектура/Реализация на Hexagon
+    description: SEAF Business Architecture Primer explained
+    type: markdown
+    source: ba_main.md
+
+
+  seaf.ba.entry:
+    location: SEAF/Бизнес-архитектура
+    description: SEAF Business Architecture with Hexagon
+    type: markdown
+    source: ba_function.md
+
+
+  seaf.ba.ecosystem_main:
+    # location: /Архитектура/Бизнес-архитектура
+    description: what is Ecosystem
+    type: markdown
+    source: ecosystem.md
+
+
+  seaf.ba.method:
+    # location: /
+    description: BA methodology entry doc
+    type: markdown
+    source: ba_method.md
+
+
+  seaf.ba.tutorial:
+    #location: /Архитектура/Бизнес-архитектура/Руководство "Минимальная БА"
+    description: BA minimal tutorial
+    type: markdown
+    source: ba_tutorial.md
+
+
+  seaf.ba.realization:
+    # location: /
+    description: BA realization entry point
+    type: markdown
+    source: ba_realization.md

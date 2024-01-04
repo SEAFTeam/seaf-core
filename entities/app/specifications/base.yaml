@@ -1,0 +1,32 @@
+# Интеграции SEAF
+entities:
+  seaf.app.integration_specifications:
+    title: Интеграционные спецификации
+    objects:
+      specification:
+        route: "/"
+        title: Спецификации интеграций
+    schema:
+      type: object
+      patternProperties:
+        "^[a-z0-9_\\$][a-z0-9_\\$]*(\\.[a-z0-9_\\$][a-z0-9_\\$]*)*$":
+          type: object
+          properties:
+            title:
+              title: Наименование спецификации интеграции
+              type: string
+            description:
+              title: Описание интеграции
+              type: string
+            encryption:
+              title: Используемое шифрование
+              type: boolean
+            async:
+              title: Асинхронный поток?
+              type: boolean
+            technologies:
+              type: array
+              items:
+                type: string
+          required:
+            - title

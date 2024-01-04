@@ -1,0 +1,50 @@
+# Бланк архитектурного решения
+entities:
+  seaf.change.adr:
+    presentations:
+      blank:
+        title: Карточка требования
+        params:
+          type: object
+          properties:
+            seaf-adr-id:
+              title: Идентификатор требования
+              type: string
+          required:
+            - seaf-adr-id
+        type: markdown
+        template: templates/blank.md
+        source: >
+          (
+              $id := $params."seaf-adr-id";
+              $requirements := $."seaf.change.requirements";
+              $adr := $."seaf.change.adr";
+              $data := $lookup($."seaf.change.adr", $id);
+              $merge([$data, {
+                  "id": $id,
+                  "requirements": $data.requirements.(
+                      $title := $lookup($requirements, $).title;
+                      {
+                          "title": $title ? $title : $,
+                          "link": "/entities/seaf.change.requirements/blank?seaf-req-id=" & $
+                      } 
+                  ),
+                  "dependencies": $data.dependencies.(
+                      $title := $lookup($adr, $).title;
+                      {
+                          "title": $title ? $title : $,
+                          "link": "/entities/seaf.change.adr/blank?seaf-adr-id=" & $
+                      } 
+                  ),
+                  "blocked": $adr.$spread().(
+                      $depId := $keys()[0];
+                      *.dependencies[$=$id] ? (
+                        $title := $lookup($adr, $depId).title;
+                        {
+                            "title": $title ? $title : $,
+                            "link": "/entities/seaf.change.adr/blank?seaf-adr-id=" & $depId
+                        } 
+                      ) 
+                  )
+              }])
+          )
