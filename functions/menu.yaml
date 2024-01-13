@@ -8,7 +8,6 @@ functions:
         description: >
           Передается коллекция объектов в формате ключ-значение
         alias: collection
-        required: true
       - type: string
         title: Идентификатор
         alias: id
@@ -56,4 +55,4 @@ functions:
       )
     result:
       type: array
-      title: Массив элементов меню
+      title: Массив элементов меню 
