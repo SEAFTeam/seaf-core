@@ -310,7 +310,7 @@ docs:
         )]^(id)]
       )
 
-  seaf.ta.components.k8s_deployment_dzo:
+  seaf.ta.components.k8s_deployment:
     type: table
     headers:
 
@@ -358,7 +358,7 @@ docs:
 
     source: >
       (
-        [[$."seaf.ta.components.k8s_deployment_dzo".$spread().(
+        [[$."seaf.ta.components.k8s_deployment".$spread().(
           $COMPONENT_ID := $keys()[0];
       	 $.*.{
          	"name": name,
@@ -372,7 +372,7 @@ docs:
         )]^(id)]
       )
 
-  seaf.ta.components.k8s_pod_dzo:
+  seaf.ta.components.k8s_pod:
     type: table
     headers:
       - value: name
@@ -455,7 +455,7 @@ docs:
 
     source: >
       (
-        [[$."seaf.ta.components.k8s_pod_dzo".$spread().(
+        [[$."seaf.ta.components.k8s_pod".$spread().(
           $COMPONENT_ID := $keys()[0];
       	 $.*.{
          	"name": name,
@@ -476,7 +476,7 @@ docs:
         )]^(id)]
       )
 
-  seaf.ta.components.k8s_container_dzo:
+  seaf.ta.components.k8s_container:
     type: table
     headers:
       - value: name
@@ -577,7 +577,7 @@ docs:
 
     source: >
       (
-        [[$."seaf.ta.components.k8s_container_dzo".$spread().(
+        [[$."seaf.ta.components.k8s_container".$spread().(
           $COMPONENT_ID := $keys()[0];
       	 $.*.{
          	"name": name,
@@ -600,7 +600,7 @@ docs:
         )]^(id)]
       )
       
-  seaf.ta.components.k8s_image_dzo:
+  seaf.ta.components.k8s_image:
     type: table
     headers:
       - value: id
@@ -641,7 +641,7 @@ docs:
 
     source: >
       (
-        [[$."seaf.ta.components.k8s_image_dzo".$spread().(
+        [[$."seaf.ta.components.k8s_image".$spread().(
           $COMPONENT_ID := $keys()[0];
       	 $.*.{
       		"id": $COMPONENT_ID ,
