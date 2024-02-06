@@ -8,6 +8,12 @@ docs:
     type: table
     #location: Таблица тех компонентов (Bare Metal)
     headers:
+      - value: fqdn_name
+        text: Имя сервера FQDN
+        sortable: true
+        align: left
+        width: 20%
+
       - value: type
         text: Тип сервера
         sortable: true
@@ -28,12 +34,6 @@ docs:
 
       - value: model
         text: Модель
-        sortable: true
-        align: left
-        width: 20%
-
-      - value: fqdn_name
-        text: Имя сервера FQDN
         sortable: true
         align: left
         width: 20%
@@ -111,7 +111,7 @@ docs:
          	"model": model,      
          	"fqdn_name": fqdn_name
       	  }
-        )]^(id)]
+        )]^(fqdn_name)]
       )
 
   seaf.ta.components.server_virtual:
@@ -181,12 +181,17 @@ docs:
          	"virtualization_id": virtualization_id,      
          	"fqdn_name": fqdn_name
       	  }
-        )]^(id)]
+        )]^(fqdn_name)]
       )
 
   seaf.ta.components.hw_storage:
     type: table
     headers:
+      - value: storage_id
+        text: Storage ID
+        sortable: true
+        align: left
+        width: 20%
 
       - value: dc_id
         text: ЦОД
@@ -229,6 +234,7 @@ docs:
         [[$."seaf.ta.components.hw_storage".$spread().(
           $COMPONENT_ID := $keys()[0];
       	 $.*.{
+            "storage_id": storage_id,
             "dc_id": dc_id,
             "office": office,
          	"vendor": vendor,
@@ -307,7 +313,7 @@ docs:
          	"description": description,      
          	"ta_component_type": ta_component_type
       	  }
-        )]^(id)]
+        )]^(name)]
       )
 
   seaf.ta.components.k8s_deployment:
@@ -369,7 +375,7 @@ docs:
          	"description": description,
          	"availabilityzone_id": availabilityzone_id      
       	  }
-        )]^(id)]
+        )]^(name)]
       )
 
   seaf.ta.components.k8s_pod:
@@ -473,7 +479,7 @@ docs:
          	"maxunavailable": maxunavailable,
          	"kubernetes_id": kubernetes_id
       	  }
-        )]^(id)]
+        )]^(name)]
       )
 
   seaf.ta.components.k8s_container:
@@ -597,18 +603,12 @@ docs:
          	"container_ram": container_ram,
          	"container_cpu": container_cpu   
       	  }
-        )]^(id)]
+        )]^(name)]
       )
       
   seaf.ta.components.k8s_image:
     type: table
     headers:
-      - value: id
-        text: ID
-        sortable: true
-        align: left
-        width: 20%
-
       - value: name
         text: Имя компонента
         sortable: true
@@ -644,14 +644,13 @@ docs:
         [[$."seaf.ta.components.k8s_image".$spread().(
           $COMPONENT_ID := $keys()[0];
       	 $.*.{
-      		"id": $COMPONENT_ID ,
          	"name": name,
          	"repo_path": repo_path,
          	"repo_proved": repo_proved ? "Да": "Нет",
          	"image_size": image_size,    
          	"description": description
       	  }
-        )]^(id)]
+        )]^(name)]
       )      
 
   seaf.ta.components.user_device:
@@ -684,5 +683,5 @@ docs:
          	"device_type": device_type,    
          	"description": description
       	  }
-        )]^(id)]
+        )]^(name)]
       )

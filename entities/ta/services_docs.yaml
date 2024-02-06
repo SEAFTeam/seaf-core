@@ -3,7 +3,6 @@ docs:
     location: /Архитектура/Техническая/Технические сервисы
     source: services.md
     type: markdown
-
   seaf.ta.services.dc_region:
     type: table
     headers:
@@ -20,7 +19,7 @@ docs:
            $.*.{
           "region_name": region_name
             }
-        )]^(id)]
+        )]^(region_name)]
       )
 
   seaf.ta.services.dc_az:
@@ -53,7 +52,7 @@ docs:
           "az_vendor": az_vendor,
           "region_id": region_id    
             }
-        )]^(id)]
+        )]^(az_name)]
       )
 
   seaf.ta.services.dc:
@@ -112,7 +111,6 @@ docs:
         [[$."seaf.ta.services.dc".$spread().(
           $COMPONENT_ID := $keys()[0];
       	 $.*.{
-      		"id": $COMPONENT_ID ,
          	"dc_name": dc_name,
          	"dc_ownership": dc_ownership,
          	"dc_type": dc_type,
@@ -122,7 +120,7 @@ docs:
          	"dc_tier": dc_tier,
          	"availabilityzone_id": availabilityzone_id
       	  }
-        )]^(id)]
+        )]^(dc_name)]
       )
 
   seaf.ta.services.office:
@@ -151,19 +149,18 @@ docs:
         [[$."seaf.ta.services.office".$spread().(
           $COMPONENT_ID := $keys()[0];
       	 $.*.{
-      		"id": $COMPONENT_ID ,
          	"name": name,
          	"address": address,
          	"description": description
       	  }
-        )]^(id)]
+        )]^(name)]
       )
 
   seaf.ta.services.cluster:
     type: table
     headers:
-      - value: availabilityzone_id
-        text: Availability Zone ID
+      - value: az_name
+        text: Имя зоны доступности
         sortable: true
         align: left
         width: 20%
@@ -197,14 +194,13 @@ docs:
         [[$."seaf.ta.services.cluster".$spread().(
           $COMPONENT_ID := $keys()[0];
       	 $.*.{
-      		"id": $COMPONENT_ID,
-            "availabilityzone_id": availabilityzone_id,
+            "az_name": az_name,
          	"description": description,
          	"cluster_fqdn": cluster_fqdn,
          	"server_id": server_id,
          	"cluster_reservation_type": cluster_reservation_type
       	  }
-        )]^(id)]
+        )]^(az_name)]
       )
 
   seaf.ta.services.storage:
@@ -289,7 +285,7 @@ docs:
          	"protocols": protocols,
          	"server_id": server_id      
       	  }
-        )]^(id)]
+        )]^(name)]
       )
   seaf.ta.services.cluster_virtualization:
     type: table
@@ -350,12 +346,18 @@ docs:
          	"sla": sla,
          	"server_id": server_id      
       	  }
-        )]^(id)]
+        )]^(name)]
       )      
 
   seaf.ta.services.k8s:
     type: table
     headers:
+      - value: cluster_fqdn
+        text: Имя кластера Kubernetes
+        sortable: true
+        align: left
+        width: 20%
+
       - value: availabilityzone_id
         text: Availability Zone ID
         sortable: true
@@ -382,12 +384,6 @@ docs:
 
       - value: server_id
         text: Ноды кластера (ID Серверов)
-        sortable: true
-        align: left
-        width: 20%
-
-      - value: cluster_fqdn
-        text: Имя кластера Kubernetes
         sortable: true
         align: left
         width: 20%
@@ -467,12 +463,18 @@ docs:
          	"policy": policy,
          	"auth": auth
       	  }
-        )]^(id)]
+        )]^(cluster_fqdn)]
       )      
 
   seaf.ta.services.network:
     type: table
     headers:
+      - value: ipnetowrk
+        text: IP-сеть и маска
+        sortable: true
+        align: left
+        width: 20%
+
       - value: type
         text: Тип сети
         sortable: true
@@ -505,12 +507,6 @@ docs:
 
       - value: vlan
         text: VLAN
-        sortable: true
-        align: left
-        width: 20%
-
-      - value: ipnetowrk
-        text: IP-сеть и маска
         sortable: true
         align: left
         width: 20%
@@ -562,7 +558,6 @@ docs:
         [[$."seaf.ta.services.network".$spread().(
           $COMPONENT_ID := $keys()[0];
       	 $.*.{
-      		"id": $COMPONENT_ID ,
          	"type": type,
             "dc_id": dc_id,
             "office_id": office_id,
@@ -578,7 +573,7 @@ docs:
          	"description": description,
          	"network_appliance_id": network_appliance_id
       	  }
-        )]^(id)]
+        )]^(ipnetowrk)]
       )
 
      
@@ -587,20 +582,14 @@ docs:
     type: table
     headers:
 
-      - value: sitelinks_id
-        text: Идентификатор линка
+      - value: networklinks_id
+        text: Network Links ID
         sortable: true
         align: left
         width: 20%
 
-      - value: network_appliance_id1
-        text: Network Appliance ID с одной стороны
-        sortable: true
-        align: left
-        width: 20%
-
-      - value: network_appliance_id2
-        text: Network Appliance ID с другой стороны
+      - value: network_appliance_id
+        text: Сетевые устройства ID реализующие связь
         sortable: true
         align: left
         width: 20%
@@ -645,9 +634,8 @@ docs:
         [[$."seaf.ta.services.network_links".$spread().(
           $COMPONENT_ID := $keys()[0];
       	 $.*.{
-      		"sitelinks_id": sitelinks_id,
-      		"network_appliance_id1": network_appliance_id1,
-      		"network_appliance_id2": network_appliance_id2,      
+      		"networklinks_id": networklinks_id,
+      		"network_appliance_id": network_appliance_id,
          	"ch_number": ch_number,
          	"type": type,
          	"provider": provider,
@@ -655,20 +643,19 @@ docs:
          	"ch_type": ch_type,
          	"description": description      
       	  }
-        )]^(id)]
+        )]^(sitelinks_id)]
       )
   seaf.ta.services.backup:
     type: table
     headers:
-
-      - value: availabilityzone_id
-        text: Availability Zone ID
+      - value: name
+        text: Производитель и название СРК
         sortable: true
         align: left
         width: 20%
 
-      - value: name
-        text: Производитель и название СРК
+      - value: availabilityzone_id
+        text: Availability Zone ID
         sortable: true
         align: left
         width: 20%
@@ -702,7 +689,6 @@ docs:
         [[$."seaf.ta.services.backup".$spread().(
           $COMPONENT_ID := $keys()[0];
       	 $.*.{
-      		"id": $COMPONENT_ID ,
          	"availabilityzone_id": availabilityzone_id,
          	"name": name,
          	"path": path,
@@ -710,20 +696,19 @@ docs:
          	"server_id": server_id,      
          	"replication": replication  ? "Да": "Нет"
       	  }
-        )]^(id)]
+        )]^(name)]
       )
   seaf.ta.services.monitoring:
     type: table
     headers:
-
-      - value: availabilityzone_id
-        text: Availability Zone ID
+      - value: name
+        text: Производитель и название СРК
         sortable: true
         align: left
         width: 20%
 
-      - value: name
-        text: Производитель и название СРК
+      - value: availabilityzone_id
+        text: Availability Zone ID
         sortable: true
         align: left
         width: 20%
@@ -757,20 +742,19 @@ docs:
          	"server_id": server_id,          
          	"ha": ha  ? "Да": "Нет"
       	  }
-        )]^(id)]
+        )]^(name)]
       )
   seaf.ta.services.software:
     type: table
     headers:
-
-      - value: vendor
-        text: Производитель ПО
+      - value: name
+        text: Имя ПО
         sortable: true
         align: left
         width: 20%
 
-      - value: name
-        text: Имя ПО
+      - value: vendor
+        text: Производитель ПО
         sortable: true
         align: left
         width: 20%
@@ -818,5 +802,5 @@ docs:
          	"lic_qty": lic_qty,
          	"server_id": server_id      
       	  }
-        )]^(id)]
+        )]^(name)]
       )
