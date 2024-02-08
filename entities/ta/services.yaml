@@ -215,7 +215,7 @@ entities:
           $ref: "#/$defs/seaf.ta.services.base.entity"
           properties:
             compute_id:
-              title: Compute Service ID
+              title: Compute Service IDВчера
               type: string
             availabilityzone_id:
               title: В какие зоны доступности входит DC

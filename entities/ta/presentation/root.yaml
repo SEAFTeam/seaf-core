@@ -1,0 +1,4 @@
+imports:
+  - component_tables.yaml
+  - service_tables.yaml
+  - ta.yaml

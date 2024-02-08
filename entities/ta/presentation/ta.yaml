@@ -1,0 +1,12 @@
+# Описание документов
+entities:
+  seaf.ta:
+    presentations:
+
+      components_md:
+        type: markdown
+        template: templates/components.md
+
+      services_md:
+        type: markdown
+        template: templates/services.md

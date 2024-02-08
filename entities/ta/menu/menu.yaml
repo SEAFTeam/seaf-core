@@ -1,0 +1,16 @@
+entities:
+  # Структура меню
+  seaf.ta.menu:
+    menu: >
+      (
+          [
+              {
+                  'location': 'Архитектура/Техническая/Технические компоненты',
+                  'link': 'entities/seaf.ta/components_md'
+              },
+              {
+                  'location': 'Архитектура/Техническая/Технические сервисы',
+                  'link': 'entities/seaf.ta/services_md'
+              }
+          ]
+      )
