@@ -1,10 +1,10 @@
 # Презентация компонентов в табличном виде
 entities:
-  seaf.ta.component.tables:
+  seaf.ta.components.server:
     presentations:
-      server:
+      table:
         type: table
-        #location: Таблица тех компонентов (Bare Metal)
+
         headers:
           - value: fqdn_name
             text: Имя сервера FQDN
@@ -112,7 +112,10 @@ entities:
             )]^(fqdn_name)]
           )
 
-      hw_storage:
+
+  seaf.ta.components.hw_storage:
+    presentations:
+      table:
         type: table
         headers:
           - value: storage_id
@@ -173,7 +176,11 @@ entities:
             )]^(id)]
           )
 
-      network:
+
+
+  seaf.ta.components.network:
+    presentations:
+      table:
         type: table
         headers:
           - value: name
@@ -244,10 +251,13 @@ entities:
             )]^(name)]
           )
 
-      k8s_deployment:
+
+  seaf.ta.components.k8s_deployment:
+    presentations:
+      table:
         type: table
         headers:
-
+          -
           - value: name
             text: Имя компонента
             sortable: true
@@ -306,7 +316,10 @@ entities:
             )]^(name)]
           )
 
-      k8s_pod:
+
+  seaf.ta.components.k8s_pod:
+    presentations:
+      table:
         type: table
         headers:
           - value: name
@@ -409,8 +422,11 @@ entities:
               }
             )]^(name)]
           )
+  
 
-      k8s_container:
+  seaf.ta.components.k8s_container:
+    presentations:
+      table:
         type: table
         headers:
           - value: name
@@ -534,7 +550,9 @@ entities:
             )]^(name)]
           )
 
-      k8s_image:
+  seaf.ta.components.k8s_image:
+    presentations:
+      table:
         type: table
         headers:
           - value: name
@@ -581,7 +599,10 @@ entities:
             )]^(name)]
           )
 
-      user_device:
+
+  seaf.ta.components.user_device:
+    presentations:
+      table:
         type: table
         headers:
           - value: name

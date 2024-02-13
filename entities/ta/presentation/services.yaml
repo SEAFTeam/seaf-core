@@ -1,8 +1,8 @@
 # Презентация сервисов в табличном виде
 entities:
-  seaf.ta.service.tables:
+  seaf.ta.services.dc_region:
     presentations:
-      dc_region:
+      table:
         type: table
         headers:
           - value: region_name
@@ -21,7 +21,9 @@ entities:
             )]^(region_name)]
           )
 
-      dc_az:
+  seaf.ta.services.dc_az:
+    presentations:
+      table:
         type: table
         headers:
           - value: az_name
@@ -52,7 +54,10 @@ entities:
                 }
             )]^(az_name)]
           )
-      dc:
+
+  seaf.ta.services.dc:
+    presentations:
+      table:
         type: table
         headers:
           - value: dc_name
@@ -119,7 +124,9 @@ entities:
             )]^(dc_name)]
           )
 
-      office:
+  seaf.ta.services.office:
+    presentations:
+      table:
         type: table
         headers:
           - value: name
@@ -151,7 +158,10 @@ entities:
               }
             )]^(name)]
           )
-      cluster:
+
+  seaf.ta.services.cluster:
+    presentations:
+      table:
         type: table
         headers:
           - value: cluster_fqdn
@@ -197,7 +207,10 @@ entities:
               }
             )]^(cluster_fqdn)]
           )
-      storage:
+
+  seaf.ta.services.storage:
+    presentations:
+      table:
         type: table
         headers:
 
@@ -280,7 +293,10 @@ entities:
               }
             )]^(name)]
           )
-      cluster_virtualization:
+
+  seaf.ta.services.cluster_virtualization:
+    presentations:
+      table:
         type: table
         headers:
           - value: name
@@ -342,7 +358,9 @@ entities:
             )]^(name)]
           )      
 
-      k8s:
+  seaf.ta.services.k8_s:
+    presentations:
+      table:
         type: table
         headers:
           - value: cluster_fqdn
@@ -459,7 +477,9 @@ entities:
             )]^(cluster_fqdn)]
           )      
 
-      network:
+  seaf.ta.services.network:
+    presentations:
+      table:
         type: table
         headers:
           - value: ipnetowrk
@@ -569,7 +589,9 @@ entities:
             )]^(ipnetowrk)]
           )
 
-      network_links:
+  seaf.ta.services.network_links:
+    presentations:
+      table:
         type: table
         headers:
 
@@ -636,7 +658,10 @@ entities:
               }
             )]^(sitelinks_id)]
           )
-      backup:
+
+  seaf.ta.services.backup:
+    presentations:
+      table:
         type: table
         headers:
           - value: name
@@ -690,7 +715,9 @@ entities:
             )]^(name)]
           )
 
-      monitoring:
+  seaf.ta.services.monitoring:
+    presentations:
+      table:
         type: table
         headers:
           - value: name
@@ -737,7 +764,9 @@ entities:
             )]^(name)]
           )
 
-      software:
+  seaf.ta.services.software:
+    presentations:
+      table:
         type: table
         headers:
           - value: name

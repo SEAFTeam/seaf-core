@@ -1,4 +1,4 @@
 imports:
-  - component_tables.yaml
-  - service_tables.yaml
+  - components.yaml
+  - services.yaml
   - ta.yaml
