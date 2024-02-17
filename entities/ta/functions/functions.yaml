@@ -1,0 +1,32 @@
+functions:
+  seaf.ta:
+    get_refs: >
+     (
+      $component := $.c;
+      $context := $lookup($.entities,$component).**."properties";
+      $context.**."$ref".%;
+      $context.$spread().{ 
+      $keys()[0] : ($split($string($.**."$ref".%."$ref"),"/")[2]) 
+      }~>$merge();
+     )
+    get_titles: >
+     (
+       $component := $.c;
+       $schema := $lookup($.entities, $component).schema;
+       $titles := $merge(($schema.**."properties").$spread().{
+           $keys()[0] : $.*.title ? $.*.title : $keys()[0]   
+        });
+        $titles := $merge([$titles, {"type":"Тип", "description":"Описание"}]);
+      )
+    get_link: >
+     (
+       $href := $.hr~>$replace(/^(.*)(\.\w+)/,"$1");
+
+       $type($v) = 'string'?
+         $link := '/entities/' & $href & '/list?ta-component-id=' & $v:
+       $type($v) = 'array'? 
+          $link :=  $map($v, function($val){
+           '/entities/' & $href & '/list?ta-component-id=' & $val
+                      }):$link := $v;
+       /*$log("--> " & $link,["MTG"]);*/
+      )

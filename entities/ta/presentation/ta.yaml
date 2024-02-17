@@ -10,3 +10,62 @@ entities:
       services_md:
         type: markdown
         template: templates/services.md
+
+      list:
+        params:
+          type: object
+          properties:
+            ta-component-id:
+              title: Идентификатор спецификации
+              type: string
+            ta-component:
+              title: Наименование спецификации
+              type: string
+          required:
+            - ta-component-id
+            - ta-component
+        type: table
+        headers:
+          - value: attr
+            sortable: true
+            align: left
+            width: 20%
+
+          - value: attr_val
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+        source: >
+          (
+              $id := $params."ta-component-id";
+              $component := $params."ta-component";
+              $titles := $eval($.functions."seaf.ta".get_titles, [{"c":$component},$]);
+              $refs := $eval($.functions."seaf.ta".get_refs, [{"c":$component},$]);
+              $f4 := $.functions."seaf.ta".get_link;
+          
+              
+              $f2 := function($v){($type($v) = 'object')?($each($v, function ($v,$k){$lookup($titles, $k) & ": " & $v})):$v};          
+          
+              $f1 := function ($v){
+                               ($type($v) = 'object')?
+                               ($f2($v)):
+                               ($type($v) = 'array' and $count($keys($v)) > 0)?
+                               ($each($merge($v), function ($v,$k){$k & ": " &  $f2($v)});)
+                               :$string($v)~>$replace(/\[|\]/,"") 
+                            };
+          
+              $content := $lookup($lookup($, $component),$id);
+              /*$ttable := $join($each($content, function($v, $k) {"|**" & $lookup($titles, $k) & " :**| " & $v & "|\n"}), "");*/
+              $each($content, function($v, $k) {(
+                 $href := $lookup($refs,$k);
+                 $boolean($href)?(
+                    /*($log("Not empty " & $href,["MTG"]);*/
+                    {"attr":$lookup($titles, $k), "attr_val":$f1($v), "link":$eval($f4,{"hr":$href,"v":$v})};
+                   ):
+                   (
+                     {"attr":$lookup($titles, $k), "attr_val":$f1($v)}
+                   );        
+                 )});
+          )

@@ -11,27 +11,10 @@ entities:
             sortable: true
             align: left
             width: 20%
+            link: link
 
           - value: type
             text: Тип сервера
-            sortable: true
-            align: left
-            width: 20%
-
-          - value: virtualization_id
-            text: ID кластера виртуализации
-            sortable: true
-            align: left
-            width: 20%
-
-          - value: vendor
-            text: Производитель
-            sortable: true
-            align: left
-            width: 20%
-
-          - value: model
-            text: Модель
             sortable: true
             align: left
             width: 20%
@@ -48,44 +31,8 @@ entities:
             align: left
             width: 20%
 
-          - value: cpu
-            text: Процессор
-            sortable: true
-            align: left
-            width: 20%
-
-          - value: nic_qty
-            text: Количество NIC
-            sortable: true
-            align: left
-            width: 20%
-
-          - value: vlan
-            text: VLAN
-            sortable: true
-            align: left
-            width: 20%
-
-          - value: ram_qty
-            text: Количество RAM, GB
-            sortable: true
-            align: left
-            width: 20%
-
-          - value: disks
-            text: Диски
-            sortable: true
-            align: left
-            width: 20%
-
           - value: storage_id
             text: Подключенные СХД
-            sortable: true
-            align: left
-            width: 20%
-
-          - value: os
-            text: Операционная система
             sortable: true
             align: left
             width: 20%
@@ -107,11 +54,27 @@ entities:
                 "vlan": vlan,      
                 "vendor": vendor,
                 "model": model,      
-                "fqdn_name": fqdn_name
+                "fqdn_name": fqdn_name,
+                "link": '/entities/seaf.ta.components.server/list?ta-component-id=' & $COMPONENT_ID
               }
             )]^(fqdn_name)]
           )
+          
 
+      list:
+        title: Карточка спецификации сервера
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ({'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
 
   seaf.ta.components.hw_storage:
     presentations:
@@ -123,6 +86,7 @@ entities:
             sortable: true
             align: left
             width: 20%
+            link: link
 
           - value: dc_id
             text: ЦОД
@@ -171,12 +135,28 @@ entities:
                 "vendor": vendor,
                 "volume": volume,
                 "disk_type": disk_type,
-                "protocols": protocols
+                "protocols": protocols,
+                "link": '/entities/seaf.ta.components.hw_storage/list?ta-component-id=' & $COMPONENT_ID
               }
             )]^(id)]
           )
+          
+          
 
-
+      list:
+        title: Карточка спецификации системы хранения данных
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
 
   seaf.ta.components.network:
     presentations:
@@ -188,6 +168,7 @@ entities:
             sortable: true
             align: left
             width: 20%
+            link: link
 
           - value: dc_id
             text: ЦОД
@@ -246,12 +227,27 @@ entities:
                 "purpose": purpose,
                 "address": address,      
                 "description": description,      
-                "ta_component_type": ta_component_type
+                "ta_component_type": ta_component_type,
+                "link": '/entities/seaf.ta.components.network/list?ta-component-id=' & $COMPONENT_ID 
               }
             )]^(name)]
           )
+          
 
-
+      list:
+        title: Карточка спецификации сети
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
   seaf.ta.components.k8s_deployment:
     presentations:
       table:
@@ -263,6 +259,7 @@ entities:
             sortable: true
             align: left
             width: 20%
+            link: link
 
           - value: availabilityzone_id
             text: Availability Zone ID
@@ -311,12 +308,27 @@ entities:
                 "maxunavailable": maxunavailable,
                 "kubernetes_id": kubernetes_id,
                 "description": description,
-                "availabilityzone_id": availabilityzone_id      
+                "availabilityzone_id": availabilityzone_id,
+                "link": '/entities/seaf.ta.components.k8s_deployment/list?ta-component-id=' & $COMPONENT_ID 
               }
             )]^(name)]
           )
 
 
+      list:
+        title: Карточка спецификации
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации k8s deployment
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
   seaf.ta.components.k8s_pod:
     presentations:
       table:
@@ -327,6 +339,7 @@ entities:
             sortable: true
             align: left
             width: 20%
+            link: link
 
           - value: priorityclass
             text: priorityClass
@@ -418,12 +431,27 @@ entities:
                 "tmp_storage": tmp_storage,
                 "ml": ml  ? "Да": "Нет",    
                 "maxunavailable": maxunavailable,
-                "kubernetes_id": kubernetes_id
+                "kubernetes_id": kubernetes_id,
+                "link": '/entities/seaf.ta.components.k8s_pod/list?ta-component-id=' & $COMPONENT_ID 
               }
             )]^(name)]
           )
-  
+          
 
+      list:
+        title: Карточка спецификации k8s POD
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации k8s POD
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ({'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2] }; )
   seaf.ta.components.k8s_container:
     presentations:
       table:
@@ -434,6 +462,7 @@ entities:
             sortable: true
             align: left
             width: 20%
+            link: link
 
           - value: description
             text: Описание
@@ -545,11 +574,26 @@ entities:
                 "livenessprobe_count_restart": livenessprobe_count_restart,
                 "livenessprobe_count_disable": livenessprobe_count_disable,
                 "container_ram": container_ram,
-                "container_cpu": container_cpu   
+                "container_cpu": container_cpu,
+                "link": '/entities/seaf.ta.components.k8s_container/list?ta-component-id=' & $COMPONENT_ID
               }
             )]^(name)]
           )
 
+      list:
+        title: Карточка спецификации контейнера k8s
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
   seaf.ta.components.k8s_image:
     presentations:
       table:
@@ -560,6 +604,7 @@ entities:
             sortable: true
             align: left
             width: 20%
+            link: link
 
           - value: repo_path
             text: Используемый репозиторий
@@ -594,12 +639,27 @@ entities:
                 "repo_path": repo_path,
                 "repo_proved": repo_proved ? "Да": "Нет",
                 "image_size": image_size,    
-                "description": description
+                "description": description,
+                "link": '/entities/seaf.ta.components.k8s_image/list?ta-component-id=' & $COMPONENT_ID
               }
             )]^(name)]
           )
+          
 
-
+      list:
+        title: Карточка спецификации k8s_image
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
   seaf.ta.components.user_device:
     presentations:
       table:
@@ -610,6 +670,7 @@ entities:
             sortable: true
             align: left
             width: 20%
+            link: link
 
           - value: device_type
             text: Тип устройства относительно среды использования
@@ -630,7 +691,22 @@ entities:
              $.*.{
                 "name": name,
                 "device_type": device_type,    
-                "description": description
+                "description": description,
+                "link": '/entities/seaf.ta.components.user_device/list?ta-component-id=' & $COMPONENT_ID
               }
             )]^(name)]
           )
+      list:
+        title: Карточка спецификации пользовательского устройства
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)

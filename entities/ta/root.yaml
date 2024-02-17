@@ -6,3 +6,4 @@ imports:
   - services.yaml
   - presentation/root.yaml
   - menu/root.yaml
+  - functions/root.yaml
