@@ -45,12 +45,8 @@ entities:
             region_id:
               title: Region ID
               type: string
-            region_name:
-              title: Имя региона
-              type: string
           required:
             - region_id
-            - region_name
 
   seaf.ta.services.dc_az:
     title: Availability Zone
@@ -67,9 +63,6 @@ entities:
             availabilityzone_id:
               title: Availability Zone ID
               type: string
-            az_name:
-              title: Имя зоны доступности
-              type: string
             az_vendor:
               title: Поставщик
               type: string
@@ -78,7 +71,6 @@ entities:
               $ref: "#/$rels/seaf.ta.services.dc_region.dc_region"
           required:
             - availabilityzone_id
-            - az_name
             - az_vendor
             - region_id
 
@@ -96,9 +88,6 @@ entities:
           properties:
             dc_id:
               title: Datacenter ID
-              type: string
-            dc_name:
-              title: Имя ЦОД/Серверной комнаты
               type: string
             dc_ownership:
               title: Тип владения ЦОД
@@ -147,9 +136,6 @@ entities:
           properties:
             office_id:
               title: Office ID
-              type: string
-            name:
-              title: Имя офиса
               type: string
             address:
               title: Адрес офиса или местоположения
@@ -312,9 +298,6 @@ entities:
                   type: array
                   items:
                     $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
-                name:
-                  title: Имя хранилища
-                  type: string
                 software:
                   title: ПО реализующее S3
                   type: string
@@ -334,7 +317,6 @@ entities:
               required:
                 - storage_id
                 - type
-                - name
                 - availabilityzone_id
               additionalProperties: false
       type: object
@@ -356,9 +338,6 @@ entities:
           properties:
             virtualization_id:
               title: Virtualization cluster ID
-              type: string
-            name:
-              title: Имя хранилища
               type: string
             hypervisor:
               title: Гипервизор
@@ -390,7 +369,6 @@ entities:
           required:
             - virtualization_id
             - availabilityzone_id
-            - name
 
   seaf.ta.services.k8s:
     title: Kubernetes Cluster
@@ -654,9 +632,6 @@ entities:
               type: array
               items:
                 $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
-            name:
-              title: Производитель и название СРК
-              type: string
             path:
               title: Место хранения РК
               type: string
@@ -674,7 +649,6 @@ entities:
           required:
             - backup_id
             - availabilityzone_id
-            - name
             - path
             - schedule
 
@@ -716,7 +690,6 @@ entities:
             - monitoring_id
             - availabilityzone_id
             - role
-            - name
             - ha
       type: object
       patternProperties:
@@ -741,9 +714,6 @@ entities:
             vendor:
               title: Производитель ПО
               type: string
-            name:
-              title: Имя ПО
-              type: string
             type:
               title: Тип лицензии
               type: string
@@ -765,7 +735,6 @@ entities:
           required:
             - software_id
             - vendor
-            - name
             - type
             - support
             - expiration
