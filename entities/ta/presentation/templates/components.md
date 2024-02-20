@@ -1,23 +1,23 @@
 ## Servers 
-![Servers ](@entity/seaf.ta.component.tables/server)
+![Servers ](@entity/seaf.ta.components.server/table)
 
 ## Hardware Storage
-![Hardware Storage](@entity/seaf.ta.component.tables/hw_storage)
+![Hardware Storage](@entity/seaf.ta.components.hw_storage/table)
 
 ## Network Appliance
-![Hardware Network Appliance](@entity/seaf.ta.component.tables/network)
+![Hardware Network Appliance](@entity/seaf.ta.components.network/table)
 
 ## K8s Deployment
-![K8s Deployment](@entity/seaf.ta.component.tables/k8s_deployment)
+![K8s Deployment](@entity/seaf.ta.components.k8s_deployment/table)
 
 ## K8s POD
-![POD K8s](@entity/seaf.ta.component.tables/k8s_pod)
+![POD K8s](@entity/seaf.ta.components.k8s_pod/table)
 
 ## K8s Container
-![K8s Container](@entity/seaf.ta.component.tables/k8s_container)
+![K8s Container](@entity/seaf.ta.components.k8s_container/table)
 
 ## K8s Image ПО для развёртывания
-![Image K8s](@entity/seaf.ta.component.tables/k8s_image)
+![Image K8s](@entity/seaf.ta.components.k8s_image/table)
 
 ## User device
-![User device](@entity/seaf.ta.component.tables/user_device)
+![User device](@entity/seaf.ta.components.user_device/table)

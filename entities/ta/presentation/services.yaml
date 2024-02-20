@@ -1,0 +1,768 @@
+# Презентация сервисов в табличном виде
+entities:
+  seaf.ta.services.dc_region:
+    presentations:
+      table:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: description
+            text: Описание
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+        source: >
+          (
+            [[$."seaf.ta.services.dc_region".$spread().(
+              $COMPONENT_ID := $keys()[0];
+               $.*.{
+              "title": title,
+              "description": description,          
+              "link": '/entities/seaf.ta.services.dc_region/list?ta-component-id=' & $COMPONENT_ID 
+                }
+            )]^(region_name)]
+          )
+
+      list:
+        title: Регион
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
+  seaf.ta.services.dc_az:
+    presentations:
+      table:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: description
+            text: Описание
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: az_vendor
+            text: Поставщик
+            sortable: true
+            align: left
+            width: 20%
+
+          - value: region_id
+            text: В какой регион входит зона доступности
+            sortable: true
+            align: left
+            width: 20%
+        source: >
+          (
+            [[$."seaf.ta.services.dc_az".$spread().(
+              $COMPONENT_ID := $keys()[0];
+               $.*.{
+              "title": title,
+              "description": description,
+              "az_vendor": az_vendor,
+              "region_id": region_id,
+              "link": '/entities/seaf.ta.services.dc_az/list?ta-component-id=' & $COMPONENT_ID 
+                }
+            )]^(az_name)]
+          )
+
+      list:
+        title: Зона доступности
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
+  seaf.ta.services.dc:
+    presentations:
+      table:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: description
+            text: Описание
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: dc_vendor
+            text: Поставщик
+            sortable: true
+            align: left
+            width: 20%
+
+          - value: availabilityzone_id
+            text: В какие зоны доступности входит DC
+            sortable: true
+            align: left
+            width: 20%
+        source: >
+          (
+            [[$."seaf.ta.services.dc".$spread().(
+              $COMPONENT_ID := $keys()[0];
+             $.*.{
+                "title": title,
+                "description": description,
+                "dc_vendor": dc_vendor,
+                "availabilityzone_id": availabilityzone_id,
+                "link": '/entities/seaf.ta.services.dc/list?ta-component-id=' & $COMPONENT_ID
+              }
+            )]^(dc_name)]
+          )
+
+      list:
+        title: Центр обработки данных
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
+  seaf.ta.services.office:
+    presentations:
+      table:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: description
+            text: Описание
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: address
+            text: Адрес офиса или местоположения
+            sortable: true
+            align: left
+            width: 20%
+
+          - value: description
+            text:  Описание использования
+            sortable: true
+            align: left
+            width: 20%
+
+        source: >
+          (
+            [[$."seaf.ta.services.office".$spread().(
+              $COMPONENT_ID := $keys()[0];
+             $.*.{
+                "title": title,
+                "description": description,
+                "address": address,
+                "link": '/entities/seaf.ta.services.office/list?ta-component-id=' & $COMPONENT_ID
+              }
+            )]^(name)]
+          )
+
+      list:
+        title: Офис
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)    
+
+  seaf.ta.services.cluster:
+    presentations:
+      table:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: description
+            text: Описание
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: cluster_fqdn
+            text: FQDN имя кластера
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: availabilityzone_id
+            text: Имя зоны доступности
+            sortable: true
+            align: left
+            width: 20%
+
+          - value: description
+            text: Описание кластера
+            sortable: true
+            align: left
+            width: 20%
+
+          - value: server_id
+            text: Ноды кластера
+            sortable: true
+            align: left
+            width: 20%
+
+          - value: cluster_reservation_type
+            text: Тип резервирования кластера
+            sortable: true
+            align: left
+            width: 20%
+
+        source: >
+          (
+            [[$."seaf.ta.services.cluster".$spread().(
+              $COMPONENT_ID := $keys()[0];
+             $.*.{
+                "title": title,
+                "description": description,
+                "availabilityzone_id": availabilityzone_id,
+                "cluster_fqdn": cluster_fqdn,
+                "server_id": server_id,
+                "cluster_reservation_type": cluster_reservation_type,
+                "link": '/entities/seaf.ta.services.cluster/list?ta-component-id=' & $COMPONENT_ID
+              }
+            )]^(cluster_fqdn)]
+          )
+
+      list:
+        title: Кластер
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
+  seaf.ta.services.storage:
+    presentations:
+      table:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: description
+            text: Описание
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: type
+            text: Тип хранилища
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: availabilityzone_id
+            text: Availability Zone ID
+            sortable: true
+            align: left
+            width: 20%
+
+        source: >
+          (
+            [[$."seaf.ta.services.storage".$spread().(
+              $COMPONENT_ID := $keys()[0];
+             $.*.{
+                "title": title,
+                "description": description,
+                "type": type,
+                "availabilityzone_id": availabilityzone_id,
+                "link": '/entities/seaf.ta.services.storage/list?ta-component-id=' & $COMPONENT_ID
+              }
+            )]^(title)]
+          )
+
+      list:
+        title: Сервис СХД
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
+  seaf.ta.services.cluster_virtualization:
+    presentations:
+      table:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: description
+            text: Описание
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: availabilityzone_id
+            text: Availability Zone ID
+            sortable: true
+            align: left
+            width: 20%
+
+
+        source: >
+          (
+            [[$."seaf.ta.services.cluster_virtualization".$spread().(
+              $COMPONENT_ID := $keys()[0];
+             $.*.{
+                "title": title,
+                "description": description,
+                "availabilityzone_id": availabilityzone_id,
+                  "link": '/entities/seaf.ta.services.cluster_virtualization/list?ta-component-id=' & $COMPONENT_ID
+              }
+            )]^(title)]
+          )      
+
+      list:
+        title: Кластер виртуальных серверов
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
+  seaf.ta.services.k8s:
+    presentations:
+      table:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: description
+            text: Описание
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: cluster_fqdn
+            text: Имя кластера Kubernetes
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: availabilityzone_id
+            text: Availability Zone ID
+            sortable: true
+            align: left
+            width: 20%
+
+        source: >
+          (
+            [[$."seaf.ta.services.k8s".$spread().(
+              $COMPONENT_ID := $keys()[0];
+             $.*.{
+                "title": title,
+                "description": description,
+                "availabilityzone_id": availabilityzone_id,
+                "cluster_fqdn": cluster_fqdn,
+                "link": '/entities/seaf.ta.services.k8s/list?ta-component-id=' & $COMPONENT_ID
+              }
+            )]^(cluster_fqdn)]
+          )
+      list:
+        title: Кластер k8s
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
+  seaf.ta.services.network:
+    presentations:
+      table:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: description
+            text: Описание
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: ipnetowrk
+            text: IP-сеть и маска
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: type
+            text: Тип сети
+            sortable: true
+            align: left
+            width: 20%
+
+          - value: dc_id
+            text: Datacenter ID
+            sortable: true
+            align: left
+            width: 20%
+
+          - value: office_id
+            text: Офис
+            sortable: true
+            align: left
+            width: 20%
+
+          - value: availabilityzone_id
+            text: Availability Zone ID
+            sortable: true
+            align: left
+            width: 20%
+
+        source: >
+          (
+            [[$."seaf.ta.services.network".$spread().(
+              $COMPONENT_ID := $keys()[0];
+             $.*.{
+                "title": title,
+                "description": description,
+                "type": type,
+                "dc_id": dc_id,
+                "office_id": office_id,
+                "availabilityzone_id": availabilityzone_id,
+                "link": '/entities/seaf.ta.services.network/list?ta-component-id=' & $COMPONENT_ID
+              }
+            )]^(type)]
+          )
+
+      list:
+        title: Сервис доступа к ресурсам сети
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
+  seaf.ta.services.network_links:
+    presentations:
+      table:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: description
+            text: Описание
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: networklinks_id
+            text: Network Links ID
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+        source: >
+          (
+            [[$."seaf.ta.services.network_links".$spread().(
+              $COMPONENT_ID := $keys()[0];
+             $.*.{
+                "title": title,
+                "description": description,
+                "networklinks_id": networklinks_id,
+                "link": '/entities/seaf.ta.services.network_links/list?ta-component-id=' & $COMPONENT_ID
+              }
+            )]^(title)]
+          )
+
+      list:
+        title: Сервис UP-LINK
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
+  seaf.ta.services.backup:
+    presentations:
+      table:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: description
+            text: Описание
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: availabilityzone_id
+            text: Availability Zone ID
+            sortable: true
+            align: left
+            width: 20%
+
+        source: >
+          (
+            [[$."seaf.ta.services.backup".$spread().(
+              $COMPONENT_ID := $keys()[0];
+             $.*.{
+                "title": title,
+                "description": description,
+                "availabilityzone_id": availabilityzone_id,
+                "link": '/entities/seaf.ta.services.backup/list?ta-component-id=' & $COMPONENT_ID
+              }
+            )]^(name)]
+          )
+
+      list:
+        title: Сервис резервного копирования
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
+  seaf.ta.services.monitoring:
+    presentations:
+      table:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: description
+            text: Описание
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: availabilityzone_id
+            text: Availability Zone ID
+            sortable: true
+            align: left
+            width: 20%
+
+          - value: role
+            text: Роль
+            sortable: true
+            align: left
+            width: 20%
+
+        source: >
+          (
+            [[$."seaf.ta.services.monitoring".$spread().(
+              $COMPONENT_ID := $keys()[0];
+             $.*.{
+                "title": title,
+                "description": description,
+                "availabilityzone_id": availabilityzone_id,
+                "role": role,
+                "link": '/entities/seaf.ta.services.monitoring/list?ta-component-id=' & $COMPONENT_ID
+              }
+            )]^(title)]
+          )
+
+      list:
+        title: Сервис мониторинга
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
+  seaf.ta.services.software:
+    presentations:
+      table:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: description
+            text: Описание
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: vendor
+            text: Производитель ПО
+            sortable: true
+            align: left
+            width: 20%
+
+        source: >
+          (
+            [[$."seaf.ta.services.software".$spread().(
+              $COMPONENT_ID := $keys()[0];
+             $.*.{
+                "title": title,
+                "description": description,
+                "vendor": vendor,
+                "link": '/entities/seaf.ta.services.software/list?ta-component-id=' & $COMPONENT_ID
+              }
+            )]^(title)]
+          )
+      list:
+        title: Программное обеспечение
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)

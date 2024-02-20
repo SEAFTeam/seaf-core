@@ -272,9 +272,6 @@ entities:
             network_appliance_id:
               title: Network Appliance ID
               type: string
-            name:
-              title: Имя сетевого устройства
-              type: string
             model:
               title: Модель и производитель
               type: string
@@ -303,7 +300,6 @@ entities:
               $ref: "#/$rels/seaf.ta.services.office.office"
           required:
             - network_appliance_id
-            - name
             - model
             - realization_type
       type: object
@@ -327,9 +323,6 @@ entities:
             user_device_id:
               title: User Device
               type: string
-            name:
-              title: Имя устройства
-              type: string
             device_type:
               title: Тип устройства относительно среды использования
               type: string
@@ -340,5 +333,4 @@ entities:
                 $ref: "#/$rels/seaf.ta.services.network.network"
           required:
             - user_device_id
-            - name
             - device_type
