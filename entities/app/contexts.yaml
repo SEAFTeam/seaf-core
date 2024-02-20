@@ -5,3 +5,18 @@ entities:
     title: Контексты
     description: >
       Представляет указанные архитектурные компоненты в виде диаграмм.
+# todo Нужно будет в DocHub базовой метамодели исправить паттерн потом удалить это переопределение
+    presentations:
+     plantuml:
+        params:
+          type: object
+          properties:
+            "dh-context-id":
+              title: Идентификатор контекста
+              type: string
+              pattern: "^[a-zA-Z][a-zA-Z0-9_-]*(\\.[a-zA-Z0-9][a-zA-Z0-9_-]*)*$"
+            "dh-focus-id":
+              title: Идентификатор требующий подсветку
+              type: string
+              pattern: "^[a-zA-Z][a-zA-Z0-9_-]*(\\.[a-zA-Z0-9][a-zA-Z0-9_-]*)*$"
+# todo до сюда
