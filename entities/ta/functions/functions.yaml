@@ -6,7 +6,7 @@ functions:
       $context := $lookup($.entities,$component).**."properties";
       $context.**."$ref".%;
       $context.$spread().{ 
-      $keys()[0] : ($split($string($.**."$ref".%."$ref"),"/")[2]) 
+      $keys()[0] : ($split($string($.**."$ref".%."$ref"),"/")[2])~>$replace(/^(.*)(\.\w+)$/,"$1") 
       }~>$merge();
      )
     get_titles: >
@@ -23,8 +23,7 @@ functions:
      )
     get_link: >
      (
-       $href := $.hr~>$replace(/^(.*)(\.\w+)/,"$1");
-
+       $href := $.hr;
        $type($v) = 'string'?
          $link := '/entities/' & $href & '/list?ta-component-id=' & $v:
        $type($v) = 'array'? 
