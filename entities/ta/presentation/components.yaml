@@ -5,26 +5,24 @@ entities:
       table:
         type: table
         headers:
-          - value: title
-            text: Наименование
-            sortable: true
-            align: left
-            width: 20%
-            link: link
-
-          - value: description
-            text: Описание
-            sortable: true
-            align: left
-            width: 20%
-            link: link
-
           - value: fqdn_name
             text: Имя сервера FQDN
             sortable: true
             align: left
             width: 20%
             link: link
+
+          - value: title
+            text: Тип
+            sortable: true
+            align: left
+            width: 20%
+
+          - value: description
+            text: Описание
+            sortable: true
+            align: left
+            width: 20%
 
           - value: dc_id
             text: ЦОД
@@ -87,7 +85,6 @@ entities:
             sortable: true
             align: left
             width: 20%
-            link: link
 
           - value: dc_id
             text: ЦОД
@@ -106,7 +103,7 @@ entities:
             [[$."seaf.ta.components.hw_storage".$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
-                "title": title,
+                "title": storage_id,
                 "description": description,
                 "dc_id": dc_id,
                 "office": office,
@@ -144,12 +141,17 @@ entities:
             width: 20%
             link: link
 
+          - value: ip
+            text: IP адрес
+            sortable: true
+            align: left
+            width: 20%
+
           - value: description
             text: Описание
             sortable: true
             align: left
             width: 20%
-            link: link
 
           - value: dc_id
             text: ЦОД
@@ -171,6 +173,7 @@ entities:
                 "title": title,
                 "description": description,
                 "dc_id": dc_id,
+                "ip": address,
                 "office": office,
                 "model": model,
                 "link": '/entities/seaf.ta.components.network/list?ta-component-id=' & $COMPONENT_ID 

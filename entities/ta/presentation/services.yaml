@@ -17,7 +17,6 @@ entities:
             sortable: true
             align: left
             width: 20%
-            link: link
 
         source: >
           (
@@ -62,7 +61,6 @@ entities:
             sortable: true
             align: left
             width: 20%
-            link: link
 
           - value: az_vendor
             text: Поставщик
@@ -120,7 +118,6 @@ entities:
             sortable: true
             align: left
             width: 20%
-            link: link
 
           - value: dc_vendor
             text: Поставщик
@@ -178,7 +175,6 @@ entities:
             sortable: true
             align: left
             width: 20%
-            link: link
 
           - value: address
             text: Адрес офиса или местоположения
@@ -225,8 +221,8 @@ entities:
       table:
         type: table
         headers:
-          - value: title
-            text: Наименование
+          - value: cluster_fqdn
+            text: FQDN имя кластера
             sortable: true
             align: left
             width: 20%
@@ -237,14 +233,6 @@ entities:
             sortable: true
             align: left
             width: 20%
-            link: link
-
-          - value: cluster_fqdn
-            text: FQDN имя кластера
-            sortable: true
-            align: left
-            width: 20%
-            link: link
 
           - value: availabilityzone_id
             text: Имя зоны доступности
@@ -317,14 +305,12 @@ entities:
             sortable: true
             align: left
             width: 20%
-            link: link
 
           - value: type
             text: Тип хранилища
             sortable: true
             align: left
             width: 20%
-            link: link
 
           - value: availabilityzone_id
             text: Availability Zone ID
@@ -337,7 +323,7 @@ entities:
             [[$."seaf.ta.services.storage".$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
-                "title": title,
+                "title": storage_id,
                 "description": description,
                 "type": type,
                 "availabilityzone_id": availabilityzone_id,
@@ -377,7 +363,6 @@ entities:
             sortable: true
             align: left
             width: 20%
-            link: link
 
           - value: availabilityzone_id
             text: Availability Zone ID
@@ -391,7 +376,7 @@ entities:
             [[$."seaf.ta.services.cluster_virtualization".$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
-                "title": title,
+                "title": virtualization_id,
                 "description": description,
                 "availabilityzone_id": availabilityzone_id,
                   "link": '/entities/seaf.ta.services.cluster_virtualization/list?ta-component-id=' & $COMPONENT_ID
@@ -418,8 +403,9 @@ entities:
       table:
         type: table
         headers:
-          - value: title
-            text: Наименование
+
+          - value: cluster_fqdn
+            text: Имя кластера Kubernetes
             sortable: true
             align: left
             width: 20%
@@ -430,14 +416,6 @@ entities:
             sortable: true
             align: left
             width: 20%
-            link: link
-
-          - value: cluster_fqdn
-            text: Имя кластера Kubernetes
-            sortable: true
-            align: left
-            width: 20%
-            link: link
 
           - value: availabilityzone_id
             text: Availability Zone ID
@@ -478,7 +456,7 @@ entities:
         type: table
         headers:
           - value: title
-            text: Наименование
+            text: IP адрес
             sortable: true
             align: left
             width: 20%
@@ -489,14 +467,6 @@ entities:
             sortable: true
             align: left
             width: 20%
-            link: link
-
-          - value: ipnetowrk
-            text: IP-сеть и маска
-            sortable: true
-            align: left
-            width: 20%
-            link: link
 
           - value: type
             text: Тип сети
@@ -527,7 +497,7 @@ entities:
             [[$."seaf.ta.services.network".$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
-                "title": title,
+                "title": ipnetowrk,
                 "description": description,
                 "type": type,
                 "dc_id": dc_id,
@@ -569,14 +539,13 @@ entities:
             sortable: true
             align: left
             width: 20%
-            link: link
 
           - value: networklinks_id
             text: Network Links ID
             sortable: true
             align: left
             width: 20%
-            link: link
+
         source: >
           (
             [[$."seaf.ta.services.network_links".$spread().(
