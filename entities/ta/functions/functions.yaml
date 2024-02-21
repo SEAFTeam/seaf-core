@@ -33,7 +33,3 @@ functions:
                       }):$link := $v;
        /*$log("--> " & $link,["MTG"]);*/
       )
-    get_component_link: >
-      ( 
-       $component_id := $.c_id;      
-     )
