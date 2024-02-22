@@ -6,29 +6,29 @@ functions:
       $context := $lookup($.entities,$component).**."properties";
       $context.**."$ref".%;
       $context.$spread().{ 
-      $keys()[0] : ($split($string($.**."$ref".%."$ref"),"/")[2]) 
+      $keys()[0] : ($split($string($.**."$ref".%."$ref"),"/")[2])~>$replace(/^(.*)(\.\w+)$/,"$1") 
       }~>$merge();
      )
     get_titles: >
      (
-       $component := $.c;
-       $base_name := $lookup($.entities, $component).*."patternProperties".*."$ref"~>$replace("#/$defs/", "");
-       $base_prop := $lookup($.entities.**, $base_name).properties;
-       $component_prop := $lookup($.entities, $component).schema.**.properties;     
-       $titles := $merge(($merge([$component_prop, $base_prop])).$spread().{
-           $keys()[0] : $.*.title ? $.*.title : $keys()[0]
-        });
-        $titles := $merge([$titles, {"type":"Тип", "description":"Описание"}]);
-        
-      )
+            $component := $.c;
+            $base_name := $lookup($.entities, $component).*."patternProperties".*."$ref"~>$replace(/.*\/(.*)/, "$1");
+            /*$log("--> " & $lookup($.entities, $component).*."patternProperties".*."$ref",["MTG"]);*/
+            $base_prop := $lookup($.entities.**, $base_name).properties;
+            $component_prop := $lookup($.entities, $component).schema.**.properties;     
+            $titles := $merge(($merge([$component_prop, $base_prop])).$spread().{
+                $keys()[0] : $.*.title ? $.*.title : $keys()[0]
+             });
+             $titles := $merge([$titles, {"title":"Наименование", "type":"Тип", "description":"Описание"}]);     
+     )
     get_link: >
      (
-       $href := $.hr~>$replace(/^(.*)(\.\w+)/,"$1");
-
+       $href := $.hr;
+       $v:=$.val;
        $type($v) = 'string'?
-             $link := '/entities/' & $href & '/list?ta-component-id=' & $v:
+          $link := '/entities/' & $href & '/list?ta-component-id=' & $v:
        $type($v) = 'array'? 
-             $count($v) >1?($link:=$v;$log("--> " & $link,["MTG"]);):$link :=  $map($v, function($val){'/entities/' & $href & '/list?ta-component-id=' & $val}):
-       $link := $v;
-       /*$log("--> " & $link,["MTG"]);*/
+          $count($v) >1?($link:=$v;$log("-+-> " & $link,["MTG"]);):$link :=  $map($v, function($val){'/entities/' & $href & '/list?ta-component-id=' & $val}):
+          $link := $v;
+          /*$log("-*-> "& $link,["MTG"]);*/
       )
