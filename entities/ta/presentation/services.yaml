@@ -137,7 +137,7 @@ entities:
 
         source: >
           (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.dc"}, $]);
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.dc"}, $]);          
             [[$."seaf.ta.services.dc".$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
@@ -248,21 +248,20 @@ entities:
             width: 20%
             link: avail_link
 
-
         source: >
           (
             $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.cluster"}, $]);
+            $get_link := $.functions."seaf.ta".get_link;
             [[$."seaf.ta.services.cluster".$spread().(
               $COMPONENT_ID := $keys()[0];
-             $log("++> " & "/entities/"& $refs."availabilityzone_id" &"/list?ta-component-id=" & availabilityzone_id,["MTG"]);
              $.*.{
                 "description": description,
                 "availabilityzone_id": availabilityzone_id,
                 "cluster_fqdn": cluster_fqdn,
                 "link": '/entities/seaf.ta.services.cluster/list?ta-component-id=' & $COMPONENT_ID,
-                "avail_link" : "/entities/"& $refs."availabilityzone_id" &"/list?ta-component-id=" & availabilityzone_id
+                "avail_link" :  $eval($get_link,{"hr":$refs."availabilityzone_id","val":availabilityzone_id})
               }
-              
+          
               )]^(cluster_fqdn)];  
           )
 
@@ -315,6 +314,7 @@ entities:
         source: >
           (
             $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.storage"}, $]);
+            $get_link := $.functions."seaf.ta".get_link;
             [[$."seaf.ta.services.storage".$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
@@ -323,9 +323,9 @@ entities:
                 "type": type,
                 "availabilityzone_id": availabilityzone_id,
                 "link": '/entities/seaf.ta.services.storage/list?ta-component-id=' & $COMPONENT_ID,
-                "avail_link" : "/entities/"& $refs."availabilityzone_id" &"/list?ta-component-id=" & availabilityzone_id
+                "avail_link" :  $eval($get_link,{"hr":$refs."availabilityzone_id","val":availabilityzone_id})
               }
-            )]^(title)]
+            )]^(storage_id)]
           )
 
       list:
@@ -370,16 +370,18 @@ entities:
         source: >
           ( 
             $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.cluster_virtualization"}, $]);
+            $get_link := $.functions."seaf.ta".get_link;
             [[$."seaf.ta.services.cluster_virtualization".$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": virtualization_id,
                 "description": description,
                 "availabilityzone_id": availabilityzone_id,
-                "link": '/entities/seaf.ta.services.cluster_virtualization/list?ta-component-id=' & $COMPONENT_ID,
-                "avail_link" : "/entities/"& $refs."availabilityzone_id" &"/list?ta-component-id=" & availabilityzone_id
+                "avail_link" :  $eval($get_link,{"hr":$refs."availabilityzone_id","val":availabilityzone_id}),         
+                "link": '/entities/seaf.ta.services.cluster_virtualization/list?ta-component-id=' & $COMPONENT_ID
+          
               }
-            )]^(title)]
+            )]^(virtualization_id)]
           )      
 
       list:
@@ -420,9 +422,12 @@ entities:
             sortable: true
             align: left
             width: 20%
+            link: avail_link
 
         source: >
           (
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.k8s"}, $]);
+            $get_link := $.functions."seaf.ta".get_link;
             [[$."seaf.ta.services.k8s".$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
@@ -430,6 +435,7 @@ entities:
                 "description": description,
                 "availabilityzone_id": availabilityzone_id,
                 "cluster_fqdn": cluster_fqdn,
+                "avail_link" :  $eval($get_link,{"hr":$refs."availabilityzone_id","val":availabilityzone_id}),
                 "link": '/entities/seaf.ta.services.k8s/list?ta-component-id=' & $COMPONENT_ID
               }
             )]^(cluster_fqdn)]
@@ -479,12 +485,12 @@ entities:
             width: 20%
             link: dc_link
 
-
           - value: office_id
             text: Офис
             sortable: true
             align: left
             width: 20%
+            link: o_link
 
           - value: availabilityzone_id
             text: Availability Zone ID
@@ -496,6 +502,7 @@ entities:
         source: >
           (
             $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.network"}, $]);
+            $get_link := $.functions."seaf.ta".get_link;
             [[$."seaf.ta.services.network".$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
@@ -506,8 +513,9 @@ entities:
                 "office_id": office_id,
                 "availabilityzone_id": availabilityzone_id,
                 "link": '/entities/seaf.ta.services.network/list?ta-component-id=' & $COMPONENT_ID,
-                "dc_link" : "/entities/"& $refs."dc_id" &"/list?ta-component-id=" & dc_id,
-                "avail_link" : "/entities/"& $refs."availabilityzone_id" &"/list?ta-component-id=" & availabilityzone_id
+                "dc_link" :  $eval($get_link,{"hr":$refs."dc_id","val":dc_id}),
+                "o_link" :  $eval($get_link,{"hr":$refs."office_id","val":office_id}),
+                "avail_link" :  $eval($get_link,{"hr":$refs."availabilityzone_id","val":availabilityzone_id})
               }
             )]^(type)]
           )
@@ -594,22 +602,25 @@ entities:
             sortable: true
             align: left
             width: 20%
-            link: link
 
           - value: availabilityzone_id
             text: Availability Zone ID
             sortable: true
             align: left
             width: 20%
+            link: avail_link
 
         source: >
           (
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.backup"}, $]);
+            $get_link := $.functions."seaf.ta".get_link;
             [[$."seaf.ta.services.backup".$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": title,
                 "description": description,
                 "availabilityzone_id": availabilityzone_id,
+                "avail_link" :  $eval($get_link,{"hr":$refs."availabilityzone_id","val":availabilityzone_id}),
                 "link": '/entities/seaf.ta.services.backup/list?ta-component-id=' & $COMPONENT_ID
               }
             )]^(name)]
@@ -646,13 +657,13 @@ entities:
             sortable: true
             align: left
             width: 20%
-            link: link
 
           - value: availabilityzone_id
             text: Availability Zone ID
             sortable: true
             align: left
             width: 20%
+            link: avail_link
 
           - value: role
             text: Роль
@@ -662,6 +673,8 @@ entities:
 
         source: >
           (
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.monitoring"}, $]);
+            $get_link := $.functions."seaf.ta".get_link;
             [[$."seaf.ta.services.monitoring".$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
@@ -669,6 +682,7 @@ entities:
                 "description": description,
                 "availabilityzone_id": availabilityzone_id,
                 "role": role,
+                "avail_link" :  $eval($get_link,{"hr":$refs."availabilityzone_id","val":availabilityzone_id}),
                 "link": '/entities/seaf.ta.services.monitoring/list?ta-component-id=' & $COMPONENT_ID
               }
             )]^(title)]

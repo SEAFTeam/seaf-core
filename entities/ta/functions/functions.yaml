@@ -24,11 +24,11 @@ functions:
     get_link: >
      (
        $href := $.hr;
+       $v:=$.val;
        $type($v) = 'string'?
-         $link := '/entities/' & $href & '/list?ta-component-id=' & $v:
+          $link := '/entities/' & $href & '/list?ta-component-id=' & $v:
        $type($v) = 'array'? 
-          $link :=  $map($v, function($val){
-           '/entities/' & $href & '/list?ta-component-id=' & $val
-                      }):$link := $v;
-       /*$log("--> " & $link,["MTG"]);*/
+          $count($v) >1?($link:=$v;$log("-+-> " & $link,["MTG"]);):$link :=  $map($v, function($val){'/entities/' & $href & '/list?ta-component-id=' & $val}):
+          $link := $v;
+          /*$log("-*-> "& $link,["MTG"]);*/
       )
