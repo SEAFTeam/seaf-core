@@ -21,7 +21,6 @@ functions:
                              ):$lookup($.entities.**, $v).properties
                     )
                 }))~>$merge();
-            /*$component_prop := $lookup($.entities, $component).schema.**.properties;*/   
             $titles := $merge($prop.$spread().{
                 $keys()[0] : $.*.title ? $.*.title : $keys()[0]
              });
