@@ -12,21 +12,20 @@ functions:
     get_titles: >
      (
             $component := $.c;
-            $def := ($lookup($.entities, $component).schema.**."$ref"~>$map(
-                     function($v){$contains($v, "def")?$v~>$replace(/.*\/(.*)/, "$1")}));
-            $base_prop := $lookup($.entities.**, $def[0]).properties;
-            $component_prop := $lookup($.entities, $component).schema.**.properties;     
-            $titles := $merge(($merge([$component_prop, $base_prop])).$spread().{
+            $prop := ($lookup($.entities, $component).schema.**."$ref"~>$map(
+                function($v){
+                    $contains($v, "def")?(
+                            $v:= $v~>$replace(/.*\/(.*)/, "$1");
+                            $v = $component?(
+                                 $lookup($.entities, $component).schema.**.properties~>$merge()
+                             ):$lookup($.entities.**, $v).properties
+                    )
+                }))~>$merge();
+            /*$component_prop := $lookup($.entities, $component).schema.**.properties;*/   
+            $titles := $merge($prop.$spread().{
                 $keys()[0] : $.*.title ? $.*.title : $keys()[0]
              });
              $titles := $merge([$titles, {"type":"Тип", "server_id":"Сервер ID"}]);
-             /*$titles := $spread($lookup($.entities, $component).schema.**."$ref"~>$map(function($v){
-                     $contains($v, "def")?(
-                         $a := $lookup($.entities.**, $v~>$replace(/.*\/(.*)/, "$1")).**."properties";
-                         $type($a) = 'array'? $a:= $a[0] : $a;
-                     )
-             })){ $keys()[0] : $.*.title ? $.*.title : $keys()[0]};
-             $titles := $merge([$titles, {"title":"Наименование", "type":"Тип", "description":"Описание"}]);*/
      )
     get_link: >
      (
