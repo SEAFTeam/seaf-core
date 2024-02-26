@@ -10,7 +10,7 @@ imports:
   # hexagon articles
   - root.yaml
 
-  - parties.yaml
+  - parties/parties.yaml
   - strategy.yaml
   - goals.yaml
   - products.yaml
