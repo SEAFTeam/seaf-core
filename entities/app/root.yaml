@@ -1,5 +1,5 @@
 imports:
-  - components.yaml
+  - components/root.yaml
   - contexts/root.yaml
   - aspects.yaml
   - integrations/root.yaml
