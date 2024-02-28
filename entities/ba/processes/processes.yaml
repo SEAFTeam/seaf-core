@@ -1,0 +1,46 @@
+entities:
+  seaf.ba.processes:
+    title: Бизнес-процессы
+    schema:
+      type: object
+      patternProperties:
+        "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$":
+          type: object
+          properties:
+            title:
+              title: Наименование
+              type: string
+            description:
+              title: Описание
+              type: string
+            owner:
+              title: Владелец
+              type: string 
+              $ref: "#/$rels/seaf.ba.parties.party"
+            relates:
+              title: агрегирующая сущность (процесс более высокого уровня)
+              type: string
+              $ref: "#/$rels/seaf.ba.processes.process"
+            next_processes:
+              title: следующий процесс в последовательности
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ba.processes.process"
+            requirements:
+              title: Требования процесса
+              type: array
+              items:
+                $ref: "#/$rels/seaf.change.requirements.requirement"
+            products:
+              title: Связь с продуктами
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ba.products.product"
+          required:
+            - title
+            - owner
+    objects:
+      process:
+        route: "/"
+        title: Бизнес-процесс
+        symbol: "bp"

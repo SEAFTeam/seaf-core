@@ -6,7 +6,7 @@ entities:
     schema:
       type: array
       items:
-        $ref: "#/$rels/seaf.ba.parties.parties"
+        $ref: "#/$rels/seaf.ba.parties.party"
 
 
   seaf.ba.parties:
