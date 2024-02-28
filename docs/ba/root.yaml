@@ -1,4 +1,5 @@
 docs:
+
   seaf.ba.main:
     #location: /Архитектура/Бизнес-архитектура/Реализация на Hexagon
     description: SEAF Business Architecture Primer explained
