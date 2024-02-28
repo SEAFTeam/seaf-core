@@ -2,7 +2,7 @@ entities:
   contexts:
     presentations:
       integration:
-        title: Представление в PlantUML
+        title: Представление (интеграций) в PlantUML
         params:
           title: Требуемые параметры для презентации
           type: object
