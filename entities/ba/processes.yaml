@@ -22,7 +22,7 @@ entities:
               title: Связь с продуктами
               type: array
               items:
-                $ref: "#/$rels/seaf.ba.products.products"
+                $ref: "#/$rels/seaf.ba.products.product"
             integrations:
               title: Связь с интеграционными потоками
               type: array

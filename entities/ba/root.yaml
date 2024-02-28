@@ -11,8 +11,6 @@ imports:
   - root.yaml
 
   - parties/parties.yaml
-  - strategy.yaml
-  - goals.yaml
-  - products.yaml
+  - products/products.yaml
   - processes.yaml
   
