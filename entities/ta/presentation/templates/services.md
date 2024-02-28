@@ -22,8 +22,8 @@
 ## Kubernetes Cluster
 ![Kubernetes Cluster](@entity/seaf.ta.services.k8s/table)
 
-## Netowrks
-![Netowrks](@entity/seaf.ta.services.network/table)
+## Networks
+![Networks](@entity/seaf.ta.services.network/table)
 
 ## Network Links
 ![Network Links](@entity/seaf.ta.services.network_links/table)

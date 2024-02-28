@@ -465,7 +465,7 @@ entities:
           $ref: "#/$defs/seaf.ta.services.k8s"
 
   seaf.ta.services.network:
-    title: Netowrk
+    title: Network
     objects:
       network:
         route: "/"
@@ -556,7 +556,7 @@ entities:
                 vlan:
                   title: Имя виртуальной сети (VLAN)
                   type: integer
-                ipnetowrk:
+                ipnetwork:
                   title: IP-сеть и маска
                   type: string
                 purpose:
@@ -571,7 +571,7 @@ entities:
                 - network_id
                 - type
                 - lan_type
-                - ipnetowrk
+                - ipnetwork
                 - network_appliance_id
               additionalProperties: false
       type: object
