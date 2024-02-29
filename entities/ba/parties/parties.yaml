@@ -76,15 +76,15 @@ entities:
                               });
 
             $consumed_products_id:= $party.*.has_interest;
-            $consumed_products:= $map($consumed_products_id, function($v) {
-                                {"id": $v,
-                                 "body": $lookup($$."seaf.ba.products",$v),
-                                 "alias": [$map($lookup($$."seaf.ba.products",$v).alias, function($vv) {                                            
-                                            {"alias_id": $vv,
-                                            "alias_body": $lookup($$."seaf.ba.products", $vv)}
-                                          })]
-                                 }
-                              });
+            $consumed_products:=  $map($consumed_products_id, function($v) {
+                                    {"id": $v,
+                                    "body": $lookup($$."seaf.ba.products",$v),
+                                    "alias": [$map($lookup($$."seaf.ba.products",$v).alias, function($vv) {                                            
+                                                {"alias_id": $vv,
+                                                "alias_body": $lookup($$."seaf.ba.products", $vv)}
+                                              })]
+                                    }
+                                  });
 
             $party:= {"id": $keys($party),
                       "body": $party.*, 
