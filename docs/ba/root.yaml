@@ -1,5 +1,12 @@
 docs:
 
+  seaf.ba.root_domain:
+    location: SEAF/Бизнес-архитектура/Декларация корневого домена
+    description: >
+      how-to: Первичная декларация корневого домена
+    type: markdown
+    source: root_domain.md
+
   seaf.ba.main:
     #location: /Архитектура/Бизнес-архитектура/Реализация на Hexagon
     description: SEAF Business Architecture Primer explained

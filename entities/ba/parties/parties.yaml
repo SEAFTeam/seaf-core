@@ -1,14 +1,5 @@
 entities:
 
-  seaf.ba.self:
-    title: Точка зрения
-    description: Указание на Участника, чья КА должна быть сформирована
-    schema:
-      type: array
-      items:
-        $ref: "#/$rels/seaf.ba.parties.party"
-
-
   seaf.ba.parties:
     title: Участники
     schema:
@@ -69,28 +60,44 @@ entities:
                                                             }
                             ];
 
-            $arch_parties:= $spread($."seaf.ba.parties")[$not($contains($keys($), "."))];
-
-
-            $top_parties:= $spread($."seaf.ba.parties")[$not($exists($.*.relates))];
-            $side_parties:= $top_parties[$not($keys($) in $keys($arch_parties))];
-
-
-            
-            /*$counterparts:= [$side_parties[$substringBefore($keys($), ".") = $keys($party)].{"domain": $keys($), "title": $.*.title, "description": $.*.description}]; */
-
-
             $members:= [$spread($."seaf.ba.parties")[$domain in $.*.relates].{"domain": $keys($), "title": $.*.title, "description": $.*.description}];
 
             $managedBy:= [$party.*.relates.{"domain": $, "title": $lookup($$."seaf.ba.parties", $).title, "description": $lookup($$."seaf.ba.parties", $).description}];
 
-            $party:= {"id": $keys($party), "body": $party.*, 
+            $owned_products:= $spread($."seaf.ba.products")[$.*.owner = $domain];
+            $owned_products:= $map($owned_products, function($v) {
+                                {"id": $keys($v),
+                                 "body": $v.*,
+                                 "alias": [$map($v.*.alias, function($vv) {                                            
+                                            {"alias_id": $vv,
+                                            "alias_body": $lookup($$."seaf.ba.products", $vv)}
+                                          })]
+                                 }
+                              });
+
+            $consumed_products_id:= $party.*.has_interest;
+            $consumed_products:= $map($consumed_products_id, function($v) {
+                                {"id": $v,
+                                 "body": $lookup($$."seaf.ba.products",$v),
+                                 "alias": [$map($lookup($$."seaf.ba.products",$v).alias, function($vv) {                                            
+                                            {"alias_id": $vv,
+                                            "alias_body": $lookup($$."seaf.ba.products", $vv)}
+                                          })]
+                                 }
+                              });
+
+            $party:= {"id": $keys($party),
+                      "body": $party.*, 
+                      "products_num": $count($owned_products) + $count($consumed_products),
+                      "counterparts_num": $count($counterparts), 
                       "counterparts": $counterparts,
+                      "members_num": $count($members),
                       "members": $members,
-                      "managedBy": $managedBy
+                      "managedBy_num": $count($managedBy),
+                      "managedBy": $managedBy,
+                      "owner_num": $count($owned_products),
+                      "owner": $owned_products,
+                      "consumes_num": $count($consumed_products),
+                      "consumes": $consumed_products
                      }
           )
-
-      no_archs:
-        type: markdown
-        template: templates/no_archs.md

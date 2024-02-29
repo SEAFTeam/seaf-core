@@ -5,7 +5,35 @@
 
 {{body.description}}
 
-#### Контрагенты:
+{{#products_num}}#### Продукты{{/products_num}}
+{{#owner_num}}###### предоставляемые{{/owner_num}}
+{{#owner}}
+* ["{{body.title}}" :id: {{id}}](/entities/seaf.ba.products/product_summary?id={{id}}) {{#description}}-- {{.}}{{/description}}
+{{#alias}}
+{{#alias_body}}
+    * ["{{alias_body.title}}" :id: {{alias_id}}](/entities/seaf.ba.products/product_summary?id={{alias_id}}) {{#alias_body.description}}-- {{.}}{{/alias_body.description}}
+{{/alias_body}} 
+{{^alias_body}}
+    * :warning: Справочное значение отсутствует :id: {{id}}
+{{/alias_body}}
+{{/alias}}
+{{/owner}}
+
+{{#consumes_num}}###### потребляемые{{/consumes_num}}
+{{#consumes}}
+* ["{{body.title}}" :id: {{id}}](/entities/seaf.ba.products/product_summary?id={{id}}) {{#description}}-- {{.}}{{/description}}
+{{#alias}}
+{{#alias_body}}
+    * ["{{alias_body.title}}" :id: {{alias_id}}](/entities/seaf.ba.products/product_summary?id={{alias_id}}) {{#alias_body.description}}-- {{.}}{{/alias_body.description}}
+{{/alias_body}} 
+{{^alias_body}}
+    * :warning: Справочное значение отсутствует :id: {{id}}
+{{/alias_body}}
+{{/alias}}
+{{/consumes}}
+
+
+{{#counterparts_num}}#### Контрагенты:{{/counterparts_num}}
 {{#counterparts}}
 * ["{{title}}" :id: {{domain}}](/entities/seaf.ba.parties/party_summary?domain={{domain}}) {{#description}}-- {{.}}{{/description}}
 {{#alias}}
@@ -19,12 +47,12 @@
 {{/counterparts}}
 
 
-#### Вышестоящая структура:
+{{#managedBy_num}}#### Вышестоящая структура:{{/managedBy_num}}
 {{#managedBy}}
 * ["{{title}}" :id: {{domain}}](/entities/seaf.ba.parties/party_summary?domain={{domain}}) {{#description}}-- {{.}}{{/description}}
 {{/managedBy}}
 
-#### Внутренняя структура:
+{{#members_num}}#### Внутренняя структура:{{/members_num}}
 {{#members}}
 * ["{{title}}" :id: {{domain}}](/entities/seaf.ba.parties/party_summary?domain={{domain}}) {{#description}}-- {{.}}{{/description}}
 {{/members}}
