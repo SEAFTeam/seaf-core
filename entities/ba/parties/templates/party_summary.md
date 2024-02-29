@@ -1,4 +1,4 @@
-###### :id: {{id}}
+###### Сводная информация по Участнику :id: {{id}}
 
 ---
 # {{body.title}} 
@@ -18,6 +18,20 @@
 {{/alias_body}}
 {{/alias}}
 {{/owner}}
+
+{{#processes_owned_num}}#### Владение процессами{{/processes_owned_num}}
+{{#processes_owned}}
+* ["{{body.title}}" :id: {{id}}](/entities/seaf.ba.processes/process_summary?id={{id}}) {{#description}}-- {{.}}{{/description}}
+{{#alias}}
+{{#alias_body}}
+    * ["{{alias_body.title}}" :id: {{alias_id}}](/entities/seaf.ba.processes/process_summary?id={{alias_id}}) {{#alias_body.description}}-- {{.}}{{/alias_body.description}}
+{{/alias_body}} 
+{{^alias_body}}
+    * :warning: Справочное значение отсутствует :id: {{id}}
+{{/alias_body}}
+{{/alias}}
+{{/processes_owned}}
+
 
 {{#consumes_num}}###### потребляемые{{/consumes_num}}
 {{#consumes}}

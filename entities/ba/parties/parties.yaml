@@ -76,12 +76,23 @@ entities:
                               });
 
             $consumed_products_id:= $party.*.has_interest;
-            $consumed_products:= $map($consumed_products_id, function($v) {
-                                {"id": $v,
-                                 "body": $lookup($$."seaf.ba.products",$v),
-                                 "alias": [$map($lookup($$."seaf.ba.products",$v).alias, function($vv) {                                            
+            $consumed_products:=  $map($consumed_products_id, function($v) {
+                                    {"id": $v,
+                                    "body": $lookup($$."seaf.ba.products",$v),
+                                    "alias": [$map($lookup($$."seaf.ba.products",$v).alias, function($vv) {                                            
+                                                {"alias_id": $vv,
+                                                "alias_body": $lookup($$."seaf.ba.products", $vv)}
+                                              })]
+                                    }
+                                  });
+
+            $processes_owned:= $spread($."seaf.ba.processes")[$.*.owner = $domain];
+            $processes_owned:= $map($processes_owned, function($v) {
+                                {"id": $keys($v),
+                                 "body": $v.*,
+                                 "alias": [$map($v.*.alias, function($vv) {                                            
                                             {"alias_id": $vv,
-                                            "alias_body": $lookup($$."seaf.ba.products", $vv)}
+                                            "alias_body": $lookup($$."seaf.ba.processes", $vv)}
                                           })]
                                  }
                               });
@@ -98,6 +109,8 @@ entities:
                       "owner_num": $count($owned_products),
                       "owner": $owned_products,
                       "consumes_num": $count($consumed_products),
-                      "consumes": $consumed_products
+                      "consumes": $consumed_products,
+                      "processes_owned_num": $count($processes_owned),
+                      "processes_owned": $processes_owned
                      }
           )

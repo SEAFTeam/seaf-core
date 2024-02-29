@@ -31,7 +31,7 @@ entities:
               type: array
               items:
                 $ref: "#/$rels/seaf.change.requirements.requirement"
-            products:
+            products: #todo not converted to hex
               title: Связь с продуктами
               type: array
               items:
@@ -44,3 +44,90 @@ entities:
         route: "/"
         title: Бизнес-процесс
         symbol: "bp"
+
+    presentations:
+
+      process_summary:
+        type: markdown
+        template: templates/process_summary.md
+        source: >
+          (
+            $id:= $params.id;
+
+            $process:= $spread($$."seaf.ba.processes")[$keys($) = $id];
+
+            $owner:= $spread($$."seaf.ba.parties")[$keys($) = $process.*.owner];
+            $owner:= $owner ? {
+                      "id": $keys($owner),
+                      "body": $owner.*,
+                      "alias": $map($owner.*.alias, function($vv) {                                            
+                                {"alias_id": $vv,
+                                 "alias_body": $lookup($$."seaf.ba.parties", $vv)}
+                              })
+                      };
+            $products:= $spread($$."seaf.products")[$keys($) in $process.*.products];
+            $products:=   $map($products, function($v) {
+                            {
+                              "id": $keys($v),
+                              "body": $v.*,
+                              "alias": $map($process.*.alias, function($vv) {                                            
+                                        {"alias_id": $vv,
+                                        "alias_body": $lookup($$."seaf.ba.products", $vv)}
+                                      })
+                              }
+                          });
+
+            $reqs:= $spread($$."seaf.change.requirements")[$keys($) in $process.*.requirements];
+            $reqs:=   $map($reqs, function($v) {
+                            {
+                              "id": $keys($v),
+                              "body": $v.*,
+                              "alias": $map($process.*.alias, function($vv) {                                            
+                                        {"alias_id": $vv,
+                                        "alias_body": $lookup($$."seaf.ba.requirements", $vv)}
+                                      })
+                              }
+                          });
+
+            $systems:= $spread($$.components)[$id in $.*.processes];
+            $systems:=   $map($systems, function($v) {
+                            {
+                              "id": $keys($v),
+                              "body": $v.*,
+                              "alias": $map($process.*.alias, function($vv) {                                            
+                                        {"alias_id": $vv,
+                                        "alias_body": $lookup($$.components, $vv)}
+                                      })
+                              }
+                          });
+
+            $biz_obj:= $spread($$."seaf.ia.business_objects")[$id in $.*.processes];
+            $biz_obj:=   $map($biz_obj, function($v) {
+                            {
+                              "id": $keys($v),
+                              "body": $v.*,
+                              "alias": $map($process.*.alias, function($vv) {                                            
+                                        {"alias_id": $vv,
+                                        "alias_body": $lookup($$."seaf.ia.business_objects", $vv)}
+                                      })
+                              }
+                          });
+
+
+
+
+            {
+              "id": $id,
+              "body": $process.*,
+              "owner_num": $count($owner),
+              "owner": $owner,
+              "requirements_num": $count($reqs),
+              "requirements": $reqs,
+              "products_num": $count($products),
+              "products": $products,
+              "systems_num": $count($systems),
+              "systems": $systems,
+              "biz_obj_num": $count($biz_obj), 
+              "biz_obj": $biz_obj 
+            }
+          )
