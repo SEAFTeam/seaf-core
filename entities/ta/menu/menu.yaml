@@ -9,8 +9,92 @@ entities:
                   'link': 'entities/seaf.ta/components_md'
               },
               {
+                  'location': 'Архитектура/Техническая/Технические компоненты/Сервера',
+                  'link': 'entities/seaf.ta/server_md'
+              },
+              {
+                  'location': 'Архитектура/Техническая/Технические компоненты/Hardware хранилище',
+                  'link': 'entities/seaf.ta/hw_storage.md'
+              },
+              {
+                  'location': 'Архитектура/Техническая/Технические компоненты/Сетевое устройство',
+                  'link': 'entities/seaf.ta/network_appliances_md'
+              },
+              {
+                  'location': 'Архитектура/Техническая/Технические компоненты/K8s Deployment',
+                  'link': 'entities/seaf.ta/k8s_deployment_md'
+              },
+              {
+                  'location': 'Архитектура/Техническая/Технические компоненты/K8s POD',
+                  'link': 'entities/seaf.ta/k8s_pod_md'
+              },
+              {
+                  'location': 'Архитектура/Техническая/Технические компоненты/K8s Container',
+                  'link': 'entities/seaf.ta/k8s_container_md'
+              },
+              {
+                  'location': 'Архитектура/Техническая/Технические компоненты/K8s Image ПО для развёртывания',
+                  'link': 'entities/seaf.ta/k8s_image_md'
+              },
+              {
+                  'location': 'Архитектура/Техническая/Технические компоненты/Пользовательские устройства',
+                  'link': 'entities/seaf.ta/user_device_md'
+              },
+              {
                   'location': 'Архитектура/Техническая/Технические сервисы',
                   'link': 'entities/seaf.ta/services_md'
+              },
+              {
+                  'location': 'Архитектура/Техническая/Технические сервисы/Регионы',
+                  'link': 'entities/seaf.ta/regions_md'
+              },
+              {
+                  'location': 'Архитектура/Техническая/Технические сервисы/Зоны доступности',
+                  'link': 'entities/seaf.ta/az_md'
+              },
+              {
+                  'location': 'Архитектура/Техническая/Технические сервисы/Датацентры',
+                  'link': 'entities/seaf.ta/dc_md'
+              },
+              {
+                  'location': 'Архитектура/Техническая/Технические сервисы/Офисы',
+                  'link': 'entities/seaf.ta/office_md'
+              },
+              {
+                  'location': 'Архитектура/Техническая/Технические сервисы/Кластера',
+                  'link': 'entities/seaf.ta/cluster_md'
+              },
+              {
+                  'location': 'Архитектура/Техническая/Технические сервисы/Хранилища',
+                  'link': 'entities/seaf.ta/storage_md'
+              },
+              {
+                  'location': 'Архитектура/Техническая/Технические сервисы/Кластера виртуализации',
+                  'link': 'entities/seaf.ta/cluster_virtualization_md'
+              },
+              {
+                  'location': 'Архитектура/Техническая/Технические сервисы/Кластера Kubernetes',
+                  'link': 'entities/seaf.ta/k8s_md'
+              },
+              {
+                  'location': 'Архитектура/Техническая/Технические сервисы/Сети',
+                  'link': 'entities/seaf.ta/network_md'
+              },
+              {
+                  'location': 'Архитектура/Техническая/Технические сервисы/Сервис доступа к ресурсам сети',
+                  'link': 'entities/seaf.ta/network_links_md'
+              },
+              {
+                  'location': 'Архитектура/Техническая/Технические сервисы/Сервисы резервного копирования',
+                  'link': 'entities/seaf.ta/backup_md'
+              },
+              {
+                  'location': 'Архитектура/Техническая/Технические сервисы/Сервисы Мониторинга',
+                  'link': 'entities/seaf.ta/monitoring_md'
+              },
+              {
+                  'location': 'Архитектура/Техническая/Технические сервисы/ПО и Лицензии',
+                  'link': 'entities/seaf.ta/software_md'
               }
           ]
       )

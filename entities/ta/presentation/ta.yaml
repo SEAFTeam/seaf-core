@@ -7,9 +7,93 @@ entities:
         type: markdown
         template: templates/components.md
 
+      k8s_image_md:
+        type: markdown
+        template: templates/k8s_image.md
+
+      k8s_deployment_md:
+        type: markdown
+        template: templates/k8s_deployment.md
+
+      hw_storage_md:
+        type: markdown
+        template: templates/hw_storage.md
+
+      server_md:
+        type: markdown
+        template: templates/server.md
+
+      network_md:
+        type: markdown
+        template: templates/network.md
+
+      k8s_pod_md:
+        type: markdown
+        template: templates/k8s_pod.md
+
+      k8s_container_md:
+        type: markdown
+        template: templates/k8s_container.md
+
+      user_device_md:
+        type: markdown
+        template: templates/user_device.md
+
       services_md:
         type: markdown
         template: templates/services.md
+    
+      regions_md:
+        type: markdown
+        template: templates/regions.md
+
+      az_md:
+        type: markdown
+        template: templates/azs.md
+
+      dc_md:
+        type: markdown
+        template: templates/dcs.md
+
+      office_md:
+        type: markdown
+        template: templates/offices.md
+
+      cluster_md:
+        type: markdown
+        template: templates/clusters.md
+
+      storage_md:
+        type: markdown
+        template: templates/storages.md
+
+      cluster_virtualization_md:
+        type: markdown
+        template: templates/cluster_virtualization.md
+
+      k8s_md:
+        type: markdown
+        template: templates/k8ss.md
+
+      network_appliances_md:
+        type: markdown
+        template: templates/network_appliances.md
+
+      network_links_md:
+        type: markdown
+        template: templates/network_linkss.md
+
+      backup_md:
+        type: markdown
+        template: templates/backups.md
+
+      monitoring_md:
+        type: markdown
+        template: templates/monitorings.md
+
+      software_md:
+        type: markdown
+        template: templates/softwares.md
 
       list:
         params:
