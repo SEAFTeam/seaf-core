@@ -1,0 +1,43 @@
+entities:
+
+  seaf.self:
+    title: Корневые домены
+    description: >
+      Перечень идентификаторов Участников, чьи архитектуры рассматриваются
+
+    schema:
+      type: array
+      items:
+        $ref: "#/$rels/seaf.ba.parties.party"
+
+    presentations:
+
+      no_archs:
+        type: markdown
+        template: templates/no_archs.md
+
+      is_hexed:
+        type: markdown
+        template: templates/is_hexed.md
+        source: >
+          (
+            {"hexed": $.imports[$contains($, "hexagon/dochub.yaml")].$count($) > 0};
+          )
+
+    menu: >
+      (
+          $arch_parties_id:= $."seaf.self";
+
+          $count($arch_parties_id)=0
+            ? {
+                "location": "Архитектура/Бизнес-архитектура/архитектура не определена",
+                "link": "/entities/seaf.self/no_archs"
+              }
+
+            : $map($arch_parties_id, function($v) {
+                {
+                  "location": "Архитектура/Бизнес-архитектура/" & $lookup($."seaf.ba.parties", $v).title,
+                  "link": "/entities/seaf.ba.parties/party_summary?domain=" & $v
+                }
+              });
+      )

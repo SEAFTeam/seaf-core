@@ -1,0 +1,103 @@
+entities:
+
+  seaf.ba.parties:
+    title: Участники
+    schema:
+
+      type: object
+      patternProperties:
+        "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$":
+          type: object
+          properties:
+            title:
+              title: Наименование Участника
+              description: Юрлицо, Группа, объединение, сегмент, оргединица
+              type: string
+            has_interest:
+              title: Интересующие продукты
+              description: Продукты, потребляемые или потенциально интересные Участнику
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ba.products.product"
+            relates:
+              title: Агрегирующая сущность
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ba.parties.party"
+          required:
+            - title
+    objects:
+      party:
+        route: "/"
+        title: Участник
+        symbol: "party"
+
+    presentations:
+
+      party_summary:
+        type: markdown
+        template: templates/party_summary.md
+        source: >
+          (
+            $domain:= $params.domain;
+
+            $party:= $spread($."seaf.ba.parties")[$keys($) = $domain];
+
+            $counterparts:= [$spread($."seaf.ba.parties")[
+                                                            $contains($keys($), $domain) and 
+                                                            $substringBefore($keys($), $domain) = "" and
+                                                            $substringAfter($keys($), $domain) != "" and
+                                                            $count([$.*.relates[$contains($, $domain)]])=0
+                                                          ]
+                                                          .{  "domain": $keys($), 
+                                                              "title": $.*.title, 
+                                                              "description": $.*.description,
+                                                              "alias": [$map($.*.alias, function($v) {
+                                                                { "id": $v, 
+                                                                  "body_com": $lookup($$."seaf.ba.parties", $v)
+                                                                }
+                                                              })]
+                                                            }
+                            ];
+
+            $members:= [$spread($."seaf.ba.parties")[$domain in $.*.relates].{"domain": $keys($), "title": $.*.title, "description": $.*.description}];
+
+            $managedBy:= [$party.*.relates.{"domain": $, "title": $lookup($$."seaf.ba.parties", $).title, "description": $lookup($$."seaf.ba.parties", $).description}];
+
+            $owned_products:= $spread($."seaf.ba.products")[$.*.owner = $domain];
+            $owned_products:= $map($owned_products, function($v) {
+                                {"id": $keys($v),
+                                 "body": $v.*,
+                                 "alias": [$map($v.*.alias, function($vv) {                                            
+                                            {"alias_id": $vv,
+                                            "alias_body": $lookup($$."seaf.ba.products", $vv)}
+                                          })]
+                                 }
+                              });
+
+            $consumed_products_id:= $party.*.has_interest;
+            $consumed_products:= $map($consumed_products_id, function($v) {
+                                {"id": $v,
+                                 "body": $lookup($$."seaf.ba.products",$v),
+                                 "alias": [$map($lookup($$."seaf.ba.products",$v).alias, function($vv) {                                            
+                                            {"alias_id": $vv,
+                                            "alias_body": $lookup($$."seaf.ba.products", $vv)}
+                                          })]
+                                 }
+                              });
+
+            $party:= {"id": $keys($party),
+                      "body": $party.*, 
+                      "products_num": $count($owned_products) + $count($consumed_products),
+                      "counterparts_num": $count($counterparts), 
+                      "counterparts": $counterparts,
+                      "members_num": $count($members),
+                      "members": $members,
+                      "managedBy_num": $count($managedBy),
+                      "managedBy": $managedBy,
+                      "owner_num": $count($owned_products),
+                      "owner": $owned_products,
+                      "consumes_num": $count($consumed_products),
+                      "consumes": $consumed_products
+                     }
+          )
