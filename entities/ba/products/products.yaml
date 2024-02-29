@@ -43,7 +43,7 @@ entities:
             $product:= $spread($$."seaf.ba.products")[$keys($) = $id];
 
             $owner:= $spread($$."seaf.ba.parties")[$keys($) = $spread($$."seaf.ba.products")[$keys($) = $id].*.owner];
-            $owner:= {
+            $owner:= $owner ? {
                       "id": $keys($owner),
                       "body": $owner.*,
                       "alias": $map($owner.*.alias, function($vv) {                                            
@@ -84,6 +84,17 @@ entities:
                                           })]
                                  }
                               });
+            $processes:= $spread($."seaf.ba.processes")[$id in $.*.products];
+            $processes:= $map($processes, function($v) {
+                                {"id": $keys($v),
+                                 "body": $v.*,
+                                 "alias": [$map($v.*.alias, function($vv) {                                            
+                                            {"alias_id": $vv,
+                                            "alias_body": $lookup($$."seaf.ba.processes", $vv)}
+                                          })]
+                                 }
+                              });
+
 
 
             {
@@ -95,6 +106,8 @@ entities:
               "wrappers_num": $count($wrappers),
               "wrappers": $wrappers,
               "wraps_num": $count($wraps),
-              "wraps": $wraps 
+              "wraps": $wraps,
+              "processes_num": $count($processes), 
+              "processes": $processes 
             }
           )

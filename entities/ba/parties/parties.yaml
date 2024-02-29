@@ -86,6 +86,17 @@ entities:
                                     }
                                   });
 
+            $processes_owned:= $spread($."seaf.ba.processes")[$.*.owner = $domain];
+            $processes_owned:= $map($processes_owned, function($v) {
+                                {"id": $keys($v),
+                                 "body": $v.*,
+                                 "alias": [$map($v.*.alias, function($vv) {                                            
+                                            {"alias_id": $vv,
+                                            "alias_body": $lookup($$."seaf.ba.processes", $vv)}
+                                          })]
+                                 }
+                              });
+
             $party:= {"id": $keys($party),
                       "body": $party.*, 
                       "products_num": $count($owned_products) + $count($consumed_products),
@@ -98,6 +109,8 @@ entities:
                       "owner_num": $count($owned_products),
                       "owner": $owned_products,
                       "consumes_num": $count($consumed_products),
-                      "consumes": $consumed_products
+                      "consumes": $consumed_products,
+                      "processes_owned_num": $count($processes_owned),
+                      "processes_owned": $processes_owned
                      }
           )
