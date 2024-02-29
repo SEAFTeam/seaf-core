@@ -14,7 +14,7 @@ entities:
               },
               {
                   'location': 'Архитектура/Техническая/Технические компоненты/Hardware хранилище',
-                  'link': 'entities/seaf.ta/hw_storage.md'
+                  'link': 'entities/seaf.ta/hw_storage_md'
               },
               {
                   'location': 'Архитектура/Техническая/Технические компоненты/Сетевое устройство',

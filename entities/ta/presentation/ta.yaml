@@ -25,7 +25,7 @@ entities:
 
       network_md:
         type: markdown
-        template: templates/network.md
+        template: templates/networks.md
 
       k8s_pod_md:
         type: markdown
