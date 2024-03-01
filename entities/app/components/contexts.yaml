@@ -10,8 +10,12 @@ entities:
               $append(
                 [
                   {
-                    "title": "SELF",
+                    "title": "SELF (зависимости)",
                     "src": "@entity/contexts/plantuml?dh-context-id=SELF&componentId=" & $component_id & "&dh-focus-id=" & $component_id
+                  },
+                  {
+                    "title": "SELF (интеграции)",
+                    "src": "@entity/contexts/integration?dh-context-id=SELF&componentId=" & $component_id & "&dh-focus-id=" & $component_id
                   }
                 ],
                 [$distinct([contexts.$spread().(
