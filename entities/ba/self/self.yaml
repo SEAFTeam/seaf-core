@@ -16,19 +16,12 @@ entities:
         type: markdown
         template: templates/no_archs.md
 
-      # # Is Hexagon imported check
-      # #todo move to tools section
-      # is_hexed:
-      #   type: markdown
-      #   template: templates/is_hexed.md
-      #   source: >
-      #     (
-      #       {"hexed": $.imports[$contains($, "hexagon/dochub.yaml")].$count($) > 0};
-      #     )
-
     menu: >
       (
-          $arch_parties_id:= $."seaf.self";
+          $top_domains:= $seaf_ddd_top($$."seaf.ba.parties");
+          $user_defined:= $$."seaf.self" != null ? $$."seaf.self"[$lookup($$."seaf.ba.parties", $)];
+          $arch_parties_id:= $distinct($append($top_domains, $user_defined ));
+
 
           $type($arch_parties_id) = "array"
             ? $map($arch_parties_id, function($v) {

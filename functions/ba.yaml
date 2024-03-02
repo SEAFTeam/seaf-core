@@ -1,0 +1,78 @@
+functions:
+  seaf_ddd_tree:
+    title: Получение дерева DDD из идентификатора объекта
+    params:
+      - type: string
+        title: Идентификатор объекта
+        alias: obj_id
+        required: true
+    code: >
+      (
+          $obj_id:= obj_id;
+
+          $getDDDWrappers:= function($obj_id){(
+            $domains:= $split($obj_id, ".");
+            $domains:= $count($domains) > 0
+              ? $domains
+              : [];
+            $getPaths:= function($domains, $i, $paths){(
+              $paths:= $i=0
+                        ? $domains[0]
+                        : $append($paths, $paths[$i-1] & "." & $domains[$i]);
+              $i < $count($domains)-1 
+                ? $getPaths($domains, $i+1, $paths)
+                : $paths 
+            )};
+            $paths:= $getPaths($domains, 0, []);
+            
+            { 
+              "domains": [$domains],  /*includes $obj_id tail*/
+              "paths": [$paths]       /*includes $obj_id itself*/
+            }
+          )};
+
+          $getDDDWrappers($obj_id);
+      )
+    result:
+      type: object
+      description: >
+        domains -- массив идентификаторов доменов (d1, d2, ...), 
+        paths -- массив "путей" (d1, d1.d2, ...) 
+
+  seaf_ddd_top:
+    title: Получение DDD верхнего уровня
+    params:
+      - type: object
+        title: Объекты сущности
+        alias: objects
+    code: >
+      (
+        $objects:= objects.$spread();
+        $tops:= $map($objects, function($v) {(
+                  $paths:= $seaf_ddd_tree($v.$keys()).paths;
+
+                  $getTop:= function($paths, $i){(
+                    $paths[$i] in $objects.$keys()
+                      ? $paths[$i]
+                      : $getTop($paths, $i+1)
+                  )};
+
+                  $top:= $getTop($paths, 0);
+                )});
+
+        $distinct($tops)        
+      )
+    result:
+      description: Верхние DDD домены
+
+
+
+      # # Is Hexagon imported check
+      # #todo make it function
+      # is_hexed:
+      #   type: markdown
+      #   template: templates/is_hexed.md
+      #   source: >
+      #     (
+      #       {"hexed": $.imports[$contains($, "hexagon/dochub.yaml")].$count($) > 0};
+      #     )

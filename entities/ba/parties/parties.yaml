@@ -46,6 +46,16 @@ entities:
           (
             $domain:= $params.domain;
 
+            $getWrappers:= function($obj_id, $wrappers_id){(
+              $obj:= $$.*.$spread()[$.$keys() = $obj_id];
+              $wrapper:= $obj.*.is_part_of;
+              $res:= $wrapper
+                ? ($wrappers_id:= $append($wrappers_id, $obj.*.is_part_of);
+                  $getWrappers($wrapper, $wrappers_id))
+                : $wrappers_id
+            )};
+            $wrappers:= $getWrappers($domain, []);
+
             $party:= $spread($."seaf.ba.parties")[$keys($) = $domain];
 
             $counterparts:= [$spread($."seaf.ba.parties")[
