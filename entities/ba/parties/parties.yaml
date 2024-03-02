@@ -19,8 +19,13 @@ entities:
               type: array
               items:
                 $ref: "#/$rels/seaf.ba.products.product"
+            is_part_of:
+              title: Является частью
+              description: Отношение n к 1 для описания строгих иерархических связей
+              $ref: "#/$rels/seaf.ba.parties.party"
             relates:
               title: Агрегирующая сущность
+              description: Отношение n к m для описания множественных категорий (фасетных признаков)
               type: array
               items:
                 $ref: "#/$rels/seaf.ba.parties.party"
