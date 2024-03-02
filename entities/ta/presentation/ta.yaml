@@ -62,7 +62,7 @@ entities:
                  $href := $lookup($refs,$k);
                  $boolean($href)?(
                     /*($log("Not empty " & $href,["MTG"]);*/
-                    {"attr":$lookup($titles, $k), "attr_val":$f1($v), "link":$eval($f4,{"hr":$href,"v":$v})};
+                    {"attr":$lookup($titles, $k), "attr_val":$f1($v), "link":$eval($f4,{"hr":$href,"val":$v})};
                    ):
                    (
                      {"attr":$lookup($titles, $k), "attr_val":$f1($v)}
