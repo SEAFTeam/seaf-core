@@ -17,8 +17,8 @@ entities:
               title: Владелец
               type: string 
               $ref: "#/$rels/seaf.ba.parties.party"
-            relates:
-              title: агрегирующая сущность (процесс более высокого уровня)
+            is_part_of:  #todo changed from "relates" -- check hex
+              title: композитная сущность (процесс более высокого уровня)
               type: string
               $ref: "#/$rels/seaf.ba.processes.process"
             next_processes:
@@ -59,22 +59,14 @@ entities:
             $owner:= $spread($$."seaf.ba.parties")[$keys($) = $process.*.owner];
             $owner:= $owner ? {
                       "id": $keys($owner),
-                      "body": $owner.*,
-                      "alias": $map($owner.*.alias, function($vv) {                                            
-                                {"alias_id": $vv,
-                                 "alias_body": $lookup($$."seaf.ba.parties", $vv)}
-                              })
+                      "body": $owner.*
                       };
             $products:= $spread($$."seaf.products")[$keys($) in $process.*.products];
             $products:=   $map($products, function($v) {
                             {
                               "id": $keys($v),
-                              "body": $v.*,
-                              "alias": $map($process.*.alias, function($vv) {                                            
-                                        {"alias_id": $vv,
-                                        "alias_body": $lookup($$."seaf.ba.products", $vv)}
-                                      })
-                              }
+                              "body": $v.*
+                            }
                           });
 
             $reqs:= $spread($$."seaf.change.requirements")[$keys($) in $process.*.requirements];

@@ -1,7 +1,7 @@
 ###### Сводная информация по Продукту :id: {{id}}
 
 ---
-# {{body.title}} 
+# Продукт: "{{body.title}}" 
 
 {{body.description}}
 
@@ -18,6 +18,19 @@
 {{/alias}}
 {{/wrappers}}
 
+{{#wraps_num}}###### Имеет в составе выделенные подпродукты:{{/wraps_num}}
+{{#wraps}}
+* ["{{body.title}}" :id: {{id}}](/entities/seaf.ba.products/product_summary?id={{id}}) {{#body.description}}-- {{.}}{{/body.description}}
+{{#alias}}
+{{#alias_body}}
+    * ["{{alias_body.title}}" :id: {{alias_id}}](/entities/seaf.ba.products/product_summary?id={{alias_id}}) {{#alias_body.description}}-- {{.}}{{/alias_body.description}}
+{{/alias_body}} 
+{{^alias_body}}
+    * :warning: Справочное значение отсутствует :id: {{alias_id}}
+{{/alias_body}}
+{{/alias}}
+{{/wraps}}
+
 {{#processes_num}}###### Поддерживается процессами:{{/processes_num}}
 {{#processes}}
 * ["{{body.title}}" :id: {{id}}](/entities/seaf.ba.processes/process_summary?id={{id}}) {{#body.description}}-- {{.}}{{/body.description}}
@@ -31,18 +44,6 @@
 {{/alias}}
 {{/processes}}
 
-{{#wraps_num}}###### Имеет в составе выделенные подпродукты:{{/wraps_num}}
-{{#wraps}}
-* ["{{body.title}}" :id: {{id}}](/entities/seaf.ba.products/product_summary?id={{id}}) {{#body.description}}-- {{.}}{{/body.description}}
-{{#alias}}
-{{#alias_body}}
-    * ["{{alias_body.title}}" :id: {{alias_id}}](/entities/seaf.ba.products/product_summary?id={{alias_id}}) {{#alias_body.description}}-- {{.}}{{/alias_body.description}}
-{{/alias_body}} 
-{{^alias_body}}
-    * :warning: Справочное значение отсутствует :id: {{alias_id}}
-{{/alias_body}}
-{{/alias}}
-{{/wraps}}
 
 ### Владелец
 {{#owner}}

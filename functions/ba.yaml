@@ -65,6 +65,80 @@ functions:
     result:
       description: Верхние DDD домены
 
+  seaf_has_parts:
+    title: Из каких частей состоит объект
+    params:
+      - type: string
+        title: Идентификатор объекта
+        alias: obj_id
+        required: true
+      - type: object
+        title: Глобальный Контекст -- $$ 
+        alias: ctx
+        required: true
+    code: >
+      (
+          $ctx:= ctx;
+          $obj_id:= obj_id;
+
+            $getParts:= function($obj_id, $i, $parts_id){(
+                            $parts:= $ctx.*.$spread()[$obj_id = $.*.is_part_of].$keys();
+                            $count($parts) > 0
+                              ? (
+                                  $parts:= $map($parts, function($v){(
+                                   {$string($obj_id): $v}
+                                  )});
+                                  $parts_id:=$append($parts_id, $parts);
+                                  $deeper:= $map($parts, function($v) {(
+                                    $getParts($v.*, $i+1, $parts_id)
+                                  )});
+                                  $parts_id:= $reduce($append($parts_id, $deeper), $append)
+                                )
+                              : $parts_id
+                        )};
+            $parts:= $getParts($obj_id, 0, []);
+            $count($parts) > 0 
+              ? [$distinct($parts)]
+              : []
+      )
+    result:
+      type: array
+      description: >
+        Перечень идентификаторов сверху вниз
+
+  seaf_is_part:
+    title: Часть чего является объект
+    params:
+      - type: string
+        title: Идентификатор объекта
+        alias: obj_id
+        required: true
+      - type: object
+        title: Глобальный Контекст -- $$
+        alias: ctx
+        required: true
+    code: >
+      (
+          $ctx:= ctx;
+          $obj_id:= obj_id;
+
+            $getWrappers:= function($obj_id, $wrappers_id){(
+              $obj:= $ctx.*.$spread()[$.$keys() = $obj_id];
+              $wrapper:= $obj.*.is_part_of;
+              $res:= $wrapper
+                ? ($wrappers_id:= $append($wrappers_id, $obj.*.is_part_of);
+                  $getWrappers($wrapper, $wrappers_id))
+                : $wrappers_id
+            )};
+            $wrappers:= $getWrappers($obj_id, [])^(<$length($));
+            $count($wrappers) > 0 
+              ?[$wrappers]
+              : []
+      )
+    result:
+      type: array
+      description: >
+        Перечень идентификаторов сверху вниз, не включая сам объект
 
 
       # # Is Hexagon imported check
