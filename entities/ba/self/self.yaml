@@ -1,9 +1,9 @@
 entities:
 
   seaf.self:
-    title: Корневые домены
+    title: Дополнительные архитектуры-субдомены
     description: >
-      Перечень идентификаторов Участников, чьи архитектуры рассматриваются
+      Перечень некорневых идентификаторов Участников, чьи архитектуры рассматриваются
 
     schema:
       type: array
@@ -16,28 +16,22 @@ entities:
         type: markdown
         template: templates/no_archs.md
 
-      is_hexed:
-        type: markdown
-        template: templates/is_hexed.md
-        source: >
-          (
-            {"hexed": $.imports[$contains($, "hexagon/dochub.yaml")].$count($) > 0};
-          )
-
     menu: >
       (
-          $arch_parties_id:= $."seaf.self";
+          $top_domains:= $seaf_ddd_top($$."seaf.ba.parties");
+          $user_defined:= $$."seaf.self" != null ? $$."seaf.self"[$lookup($$."seaf.ba.parties", $)];
+          $arch_parties_id:= $distinct($append($top_domains, $user_defined ));
 
-          $count($arch_parties_id)=0
-            ? {
-                "location": "Архитектура/Бизнес-архитектура/архитектура не определена",
-                "link": "/entities/seaf.self/no_archs"
-              }
 
-            : $map($arch_parties_id, function($v) {
+          $type($arch_parties_id) = "array"
+            ? $map($arch_parties_id, function($v) {
                 {
                   "location": "Архитектура/Бизнес-архитектура/" & $lookup($."seaf.ba.parties", $v).title,
                   "link": "/entities/seaf.ba.parties/party_summary?domain=" & $v
                 }
-              });
+              })
+            : {
+                "location": "Архитектура/Бизнес-архитектура/архитектура не определена",
+                "link": "/entities/seaf.self/no_archs"
+              };
       )

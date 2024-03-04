@@ -1,7 +1,7 @@
 ###### Сводная информация по Участнику :id: {{id}}
 
 ---
-# {{body.title}} 
+# Участник: "{{body.title}}" 
 
 {{body.description}}
 
@@ -61,7 +61,7 @@
 {{/counterparts}}
 
 
-{{#managedBy_num}}#### Вышестоящая структура:{{/managedBy_num}}
+{{#managedBy_num}}#### Входит в состав:{{/managedBy_num}}
 {{#managedBy}}
 * ["{{title}}" :id: {{domain}}](/entities/seaf.ba.parties/party_summary?domain={{domain}}) {{#description}}-- {{.}}{{/description}}
 {{/managedBy}}

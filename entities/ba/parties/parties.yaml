@@ -46,48 +46,36 @@ entities:
           (
             $domain:= $params.domain;
 
-            $party:= $spread($."seaf.ba.parties")[$keys($) = $domain];
 
+            $party:= $spread($."seaf.ba.parties")[$keys($) = $domain];
+            
             $counterparts:= [$spread($."seaf.ba.parties")[
                                                             $contains($keys($), $domain) and 
                                                             $substringBefore($keys($), $domain) = "" and
                                                             $substringAfter($keys($), $domain) != "" and
-                                                            $count([$.*.relates[$contains($, $domain)]])=0
+                                                            $count([$.*.is_part_of[$contains($, $domain)]])=0
                                                           ]
                                                           .{  "domain": $keys($), 
                                                               "title": $.*.title, 
-                                                              "description": $.*.description,
-                                                              "alias": [$map($.*.alias, function($v) {
-                                                                { "id": $v, 
-                                                                  "body_com": $lookup($$."seaf.ba.parties", $v)
-                                                                }
-                                                              })]
+                                                              "description": $.*.description
                                                             }
                             ];
 
-            $members:= [$spread($."seaf.ba.parties")[$domain in $.*.relates].{"domain": $keys($), "title": $.*.title, "description": $.*.description}];
+            $members:= [$spread($."seaf.ba.parties")[$domain in $.*.is_part_of].{"domain": $keys($), "title": $.*.title, "description": $.*.description}];
 
-            $managedBy:= [$party.*.relates.{"domain": $, "title": $lookup($$."seaf.ba.parties", $).title, "description": $lookup($$."seaf.ba.parties", $).description}];
+            $managedBy:= [$party.*.is_part_of.{"domain": $, "title": $lookup($$."seaf.ba.parties", $).title, "description": $lookup($$."seaf.ba.parties", $).description}];
 
             $owned_products:= $spread($."seaf.ba.products")[$.*.owner = $domain];
             $owned_products:= $map($owned_products, function($v) {
                                 {"id": $keys($v),
-                                 "body": $v.*,
-                                 "alias": [$map($v.*.alias, function($vv) {                                            
-                                            {"alias_id": $vv,
-                                            "alias_body": $lookup($$."seaf.ba.products", $vv)}
-                                          })]
-                                 }
+                                 "body": $v.*
+                                }
                               });
 
             $consumed_products_id:= $party.*.has_interest;
             $consumed_products:=  $map($consumed_products_id, function($v) {
                                     {"id": $v,
-                                    "body": $lookup($$."seaf.ba.products",$v),
-                                    "alias": [$map($lookup($$."seaf.ba.products",$v).alias, function($vv) {                                            
-                                                {"alias_id": $vv,
-                                                "alias_body": $lookup($$."seaf.ba.products", $vv)}
-                                              })]
+                                    "body": $lookup($$."seaf.ba.products",$v)
                                     }
                                   });
 
