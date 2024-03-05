@@ -16,7 +16,7 @@ entities:
             owner:
               title: Владелец продукта
               type: string
-              $ref: "#/$rels/seaf.ba.paries.parties"
+              $ref: "#/$rels/seaf.ba.parties.party"
             used_in:
               title: используется в
               type: array
