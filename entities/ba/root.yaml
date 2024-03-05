@@ -1,18 +1,7 @@
 imports:
 
-# Для работы метамодели БА и всех сопуствующих элементов необходимо,
-# чтобы расширение Hexagon было подключено (см. корневой манифест SEAF)
+  - self/self.yaml
+  - parties/parties.yaml
+  - products/products.yaml
+  - processes/processes.yaml
 
-  # seaf.ba.ttl objects representing BA Metamodel
-  - metamodel.yaml
-  # hexagon menu items
-  - menu.yaml
-  # hexagon articles
-  - root.yaml
-
-  - parties.yaml
-  - strategy.yaml
-  - goals.yaml
-  - products.yaml
-  - processes.yaml
-  

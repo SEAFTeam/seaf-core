@@ -1,30 +1,46 @@
 docs:
+
   seaf.ba.main:
-    #location: /Архитектура/Бизнес-архитектура/Реализация на Hexagon
-    description: SEAF Business Architecture Primer explained
+    location: SEAF/Бизнес-архитектура/Intro
+    description: SEAF-CORE BA explained
     type: markdown
     source: ba_main.md
 
-
-  seaf.ba.entry:
-    location: SEAF/Бизнес-архитектура
-    description: SEAF Business Architecture with Hexagon
+  seaf.ba.root_domain:
+    location: SEAF/Бизнес-архитектура/Декларация корневого домена
+    description: >
+      how-to: Первичная декларация корневого домена
     type: markdown
-    source: ba_function.md
+    source: root_domain.md
 
-
-  seaf.ba.ecosystem_main:
-    # location: /Архитектура/Бизнес-архитектура
-    description: what is Ecosystem
+  seaf.ba.ownership:
+    location: SEAF/Бизнес-архитектура/Владение
+    description: >
+      how-to: Описание владения Продуктами и Процессами
     type: markdown
-    source: ecosystem.md
+    source: ownership.md
 
-
-  seaf.ba.method:
-    # location: /
-    description: BA methodology entry doc
+  seaf.ba.products_usage:
+    location: SEAF/Бизнес-архитектура/Продукты
+    description: >
+      how-to: Описание Продуктов и их использования 
     type: markdown
-    source: ba_method.md
+    source: products_usage.md
+
+  seaf.ba.processes_rels:
+    location: SEAF/Бизнес-архитектура/Процессы
+    description: >
+      how-to: Мэппинги процессов 
+    type: markdown
+    source: processes_rels.md
+
+  seaf.ba.biz_ea:
+    location: SEAF/Бизнес-архитектура/Связи с объектами EA
+    description: >
+      how-to: 
+    type: markdown
+    source: biz_ea.md
+
 
 
   seaf.ba.tutorial:
@@ -32,10 +48,3 @@ docs:
     description: BA minimal tutorial
     type: markdown
     source: ba_tutorial.md
-
-
-  seaf.ba.realization:
-    # location: /
-    description: BA realization entry point
-    type: markdown
-    source: ba_realization.md

@@ -1,0 +1,113 @@
+entities:
+  seaf.ba.products:
+    title: Продукты или услуги
+    schema:
+      type: object
+      patternProperties:
+        "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$":
+          type: object
+          properties:
+            title:
+              title: Наименование
+              type: string
+            description:
+              title: Описание
+              type: string
+            owner:
+              title: Владелец продукта
+              type: string
+              $ref: "#/$rels/seaf.ba.parties.party"
+            used_in:
+              title: используется в
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ba.products.product"
+          required:
+            - title
+            - owner
+    objects:
+      product:
+        route: "/"
+        title: Продукт-услуга
+        symbol: "prd"
+
+    presentations:
+
+      product_summary:
+        type: markdown
+        template: templates/product_summary.md
+        source: >
+          (
+            $id:= $params.id;
+
+            $product:= $spread($$."seaf.ba.products")[$keys($) = $id];
+
+            $owner:= $spread($$."seaf.ba.parties")[$keys($) = $spread($$."seaf.ba.products")[$keys($) = $id].*.owner];
+            $owner:= $owner ? {
+                      "id": $keys($owner),
+                      "body": $owner.*,
+                      "alias": $map($owner.*.alias, function($vv) {                                            
+                                {"alias_id": $vv,
+                                 "alias_body": $lookup($$."seaf.ba.parties", $vv)}
+                              })
+                      };
+
+            $consumers:= $spread($$."seaf.ba.parties")[$id in $.*.has_interest];
+            $consumers:= $map($consumers, function($v) {
+                                {"id": $keys($v),
+                                 "body": $v.*,
+                                 "alias": [$map($v.*.alias, function($vv) {                                            
+                                            {"alias_id": $vv,
+                                             "alias_body": $lookup($$."seaf.ba.parties", $vv)}
+                                          })]
+                                 }
+                              });
+
+            $wrappers_id:= $product.*.used_in;
+            $wrappers:= $map($wrappers_id, function($v) {
+                                {"id": $v,
+                                 "body": $lookup($$."seaf.ba.products", $v),
+                                 "alias": [$map($lookup($$."seaf.ba.products", $v).alias, function($vv) {                                            
+                                            {"alias_id": $vv,
+                                             "alias_body": $lookup($$."seaf.ba.products", $vv)}
+                                          })]
+                                 }
+                              });
+
+            $wraps:= $spread($$."seaf.ba.products")[$id in $.*.used_in];
+            $wraps:= $map($wraps, function($v) {
+                                {"id": $keys($v),
+                                 "body": $v.*,
+                                 "alias": [$map($v.*.alias, function($vv) {                                            
+                                            {"alias_id": $vv,
+                                             "alias_body": $lookup($$."seaf.ba.products", $vv)}
+                                          })]
+                                 }
+                              });
+            $processes:= $spread($."seaf.ba.processes")[$id in $.*.products];
+            $processes:= $map($processes, function($v) {
+                                {"id": $keys($v),
+                                 "body": $v.*,
+                                 "alias": [$map($v.*.alias, function($vv) {                                            
+                                            {"alias_id": $vv,
+                                            "alias_body": $lookup($$."seaf.ba.processes", $vv)}
+                                          })]
+                                 }
+                              });
+
+
+
+            {
+              "id": $id,
+              "body": $product.*,
+              "owner": $owner,
+              "consumers_num": $count($consumers),
+              "consumers": $consumers,
+              "wrappers_num": $count($wrappers),
+              "wrappers": $wrappers,
+              "wraps_num": $count($wraps),
+              "wraps": $wraps,
+              "processes_num": $count($processes), 
+              "processes": $processes 
+            }
+          )

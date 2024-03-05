@@ -180,6 +180,11 @@ entities:
               type: array
               items:
                 $ref: "#/$rels/seaf.ta.services.network.network"
+            server_id:
+              title: Список серверов реализующих кластер
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.components.server.server"
           required:
             - cluster_id
             - availabilityzone_id
@@ -272,6 +277,11 @@ entities:
                   type: array
                   items:
                     $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
+                hw_storage_connected:
+                  title: В какие зоны доступности входит DC
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.components.hw_storage.hw_storage"
                 network_connection:
                   title: Перечисление связанных сетей
                   type: array
@@ -283,7 +293,6 @@ entities:
                 - software
                 - volume
                 - availabilityzone_id
-                - server_id
               additionalProperties: false
             - type: object
               properties:
@@ -314,6 +323,11 @@ entities:
                   type: array
                   items:
                     $ref: "#/$rels/seaf.ta.services.network.network"
+                hw_storage_connected:
+                  title: В какие зоны доступности входит DC
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.components.hw_storage.hw_storage"
               required:
                 - storage_id
                 - type
@@ -451,7 +465,7 @@ entities:
           $ref: "#/$defs/seaf.ta.services.k8s"
 
   seaf.ta.services.network:
-    title: Netowrk
+    title: Network
     objects:
       network:
         route: "/"
@@ -542,7 +556,7 @@ entities:
                 vlan:
                   title: Имя виртуальной сети (VLAN)
                   type: integer
-                ipnetowrk:
+                ipnetwork:
                   title: IP-сеть и маска
                   type: string
                 purpose:
@@ -557,7 +571,7 @@ entities:
                 - network_id
                 - type
                 - lan_type
-                - ipnetowrk
+                - ipnetwork
                 - network_appliance_id
               additionalProperties: false
       type: object
