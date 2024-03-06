@@ -1,5 +1,4 @@
 ###### Сводная информация по Участнику :id: {{id}}
-
 ---
 # Участник: "{{body.title}}" 
 
@@ -66,8 +65,9 @@
 * ["{{title}}" :id: {{domain}}](/entities/seaf.ba.parties/party_summary?domain={{domain}}) {{#description}}-- {{.}}{{/description}}
 {{/managedBy}}
 
-{{#members_num}}#### Внутренняя структура:{{/members_num}}
+{{#members_num}} **Внутренняя структура:**{{/members_num}}
 {{#members}}
 * ["{{title}}" :id: {{domain}}](/entities/seaf.ba.parties/party_summary?domain={{domain}}) {{#description}}-- {{.}}{{/description}}
 {{/members}}
 
+![](@entity/seaf.ba.parties/party_context?sa={{sa}})
