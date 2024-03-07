@@ -10,6 +10,9 @@
 ## K8s Deployment
 ![K8s Deployment](@entity/seaf.ta.components.k8s_deployment/table)
 
+## K8s StatefulSet
+![K8s StatefulSet](@entity/seaf.ta.components.k8s_statefulset/table)
+
 ## K8s POD
 ![POD K8s](@entity/seaf.ta.components.k8s_pod/table)
 
