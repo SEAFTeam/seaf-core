@@ -253,6 +253,66 @@ entities:
         template: templates/list.md
         source: >
           ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
+  seaf.ta.components.k8s_statefulset:
+    presentations:
+      table:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: description
+            text: Описание
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: availabilityzone_id
+            text: Availability Zone ID
+            sortable: true
+            align: left
+            width: 20%
+
+          - value: kubernetes_id
+            text:  Kubernetes cluster ID
+            sortable: true
+            align: left
+            width: 20%
+
+        source: >
+          (
+            [[$."seaf.ta.components.k8s_statefulset".$spread().(
+              $COMPONENT_ID := $keys()[0];
+             $.*.{
+                "title": title,
+                "description": description,
+                "kubernetes_id": kubernetes_id,
+                "availabilityzone_id": availabilityzone_id,
+                "link": '/entities/seaf.ta.components.k8s_deployment/list?ta-component-id=' & $COMPONENT_ID 
+              }
+            )]^(title)]
+          )
+
+
+      list:
+        title: Карточка спецификации
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации k8s statefulset
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
   seaf.ta.components.k8s_pod:
     presentations:
       table:
