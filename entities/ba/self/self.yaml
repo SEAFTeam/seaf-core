@@ -23,7 +23,7 @@ entities:
           $arch_parties_id:= $distinct($append($top_domains, $user_defined ));
 
 
-          $type($arch_parties_id) = "array"
+          $count($arch_parties_id) > 0
             ? $map($arch_parties_id, function($v) {
                 {
                   "location": "Архитектура/Бизнес-архитектура/" & $lookup($."seaf.ba.parties", $v).title,
