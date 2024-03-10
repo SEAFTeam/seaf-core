@@ -1,0 +1,6 @@
+docs:
+  # Публикация документации по SEAF Техническая архитектура
+  sber.berezka.documentations.seaf_ta:
+    location: SEAF/Техническая архитектура
+    type: markdown
+    source: README.md
