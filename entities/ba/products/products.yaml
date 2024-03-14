@@ -52,7 +52,7 @@ entities:
                               })
                       };
 
-            $consumers:= $spread($$."seaf.ba.parties")[$id in $.*.has_interest];
+            $consumers:= $spread($$."seaf.ba.parties")[$id in $.*.has_interest.id];
             $consumers:= $map($consumers, function($v) {
                                 {"id": $keys($v),
                                  "body": $v.*,

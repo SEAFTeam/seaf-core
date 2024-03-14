@@ -64,7 +64,7 @@ entities:
                                                           .{  "domain": $keys($), 
                                                               "title": $.*.title, 
                                                               "description": $.*.description,
-                                                              "has_interest": $.*.has_interest
+                                                              "has_interest": $.*.has_interest.id
                                                         
                                                             }
                             ];
@@ -80,7 +80,7 @@ entities:
                                 }
                               });
 
-            $consumed_products_id:= $party.*.has_interest;
+            $consumed_products_id:= $party.*.has_interest.id;
             $consumed_products:=  $map($consumed_products_id, function($v) {
                                     {"id": $v,
                                     "body": $lookup($$."seaf.ba.products",$v)
@@ -100,7 +100,7 @@ entities:
             
 
             $consumers:= $reduce($map($counterparts, function($v){(
-                  $products:= $map($v.has_interest, function($vv) {
+                  $products:= $map($v.has_interest.id, function($vv) {
                     $vv in $owned_products.id ? $vv
                   });
                   $count($products) >0 ?  {"node": $v, "interest": $products}
@@ -138,7 +138,7 @@ entities:
                                                     }), 
                                             $append)
                         );
-            $sa_links:= $append($sa_links, $map($party.*.has_interest, function($v) {
+            $sa_links:= $append($sa_links, $map($party.*.has_interest.id, function($v) {
             
                                                           {
                                                             "from": $keys($party),
