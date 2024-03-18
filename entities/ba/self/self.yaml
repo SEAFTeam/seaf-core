@@ -18,16 +18,13 @@ entities:
 
     menu: >
       (
-          $top_domains:= $seaf_ddd_top($$."seaf.ba.parties");
-          $user_defined:= $$."seaf.self" != null ? $$."seaf.self"[$lookup($$."seaf.ba.parties", $)];
-          $arch_parties_id:= $distinct($append($top_domains, $user_defined ));
+          $contexts:= $seaf_contexts($$);
 
-
-          $count($arch_parties_id) > 0
-            ? $map($arch_parties_id, function($v) {
+          $count($contexts) > 0
+            ? $map($contexts, function($v) {
                 {
-                  "location": "Архитектура/Бизнес-архитектура/" & $lookup($."seaf.ba.parties", $v).title,
-                  "link": "/entities/seaf.ba.parties/party_summary?domain=" & $v
+                  "location": "Архитектура/Бизнес-архитектура/" & $v.menu_path,
+                  "link": "/entities/seaf.ba.parties/party_summary?domain=" & $v.context
                 }
               })
             : {
@@ -35,3 +32,4 @@ entities:
                 "link": "/entities/seaf.self/no_archs"
               };
       )
+

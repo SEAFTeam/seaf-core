@@ -1,4 +1,39 @@
 functions:
+
+
+  seaf_contexts:
+    title: Перечень и дерево контекстов
+    params:
+      - type: object
+        title: Область поиска контекстов (глобальный Контекст -- $$) 
+        alias: ctx
+        required: true
+    code: >
+      (   
+          $ctx:= ctx;
+
+          $top_domains:= $seaf_ddd_top($ctx."seaf.ba.parties");
+          $user_defined:= $ctx."seaf.self" != null 
+            ? $ctx."seaf.self"[$ in $ctx.*.$keys()];
+          $contexts_id:= $distinct($append($top_domains, $user_defined ));
+
+          $map($contexts_id, function($v){(
+            $full_paths:= $seaf_ddd_tree($v).paths;
+
+            $menu_path:= function($arr, $i, $path){(
+              $title:= $ctx.*.$spread()[$.$keys() = $arr[$i]].*.title;
+              $not($i > 0)
+                ? $path:= $title
+                : $path:= $path & "/" & $title;
+
+              $i < $count($arr)-1
+                ? $menu_path($arr, $i+1, $path)
+                : {"context": $v, "menu_path": $path}
+            )}; $menu_path([$full_paths], 0, "");
+
+          )});
+      )
+
   seaf_ddd_tree:
     title: Получение дерева DDD из идентификатора объекта
     params:
@@ -64,6 +99,43 @@ functions:
       )
     result:
       description: Верхние DDD домены
+
+  seaf_context_content:
+    title: Содержимое контекста
+    params:
+      - type: string
+        title: Идентификатор объекта
+        alias: obj_id
+        required: true
+      - type: object
+        title: Глобальный Контекст -- $$ 
+        alias: ctx
+        required: true
+    code: >
+      (
+          $ctx:= ctx;$log($ctx);
+          $obj_id:= obj_id;
+
+          $entities_id_list:= $ctx.entities.$spread().$keys();$log($entities_id_list);
+
+          $context_content:=  $map($entities_id_list, function($v) {
+                                        $map($eval("$ctx" & "." & "\"" & $v & "\"").$keys()[$contains($, $obj_id) and 
+                                                                                            $substringBefore($, $obj_id) = "" 
+                                                                                            ], function($vv) {
+                                            {
+                                                "obj": {$vv: $ctx.$lookup($eval("$ctx" & "." & "\"" & $v & "\""), $vv)},
+                                                "entity": $v
+                                            }
+                                        })
+                                });
+          $context_content:= [$reduce($context_content, $append)];
+
+      )
+    result:
+      type: array
+      description: >
+        Перечень объектов контекста {"obj", "entity"}
+
 
   seaf_has_parts:
     title: Из каких частей состоит объект
@@ -150,3 +222,60 @@ functions:
       #     (
       #       {"hexed": $.imports[$contains($, "hexagon/dochub.yaml")].$count($) > 0};
       #     )
+
+
+datasets:
+
+  metamodel:
+    source: >
+      (
+        $entities:= $.entities.$spread();
+        $objects:= $entities[$.*.objects];
+        $seaf_objects:= $objects[$substringBefore($.$keys().
+            {"entity_id": $.$keys(), "title": $.*.title};
+      )
+
+  byContext:
+    source: >
+      (   
+          $contexts_id:= $seaf_contexts($$).context;
+          
+          $contexts_till_down:= $map($contexts_id, function($v) {
+              {
+                "context": $v,
+                "content": $seaf_context_content($v, $$)
+                }
+          });
+
+          /*sort contexts from lowest (no other contexts inside)             */
+          /*                to highest (includes max number of other contexts*/
+          $contexts_id:= $contexts_till_down.context;
+          $contexts_id_ordered:=
+          $map($contexts_id, function($v) {(
+            {$v: $count($map($contexts_id[$ != $v], function($vv) {
+                          $vv in $contexts_till_down[$.context = $v].content.obj.$keys()
+                            ? {$v: $vv}
+                            : {$v: null}
+                        })[$.* != null]
+                  )
+            }
+          )})^(<$.*).$keys();
+
+          $trim:= function($order, $i, $contexts){(
+            $toTrimOff:= $contexts[$.context = $order[$i]];
+            $toTrim:= $contexts[$.context !=  $order[$i]];
+            $contexts:= $map($toTrim, function($v){
+                          $v~>|$|{"content": $map($v.content, function($vv){(
+                                                $not($vv.obj.$keys() in $toTrimOff.content.obj.$keys()) or
+                                                $vv.obj.$keys() = $toTrimOff.context
+                                                  ? $vv
+                                              )})
+                                  }|
+                        });
+            $contexts:= $append($contexts, $toTrimOff);
+            $i < $count($order)-1
+              ? $trim($order, $i+1, $contexts)
+              : $contexts
+          )};
+          $contexts_isolated:= $trim($contexts_id_ordered, 0, $contexts_till_down);
+      )
