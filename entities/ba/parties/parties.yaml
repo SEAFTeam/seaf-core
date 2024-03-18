@@ -18,7 +18,13 @@ entities:
               description: Продукты, потребляемые или потенциально интересные Участнику
               type: array
               items:
-                $ref: "#/$rels/seaf.ba.products.product"
+                type: object
+                properties:
+                  id:
+                    title: Идентификатор продукта
+                    $ref: "#/$rels/seaf.ba.products.product"
+                required:
+                  - id
             is_part_of:
               title: Является частью
               description: Отношение n к 1 для описания строгих иерархических связей
