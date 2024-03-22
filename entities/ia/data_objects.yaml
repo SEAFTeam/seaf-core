@@ -10,37 +10,14 @@ entities:
             title:
               title: Наименование
               type: string
-            category:
-              title: Категория
-              enum:
-                - Перс данные
-                - Медицинские данные
-                - Платежные данные (карты)
-                - Коммерческая тайна
-                - Прочее
-            status:
-              title: Статус
-              enum:
-                - Планируется
-                - Разрабатывается или модифицируется
-                - Используется
-                - Выводится из эксплуатации
-                - В архиве
             business_object:
               title: Родительский бизнес-объект
               $ref: "#/$rels/seaf.ia.business_objects.business_objects"
             master_system:
               title: АС, являющаяся мастер системой для объекта данных
               $ref: "#/$rels/components.component"
-            comments:
-              title: Комментарии, риски, проблемы
-              type: array
-              items:
-                type: string
           required:
             - title
-            - category
-            - status
             - business_object
             - master_system
     objects:
