@@ -30,7 +30,7 @@ entities:
           (
               [$."seaf.ia.data_objects".$spread().{
                   "id": $keys()[0],
-                  "link": "/entities/seaf.ia.data_objects/card?id=" & $keys()[0],
+                  "link": "/entities/seaf.ia.data_objects/blank?seaf-data-object-id=" & $keys()[0],
                   "title": *.title,
                   "category": *.category,
                   "status": *.status,
