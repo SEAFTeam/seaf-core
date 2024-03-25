@@ -11,6 +11,10 @@ entities:
               {
                   'location': 'Архитектура/Техническая/Технические сервисы',
                   'link': 'entities/seaf.ta/services_md'
+              },
+              {
+                  'location': 'Архитектура/Техническая/Реестры/Сервера',
+                  'link': 'entities/seaf.ta.general/servers_list'
               }
           ]
       )

@@ -1,0 +1,146 @@
+functions:
+  ta_vms:
+    title: Список виртуальных машин ТА
+    params:
+      - alias: dataset
+        type: object
+        title: Озеро данных
+        required: true  # Признак обязательности параметра функции
+      - alias: domain
+        type: string
+        title: Домен организации
+        required: false  # Признак обязательности параметра функции
+    code: >
+      (
+          $domain := domain;
+          $domain_matcher := $eval('/^' & $domain & '.*/');
+          $server_entity_matcher := /.*\.components\.server$/;
+          $dc_az_entity_matcher := /.*\.services\.dc_az$/;
+          $network_entity_matcher := /.*\.services\.network$/;
+          $edr_entity_matcher := /.*\.enterprise\.edrs$/;
+          $av_entity_matcher := /.*\.enterprise\.avs$/;
+          $dcs_entity_matcher := /.*\.services\.dc$/;
+          $virt_cluster_entity_matcher := /.*\.services\.cluster_virtualization/;
+          $dcs_entity := dataset.entities.$spread()[$dcs_entity_matcher($keys())].$keys()[0];
+          $dcs := dataset.$spread()[$dcs_entity_matcher($keys())].*;
+          $server_entity_full := dataset.entities.$spread()[$server_entity_matcher($keys())];
+          $server_entity := $server_entity_full.$keys()[0];
+          $servers := dataset.$spread()[$server_entity_matcher($keys())].*.$spread()[$domain_matcher($keys())][*.type = 'Виртуальный'];
+          $cluster_virtualization := dataset.$spread()[$virt_cluster_entity_matcher($keys())].*.$spread()[$domain_matcher($keys())];
+          $networks := dataset.$spread()[$network_entity_matcher($keys())].*.$spread()[$domain_matcher($keys())];
+          $dc_azs := dataset.$spread()[$dc_az_entity_matcher($keys())].*.$spread()[$domain_matcher($keys())];
+          $edrs := dataset.$spread()[$edr_entity_matcher($keys())].*.$spread()[$domain_matcher($keys())];
+          $avs := dataset.$spread()[$av_entity_matcher($keys())].*.$spread()[$domain_matcher($keys())];
+          [[$servers.$spread().{
+              'id': $keys(),
+              'server': *
+          }].(
+              $disks := $join(server.disks.(*.device & ' - ' & *.type & ' - ' & *.size & 'Gb'), '\n');
+              $subnets := $count(server.network_connection) > 1 ? $join(server.network_connection.($ != null ? $), ', ') : server.network_connection;
+              $av := vm.name in $avs.**.hosts ? true : false;
+              $edr := vm.name in $edrs.**.hosts ? true : false;
+              $vmclusterid := server.virtualization_id;
+              $vmcluster := $cluster_virtualization.$spread()[$keys() = $vmclusterid];
+              $servers_dcs := $distinct($servers.$spread()[$keys() in $vmcluster.*.server_id].*.dc_id);
+              $dc := $dcs.$spread()[$keys() in $servers_dcs];
+              {
+                  'id': id,
+                  'short_id': server.id,
+                  'name': server.fqdn_name,
+                  'description': server.description,
+                  'os_type': server.os.name,
+                  'os_bit': server.os.bit,
+                  'cpu_qty': server.cpu.cores,
+                  'ram': server.ram_qty / 1024,
+                  'flavor': 'Здесь нет flavor',
+                  'disks': $disks,
+                  'nic_qty': server.nic_qty,
+                  'addresses': 'Здесь нет адресов',
+                  'av': $av,
+                  'edr': $edr,
+                  'subnet': $subnets,
+                  'subnet_ids': server.network_connection,
+                  'az': server.availabilityzone_id,
+                  'tenant': 'Нет тенанта',
+                  'virtualization': $vmcluster.*.title,
+                  'link': '/entities/' & $server_entity & '/card?id=' & id,
+                  'entity': $server_entity,
+                  'entity_type': 'SEAF-CORE Virtual Machine',
+                  'entity_name': $server_entity_full.*.title,
+                  'DC': $dc.$keys(),
+                  'dc_name': $dc.*.title
+              }
+          )]
+      )
+
+  ta_physical_servers:
+    title: Список физических серверов ТА
+    params:
+      - alias: dataset
+        type: object
+        title: Озеро данных
+        required: true  # Признак обязательности параметра функции
+      - alias: domain
+        type: string
+        title: Домен организации
+        required: false  # Признак обязательности параметра функции
+    code: >
+      (
+          $domain := domain;
+          $domain_matcher := $eval('/^' & $domain & '.*/');
+          $server_entity_matcher := /.*\.components\.server$/;
+          $dc_az_entity_matcher := /.*\.services\.dc_az$/;
+          $network_entity_matcher := /.*\.services\.network$/;
+          $edr_entity_matcher := /.*\.enterprise\.edrs$/;
+          $av_entity_matcher := /.*\.enterprise\.avs$/;
+          $dcs_entity_matcher := /.*\.services\.dc$/;
+          $virt_cluster_entity_matcher := /.*\.services\.cluster_virtualization/;
+          $dcs_entity := dataset.entities.$spread()[$dcs_entity_matcher($keys())].$keys()[0];
+          $dcs := dataset.$spread()[$dcs_entity_matcher($keys())].*;
+          $server_entity_full := dataset.entities.$spread()[$server_entity_matcher($keys())];
+          $server_entity := $server_entity_full.$keys()[0];
+          $servers := dataset.$spread()[$server_entity_matcher($keys())].*.$spread()[$domain_matcher($keys())][*.type = 'Физический'];
+          $cluster_virtualization := dataset.$spread()[$virt_cluster_entity_matcher($keys())].*.$spread()[$domain_matcher($keys())];
+          $networks := dataset.$spread()[$network_entity_matcher($keys())].*.$spread()[$domain_matcher($keys())];
+          $dc_azs := dataset.$spread()[$dc_az_entity_matcher($keys())].*.$spread()[$domain_matcher($keys())];
+          $edrs := dataset.$spread()[$edr_entity_matcher($keys())].*.$spread()[$domain_matcher($keys())];
+          $avs := dataset.$spread()[$av_entity_matcher($keys())].*.$spread()[$domain_matcher($keys())];
+          [[$servers.$spread().{
+              'id': $keys(),
+              'server': *
+          }].(
+              $dc_id := server.dc_id;
+              $disks := $join(server.disks.(*.device & ' - ' & *.type & ' - ' & *.size & 'Gb'), '\n');
+              $subnets := $count(server.network_connection) > 1 ? $join(server.network_connection.($ != null ? $), ', ') : server.network_connection;
+              $av := vm.name in $avs.**.hosts ? true : false;
+              $edr := vm.name in $edrs.**.hosts ? true : false;
+              $dc := $dcs.$spread()[$keys() = $dc_id];
+              $dc_az := $dc_azs.$spread()[$keys() = $dc.*.availabilityzone_id];
+              {
+                  'id': id,
+                  'short_id': server.id,
+                  'name': server.fqdn_name,
+                  'description': server.description,
+                  'os_type': server.os.name,
+                  'os_bit': server.os.bit,
+                  'cpu_qty': server.cpu.cores,
+                  'ram': server.ram_qty / 1024,
+                  'flavor': 'Здесь нет flavor',
+                  'disks': $disks,
+                  'nic_qty': server.nic_qty,
+                  'addresses': 'Здесь нет адресов',
+                  'av': $av,
+                  'edr': $edr,
+                  'subnet': $subnets,
+                  'subnet_ids': server.network_connection,
+                  'az': $availabilityzone_id.*.title,
+                  'tenant': 'Нет тенанта',
+                  'link': '/entities/' & $server_entity & '/card?id=' & id,
+                  'entity': $server_entity,
+                  'entity_type': 'SEAF-CORE Physical Server',
+                  'entity_name': $server_entity_full.*.title,
+                  'DC': $dc.$keys(),
+                  'dc_name': $dc.*.title
+              }
+          )]
+      )
