@@ -40,25 +40,3 @@ entities:
                   "comments": *.comments
               }]
           )
-
-      card:
-        type: markdown
-        template: templates/data_objects.md
-        source: >
-          (
-              $ctx := $;
-              $lookup($ctx."seaf.ia.data_objects", $params.id).(
-                  $bo := $lookup($ctx."seaf.ia.business_objects", $.business_object);
-              {
-                      "id": $params.id,
-                      "title": $.title,
-                      "category": $.category,
-                      "status": $.status,
-                      "business_object": $.business_object,
-                      "business_object_title": $bo.title,
-                      "business_object_link": "/entities/seaf.ia.business_objects/card?id=" & $.business_object, 
-                      "master_system": $.master_system,
-                      "master_system_title": $ms.title
-                  }
-              )
-          )
