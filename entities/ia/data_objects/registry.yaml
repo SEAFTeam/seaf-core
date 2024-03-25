@@ -1,7 +1,7 @@
 entities:
   seaf.ia.data_objects:
     presentations:
-      list:
+      registry:
         type: table
         headers:
           - value: id
