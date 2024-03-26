@@ -2,3 +2,4 @@ imports:
   - components.yaml
   - services.yaml
   - ta.yaml
+  - aggregations.yaml

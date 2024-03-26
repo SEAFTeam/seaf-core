@@ -1,0 +1,7 @@
+entities:
+  seaf.ta.general:
+    config:
+      entities:
+        server:
+          - 'ta_vms'
+          - 'ta_physical_servers'

@@ -1,0 +1,25 @@
+entities:
+  seaf.ta.general:
+    presentations:
+      servers_list:
+        type: table
+        headers:
+          - value: id
+            text: ID
+          - value: name
+            text: Наименование
+            link: link
+          - value: os_type
+            text: Тип ОС
+          - value: entity_type
+            text: Тип сервера машины
+            sortable: true
+          - value: entity_name
+            text: Наименование сущности
+          - value: dc_name
+            text: ЦОД/IaaS
+        origin: seaf.ta.aggregations.servers
+        source: >
+          (
+              $
+          )

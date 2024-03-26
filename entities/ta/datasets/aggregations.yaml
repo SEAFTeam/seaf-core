@@ -1,0 +1,18 @@
+datasets:
+  seaf.ta.aggregations.servers:
+    title: Server reverse objects
+    origin:
+      functions_reverse: '($.entities."seaf.ta.reverse.general".config.entities)'
+      functions_core: '($.entities."seaf.ta.general".config.entities)'
+      manifest: '($)'
+    source: >
+        (
+            $all := manifest;
+            $functions := $append(functions_reverse, functions_core);
+            $functions.server.(      
+                $id := $;
+                $fn := $all.functions.$spread()[$keys() = $id];
+                $exists($fn) ? 
+                    $eval('$' & $fn.$keys()[0] & '(' & $all & ')');
+            )
+        )
