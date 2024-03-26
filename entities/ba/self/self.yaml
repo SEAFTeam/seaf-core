@@ -1,35 +1,104 @@
 entities:
 
   seaf.self:
-    title: Дополнительные архитектуры-субдомены
+    title: Дополнительные контексты (точки зрения)
     description: >
-      Перечень некорневых идентификаторов Участников, чьи архитектуры рассматриваются
+      Перечень некорневых идентификаторов объектов архитектуры,
+      изолирующих свое внутреннее содержимое от более широкого контекста
 
     schema:
       type: array
       items:
-        $ref: "#/$rels/seaf.ba.parties.party"
+        anyOf:
+          - $ref: "#/$rels/seaf.ba.parties.party" 
+          - $ref: "#/$rels/seaf.ba.products.product"
+          - $ref: "#/$rels/seaf.ba.processes.process" 
 
     presentations:
-
-      no_archs:
+#todo Перепроверить терминологию в документации
+      no_ctx:
         type: markdown
-        template: templates/no_archs.md
+        template: templates/no_ctx.md
+
+#todo обработчик ошибки, если нет ни одного объекта
+      domain_map:
+        type: markdown
+        template: templates/domain_map.md
+
+      objects_domain_structure:
+        type: smartants
+        source: >
+          (
+            $getSymbol:= function($title, $entity_id, $symbol_width) {(
+                $symbol_title:= $split($entity_id, ".")[-1];
+                $symbol_template:= $eval("$.\"seaf.ba.icons\"." & $symbol_title);
+                $symbol_template:= $symbol_template
+                    ? $symbol_template
+                    : $."seaf.ba.icons".no_icon;
+                $symbol_svg:= $replace($symbol_template, /\{\{title\}\}/, $title);
+                $symbol_svg:= $replace($symbol_svg, /\{\{absWidth\}\}/, $string($symbol_width));
+                $symbol_svg:= $replace($symbol_svg, /\{\{vbWidth\}\}/, $string(960*$symbol_width/100));
+                {"title": $symbol_title & "_" & $title, "svg": $symbol_svg}
+            )};
+
+            $pre_nodes:= $arch_objects($$).$map($, function($v) {(
+                $title:= $split($.object_id, ".")[-1];
+                $symbol_width:= $length($title)*90 + 100;
+                $symbol:= $getSymbol($title, $.entity_id, $symbol_width);
+                {"nodes": {
+                    $.object_id: {
+                        "title": $title, 
+                        "symbol": $symbol.title}
+                    },
+                "symbols": {
+                    $symbol.title: $symbol.svg}
+                };
+            )});
+
+            {"config": {
+              "distance": 50,
+              "trackWidth": 50,
+              "hideBoundaryTitles": true,
+              "hideLeafTitles": true
+              },
+             "symbols": $merge($pre_nodes.symbols), 
+             "nodes": $merge($pre_nodes.nodes)
+            } 
+
+
+          )
 
     menu: >
       (
           $contexts:= $seaf_contexts($$);
 
-          $count($contexts) > 0
+          $seaf_entities:= $seaf_entities($$);
+
+          $contexts:= $map($contexts, function($v) {(
+                $seaf_entity:= $map($seaf_entities, function($vv) {
+                      $lookup($eval("$$." & "\"" & $vv.entity_id & "\""), $v.context)
+                            ? $vv
+                });
+                $v~>|$|$merge($seaf_entity)|
+          )});
+          
+          $contexts:= $count($contexts) > 0
             ? $map($contexts, function($v) {
                 {
                   "location": "Архитектура/Бизнес-архитектура/" & $v.menu_path,
-                  "link": "/entities/seaf.ba.parties/party_summary?domain=" & $v.context
+                  "link": "/entities/" & $v.entity_id & "/ctx_summary?domain=" & $v.context
                 }
               })
             : {
-                "location": "Архитектура/Бизнес-архитектура/архитектура не определена",
-                "link": "/entities/seaf.self/no_archs"
+                "location": "Архитектура/Бизнес-архитектура/контексты не определены",
+                "link": "/entities/seaf.self/no_ctx"
               };
+          $domains_structure:= {
+                "location": "Архитектура/Бизнес-архитектура/Доменная структура",
+                "link": "/entities/seaf.self/domain_map",
+                "order": 100
+            };
+
+          $menu:= $append($domains_structure, $contexts);
       )
 
