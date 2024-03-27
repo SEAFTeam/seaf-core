@@ -21,7 +21,7 @@ entities:
             - business_object
             - master_system
     objects:
-      data_objects:
+      data_object:
         route: "/"
         title: Объект данных
         symbol: "do"
