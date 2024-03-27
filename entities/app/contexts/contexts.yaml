@@ -1,0 +1,90 @@
+# Контексты представлений прикладных компонентов SEAF
+# Переиспользуется матамодель DocHub
+entities:
+  contexts:
+    title: Контексты
+    description: >
+      Представляет указанные архитектурные компоненты в виде диаграмм.
+    schema:
+      type: object
+      patternProperties:
+        "^[0-9a-zA-Z][a-zA-Z0-9_-]*(\\.[a-zA-Z][a-zA-Z0-9_-]*)*$":
+          type: object
+          properties:
+            presentation:
+              title: Принудительно определяет презентацию
+              type: string
+              enum:
+                - plantuml
+                - smartants
+                - integration
+    api:
+      # Возвращает компоненты входящие в контекст
+      # Входящие параметры:
+      #   manifest      - данные архитектуры
+      #   contextId     - идентификатор контекста
+      #   extra-links   - признак необходимости отразить окружение
+      #   componentId   - идентификатор компонента для контекста SELF
+      fetchComponentsExtraIntegrations: >
+        (
+          /* Обрабатываем параметры */
+          $params := $;
+          $manifest := $params.manifest;
+          /* Признак SELF контекста */
+          $isSelf := $params.componentId ? true : false;
+          /* Получаем объект контекста */
+          $context := $lookup($params.manifest.contexts, contextId);
+
+          /* Определяем необходимость показывать ближайшие связи */
+          $isExtraLinks := $params.componentId ? true : $params."extra-links";
+
+          /* Определяем, какие компоненты покажем в контексте */
+          $showComponents := $params.componentId
+            /* Если контекст под определенный компонент, ограничиваемся им. */
+            ? [$params.componentId]
+            /* Если нет берем все компоненты указанные в контексте */
+            : $context.components; 
+
+          /* Если в контексте переопределена функция получения компонентов, используем ее*/
+          $context.api.fetchComponents ? (
+            $eval($context.api.fetchComponents, $params)
+          ) : (
+            /* Получаем все компоненты входящие в контекст */
+            $components := $merge($showComponents.(
+                $mask := $;
+                $manifest.components.$spread().(
+                    $componentId := $keys()[0];
+                    $result := $wcard($componentId, $mask) ? $
+                )
+            ));
+
+            
+            /* Добавляем окружение, если это нужно */
+            $merge([$components, $isExtraLinks ?
+            (
+                $tmp := $distinct($manifest."seaf.app.integrations".$spread()[*.to in $components.$keys() or *.from in $components.$keys()].[$.*.to, $.*.from]);
+                $extra_components := $tmp[$not($ in $components.$keys())];
+                $extra_components.(
+                    {
+                        $ : $lookup($manifest.components, $) 
+                    }
+                );
+            ) : {}]);
+          )
+        )
+      # Генерирует список отображаемых связей
+      # Входящие параметры:
+      # components - список компонентов в формате fetchComponents
+      # integrations - список интеграций
+      fetchIntegrations: >
+        (
+          /* Обрабатываем параметры */
+          $integrations := integrations;
+          $components := components;
+          $integrations.$spread()[*.to in $components.$keys() and *.from in $components.$keys()].{
+               "from": $.*.from,
+               "to": $.*.to,
+               "title": $.*.title,
+               "direction": "-->"
+          }
+        )

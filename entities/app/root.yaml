@@ -1,6 +1,6 @@
 imports:
-  - components.yaml
-  - contexts.yaml
+  - components/root.yaml
+  - contexts/root.yaml
   - aspects.yaml
   - integrations/root.yaml
   - specifications/root.yaml
