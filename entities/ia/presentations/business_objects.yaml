@@ -23,24 +23,10 @@ entities:
           (
               ["seaf.ia.business_objects".$spread().{
                   "id": $keys()[0],
-                  "link": "/entities/seaf.ia.business_objects/card?id=" & $keys()[0],
+                  "link": "/entities/seaf.ia.business_objects/blank?seaf-business-object-id=" & $keys()[0],
                   "title": *.title,
                   "status": *.status,
                   "processes": *.processes,
                   "comments": *.comments
               }]
-          )
-
-      card:
-        type: markdown
-        template: templates/business_objects.md
-        source: >
-          (
-              $ctx := $;
-              $ctx."seaf.ia.business_objects".$spread()[$keys()[0]=$params.id].{
-                  "id": $keys()[0],
-                  "title": *.title,
-                  "status": *.status,
-                  "comments": *.comments
-              };
           )
