@@ -5,7 +5,7 @@ entities:
           [
               {
                   'location': 'Архитектура/Информационная/Бизнес объекты',
-                  'link': 'entities/seaf.ia.business_objects/list'
+                  'link': 'entities/seaf.ia.business_objects/registry'
               },
               {
                   'location': 'Архитектура/Информационная/Объекты данных',

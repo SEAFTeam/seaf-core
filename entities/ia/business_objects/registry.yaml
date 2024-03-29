@@ -1,7 +1,7 @@
 entities:
   seaf.ia.business_objects:
     presentations:
-      list:
+      registry:
         type: table
         headers:
           - value: id
@@ -11,22 +11,15 @@ entities:
             text: Наименование
             align: left
             link: link
-          - value: status
-            text: Статус
-            align: left
           - value: processes
             text: Используется в бизнес-процессах
             align: left
-          - value: comments
-            text: Комментарии, риски, проблемы
         source: >
           (
               ["seaf.ia.business_objects".$spread().{
                   "id": $keys()[0],
                   "link": "/entities/seaf.ia.business_objects/blank?seaf-business-object-id=" & $keys()[0],
                   "title": *.title,
-                  "status": *.status,
-                  "processes": *.processes,
-                  "comments": *.comments
+                  "processes": *.processes
               }]
           )
