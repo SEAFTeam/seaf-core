@@ -600,6 +600,11 @@ entities:
                 anyOf:
                   - $ref: "#/$rels/seaf.ta.components.network.network"
                   - $ref: "#/$rels/seaf.ta.components.user_device.user_device"
+            network_connection:
+              title: Перечисление связанных сетей
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.network.network"
             ch_number:
               title: Номер канала
               type: string
