@@ -13,6 +13,12 @@ entities:
               description:
                 title: Описание
                 type: string
+              stand_id:
+                title: Имя стенда внутри окружения
+                type: array
+                items:
+                  $ref: "#/$rels/seaf.ta.services.stand.stand"
+
 #### Описания технологических компонентов. Добавляются все необходимые поля и устанавливаются правила их наполнения ####
   seaf.ta.components.server:
     title: Server

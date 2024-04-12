@@ -28,6 +28,11 @@ entities:
               type: array
               items:
                 $ref: "#/$rels/seaf.app.integrations.integrations"
+            stand_id:
+              title: Имя стенда внутри окружения
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.stand.stand"
 
 #### Описания технологических сервисов. Добавляются все необходимые поля и устанавливаются правила их наполнения ####
   seaf.ta.services.dc_region:
@@ -112,7 +117,6 @@ entities:
               $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
           required:
             - dc_id
-            - dc_name
             - dc_ownership
             - dc_type
             - dc_vendor
@@ -147,7 +151,6 @@ entities:
                 $ref: "#/$rels/seaf.ta.services.network.network"
           required:
             - office_id
-            - name
             - address
 
   seaf.ta.services.cluster:
