@@ -337,6 +337,9 @@ entities:
               type: string
               items:
                 $ref: "#/$rels/seaf.ta.services.network.network"
+            office_id:
+              title: Имя офиса если устройство находится в офисе
+              $ref: "#/$rels/seaf.ta.services.office.office"
           required:
             - user_device_id
             - device_type
