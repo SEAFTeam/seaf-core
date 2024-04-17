@@ -200,7 +200,7 @@ entities:
   seaf.ta.services.compute_service:
     title: Compute Service
     objects:
-      cluster:
+      compute_service:
         route: "/"
         title: Вычислительный сервис
     schema: # JSON Schema контролирующая описание объекта сущности
@@ -238,7 +238,7 @@ entities:
   seaf.ta.services.storage:
     title: Storage
     objects:
-      server:
+      storage:
         route: "/"
         title: Система хранения данных
     schema: # JSON Schema контролирующая описание объекта сущности
