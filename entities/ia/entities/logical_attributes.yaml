@@ -1,0 +1,49 @@
+entities:
+  seaf.ia.logical_attributes:
+    title: Таблица аттрибутов
+    description: Таблица аттрибутов логических сущностей
+    objects:
+      logical_attribute:
+        route: "/"
+        symbol: "la"
+        title: Логический атрибут
+    menu: >
+      (
+        {
+          "location": "Архитектура/Информационная/Логическая модель/Атрибуты",
+          "link": "/entities/seaf.ia.logical_attributes/reestr"
+        }
+      )
+    schema:
+      type: object
+      patternProperties:
+        "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$": # Шаблон
+          type: object  # объект
+          properties:   # со следующей структурой
+            code:       # Уникальная в рамках модели аббревиатура
+              title: Код
+              type: string
+            name:       # Наименование на русском языке в единственном числе, уникальное в рамках модели
+              title: Наименование
+              type: string
+              minLength: 3
+            description: # Описание атрибута с точки зрения бизнеса; сведения о ее назначении, способе использования, и имеющихся ограничениях
+              title: Описание
+              type: string
+              minLength: 5
+            logical_entity:         # Ссылка на сущность соответствующей логической модели, к которой принадлежит атрибут
+              title: Ссылка на сущность
+              $ref: "#/$rels/seaf.ia.logical_entities.logical_entity"
+            business_term:         # Указывается ссылка на соответствующие термины Бизнес-глоссария или сущности концептуальной модели данных
+              title: Ссылка на термин
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ia.business_terms.business_term"
+            link_attr:         # Ссылка на связанный экземпляр сущности
+              title: Ссылочный атрибут
+              $ref: "#/$rels/seaf.ia.logical_entities.logical_entity"
+        # Сообщаем, что перечисленные поля обязательны
+          required:
+            - code
+            - name
+            - logical_entity

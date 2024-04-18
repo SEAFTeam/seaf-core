@@ -1,0 +1,62 @@
+entities:
+  seaf.ia.logical_entities:
+    title: Таблица сущностей
+    description: Таблица логических сущностей
+    objects:
+      logical_entity:
+        route: "/"
+        symbol: "le"
+        title: Логическая сущность
+    menu: >
+      (
+        {
+          "location": "Архитектура/Информационная/Логическая модель/Сущности",
+          "link": "/entities/seaf.ia.logical_entities/reestr"
+        }
+       )
+    schema:
+      type: object
+      patternProperties:
+        "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$": # Шаблон
+          type: object  # объект
+          properties:   # со следующей структурой
+            code:       # Уникальная в рамках модели аббревиатура
+              title: Код
+              type: string
+            name:       # Существительное в единственном числе или словосочетание на его основе (составной термин), уникальное в рамках модели
+              title: Наименование
+              type: string
+              minLength: 5
+            description: # Описание сущности с точки зрения бизнес-процессов; сведения о ее назначении, способе использования и имеющихся ограничениях
+              title: Описание
+              type: string
+              minLength: 5
+            category:
+              title: Категория
+              enum:
+                - Перс данные
+                - Медицинские данные
+                - Платежные данные (карты)
+                - Коммерческая тайна
+                - Прочее
+            status:
+              title: Статус
+              enum:
+                - Планируется
+                - Разрабатывается или модифицируется
+                - Используется
+                - Выводится из эксплуатации
+                - В архиве
+            business_term:         # Указывается ссылка на соответствующие термины Бизнес-глоссария или сущности концептуальной модели данных
+              title: Ссылка на термин
+              $ref: "#/$rels/seaf.ia.business_terms.business_term"
+            comments:
+              title: Комментарии, риски, проблемы
+              type: array
+              items:
+                type: string
+        # Сообщаем, что перечисленные поля обязательны
+          required:
+            - code
+            - name
+            - status

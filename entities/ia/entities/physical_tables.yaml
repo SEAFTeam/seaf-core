@@ -1,0 +1,59 @@
+entities:
+  seaf.ia.physical_tables:
+    title: Физические таблицы
+    description: Реестр физических таблиц. Одна строка соответствует одной таблице
+    objects:
+      physical_table:
+        route: "/"
+        symbol: "pht"
+        title: Физическая таблица
+    menu: >
+      (
+        {
+          "location": "Архитектура/Информационная/Физическая модель/Таблицы",
+          "link": "/entities/seaf.ia.physical_tables/reestr"
+        }
+      )
+    schema:
+      type: object
+      patternProperties:
+        "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$": # Шаблон
+          type: object
+          properties:
+            name:       # Имя таблицы (должно соответствовать правилам наименования принятым в компании)
+              title: Наименование
+              type: string
+            description: # Описание назначения таблицы в текстовом формате.
+              title: Назначение
+              type: string
+              minLength: 5
+            as:         # Наименование АС, к которой относится таблица
+              title: АС
+              $ref: "#/$rels/components.component"
+            rdb:        # СУБД АС, к которой относится таблица
+              title: СУБД
+              type: string
+              minLength: 3
+            db:        # БД, в которой находится таблица
+              title: БД
+              type: string
+              minLength: 3
+            schema:        # Схема в конкретной АС
+              title: Схема
+              type: string
+              minLength: 5
+            logic_link:         # Ссылка на сущность логической модели
+              title: Ссылка на сущность
+              $ref: "#/$rels/seaf.ia.logical_entities.logical_entity"
+            loc_attr:        # дополнительные атрибуты для конкретизации физического нахождения таблиц: контур, СУБД, хост и т.п.
+              title: дополнительные метаатрибуты
+              type: array
+              minItems: 0 # Минимум один шаг
+              items:
+                type: string
+                minLength: 5
+        # Сообщаем, что перечисленные поля обязательны
+          required:
+            - name
+            - description
+            - as

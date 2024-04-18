@@ -1,0 +1,77 @@
+entities:
+  seaf.ia.logical_attributes:
+    presentations:
+      reestr:
+        type: table
+        headers:
+          - value: code
+            text: Код
+          - value: name
+            text: Наименование
+          - value: logical_entity
+            text: Логическая сущность
+            link: le_link
+          - value: link_attr
+            text: Связанная сущность
+            link: entity_link
+        source: >
+          (
+            [seaf.ia.logical_attributes.$spread().
+                {
+                    "code": *.code,
+                    "name": *.name,
+                    "logical_entity": ($id := *.logical_entity; $$.logical_entities.$spread()[$keys() = $id].*.name),
+                    "le_link": "/entities/seaf.ia.logical_entities/card?id=" & *.logical_entity,
+                    "link_attr": ($id := *.link_attr; $$.logical_entities.$spread()[$keys() = $id].*.name),
+                    "entity_link": "/entities/seaf.ia.logical_entities/card?id=" & *.link_attr
+                }]
+          )
+
+#            logical_entity:         # Ссылка на сущность соответствующей логической модели, к которой принадлежит атрибут
+#            business_term:         # Указывается ссылка на соответствующие термины Бизнес-глоссария или сущности концептуальной модели данных
+#            link_attr:         # Ссылка на связанный экземпляр сущности
+
+#Ссылка на сущность|Ссылка на сущность соответствующей логической модели, к которой принадлежит атрибут
+#Ссылка на термин|Указывается ссылка на соответствующие термины Бизнес-глоссария или сущности концептуальной модели данных.
+#Ссылочный атрибут|Ссылка на связанный экземпляр сущности
+      reestr_by_LE:
+        type: table
+        headers:
+          - value: code
+            text: Код
+          - value: name
+            text: Наименование
+          - value: link_attr
+            text: Связанная сущность
+            link: entity_link
+        source: >
+          (
+          [seaf.ia.logical_attributes.*[logical_entity=$params.id].
+              {
+                  "code": code,
+                  "name": name,
+                  "link_attr": ($id := link_attr; $$.logical_entities.$spread()[$keys() = $id].*.name),
+                  "entity_link": "/entities/seaf.ia.logical_entities/card?id=" & link_attr
+              }]
+          )
+
+      reestr_by_LA:
+        type: table
+        headers:
+          - value: logical_entity
+            text: Связанная сущность
+            link: entity_link
+          - value: code
+            text: Код аттрибута
+          - value: name
+            text: Наименование аттрибута
+        source: >
+          (
+          [seaf.ia.logical_attributes.*[link_attr=$params.id].
+              {
+                  "logical_entity": ($id := logical_entity; $$.logical_entities.$spread()[$keys() = $id].*.name),
+                  "entity_link": "/entities/seaf.ia.logical_entities/card?id=" & logical_entity,
+                  "code": code,
+                  "name": name
+              }]
+          )

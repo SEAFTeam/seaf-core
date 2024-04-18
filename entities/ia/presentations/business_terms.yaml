@@ -1,0 +1,50 @@
+entities:
+  seaf.ia.business_terms:
+    presentations:
+      reestr:
+        type: table
+        headers:
+          - value: id
+            text: Системное имя
+          - value: name
+            text: Наименование
+            link: link
+          - value: description
+            text: Описание
+          - value: owner
+            text: Ответственный
+          - value: creation_date
+            text: Дата создания
+          - value: status
+            text: Статус
+        source: >
+          (
+            [business_terms.$spread().{
+                  "id": $keys()[0],
+                  "name": *.name,
+                  "link": "/entities/seaf.ia.business_terms/card?id=" & $keys()[0],
+                  "description": *.description,
+                  "owner": *.owner,
+                  "creation_date": *.creation_date,
+                  "status": *.status
+                }]
+          )
+
+      card:
+        type: markdown
+        template: templates/business_term.md
+        source: >
+          (
+            seaf.ia.business_terms.$spread()[$keys()=$params.id].{
+                  "id": $keys()[0],
+                  "name": *.name,
+                  "description": *.description,
+                  "status": *.status,
+                  "processes": *.processes,
+                  "creation_date": *.creation_date,
+                  "modify_date": *.modify_date,
+                  "owner": *.owner,
+                  "comments": *.comments,
+                  "legal_doc": *.legal_doc
+                }
+          )

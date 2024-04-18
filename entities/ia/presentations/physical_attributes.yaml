@@ -1,0 +1,53 @@
+entities:
+  seaf.ia.physical_attributes:
+    presentations:
+      reestr:
+        type: table
+        headers:
+          - value: name
+            text: Наименование
+          - value: description
+            text: Описание
+          - value: type
+            text: Тип
+          - value: phys_table
+            text: Физическая таблица
+            link: link
+          - value: link_table
+            text: Связанная таблица
+            link: link_table_link
+          - value: link_table_key
+            text: Ключ в связанной таблице
+        source: >
+          (
+            [seaf.ia.physical_attributes.$spread().
+                {
+                    "name": *.name,
+                    "description": *.description,
+                    "type": *.type,
+                    "phys_table":  ($id := *.phys_table; $$.physical_tables.$spread()[$keys() = $id].*.name),
+                    "link": "/entities/seaf.ia.physical_tables/card?id=" & *.phys_table,
+                    "link_table":  ($id := *.link_table; $$.physical_tables.$spread()[$keys() = $id].*.name),
+                    "link_table_link": "/entities/seaf.ia.physical_tables/card?id=" & *.link_table,
+                    "link_table_key": *.link_table_key
+                }]
+          )
+          
+      reestr_by_PhT:
+        type: table
+        headers:
+          - value: name
+            text: Наименование
+          - value: description
+            text: Описание
+          - value: type
+            text: Тип
+        source: >
+          (
+          [seaf.ia.physical_attributes.*[phys_table=$params.id].
+              {
+                    "name": name,
+                    "description": description,
+                    "type": type
+              }]
+          )

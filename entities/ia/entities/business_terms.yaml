@@ -1,0 +1,64 @@
+entities:
+  seaf.ia.business_terms:
+    title: Бизнес-глоссарий
+    description: Таблица бизнес терминов
+    objects:
+      business_term:
+        route: "/"
+        title: Бизнес-термин
+        symbol: "busobj"
+    menu: >
+      (
+        {
+            'location': 'Архитектура/Информационная/Бизнес глоссарий',
+            'link': 'entities/seaf.ia.business_terms/reestr'
+        }
+      )
+    schema:
+      type: object
+      patternProperties:
+        "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$": # Шаблон
+          type: object  # объект
+          properties:   # со следующей структурой
+            name:       # Существительное в единственном числе именительного падежа, без сокращений.
+              title: Наименование
+              type: string
+            description:    # Логическое раскрытие термина. Без сокращений.
+              title: Описание
+              type: string
+            status:         # черновик/ используется/ архив
+              title: Статус
+              enum:
+                - Планируется
+                - Разрабатывается или модифицируется
+                - Используется
+                - Выводится из эксплуатации
+                - В архиве
+            processes:
+              title: Используется в бизнес-процессах
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ba.processes.process"
+            creation_date:  # Дата внесения термина в инструмент описания
+              title: Дата внесения термина
+              type: string
+            modify_date:    # Дата последнего изменения термина в инструменте описания
+              title: Дата изменения термина
+              type: string
+            owner:         # ФИО отвечающего за заполнение термина
+              title: Ответственный (ФИО)
+              type: string
+              minLength: 5
+            comments:      # Комментарий работника, заполнение не обязательно
+              title: Комментарий
+              type: string
+              minLength: 5
+            legal_doc:         # Ссылка на документы, рабочие пространства, которые определяют термин
+              title: Нормативный/правовой документ
+              type: string
+              minLength: 5
+        # Сообщаем, что перечисленные поля обязательны
+          required:
+            - name
+#            - description
+            - status

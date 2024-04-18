@@ -1,0 +1,87 @@
+# Иерархия компонентов определяется доменной структурой (L1.L2.L3)
+components:
+  Users:                  # Идентификатор компонента
+    title: Пользователи   # Название
+    entity: folder        # Представление на схеме
+  Meta:
+    title: Метаданные
+    entity: folder
+
+# Профили пользователей
+  Users.Business:             
+    title: Бизнес-аналитики
+    entity: component
+  Users.System:
+    title: Системные аналитики
+    entity: component
+  Users.Engineer:
+    title: Инженеры/разработкики
+    entity: component
+
+# Мета уровни
+  Meta.Lists:
+    title: Реестры
+    description: Плоские таблицы
+    entity: folder
+  Meta.Models:
+    title: Модели
+    description: Сущности, аттрибуты и связи
+    entity: folder
+    aspects:
+      - Meta_aspects.models.LM
+      - Meta_aspects.models.PhM
+  Meta.Dictionary:
+    title: Словарь
+    description: Перечень терминов
+    entity: component
+    aspects:
+      - Meta_aspects.models.CM
+  # Реестры
+  Meta.Lists.Reports:
+    title: Реестр отчетов
+    entity: collections
+  Meta.Lists.Datamarts:
+    title: Реестр витрин
+    entity: collections
+  Meta.Lists.ASlist:
+    title: Реестр Автоматизированных Систем
+    entity: collections
+    links:
+      - id: Meta.Models.Physic
+        direction: -->
+  # Модели
+  Meta.Models.Concept:
+    title: Концептуальная модель данных
+    entity: entity
+    links:
+      - id: Meta.Models.Logic
+        direction: -->
+  Meta.Models.Logic:
+    title: Логическая модель данных
+    entity: entity
+    aspects:
+      - Meta_aspects.models.LM.LE
+      - Meta_aspects.models.LM.LA
+    links:
+      - id: Meta.Models.Physic
+        direction: -->
+  Meta.Models.Physic:
+    title: Физическая модель данных
+    entity: entity
+    aspects:
+      - Meta_aspects.models.PhM.TR
+      - Meta_aspects.models.PhM.MA
+    links:
+      - id: Meta.Lists.Datamarts
+        direction: -->
+  # Словарь
+  Meta.Dictionary.Glossary:
+    title: Бизнес глосарий
+    entity: file
+    links:
+      - id: Meta.Models.Concept
+        direction: -->
+      - id: Meta.Models.Logic
+        direction: -->
+      - id: Meta.Models.Physic
+        direction: -->

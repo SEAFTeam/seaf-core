@@ -1,0 +1,55 @@
+entities:
+  seaf.ia.physical_attributes:
+    title: Физические аттрибуты
+    description: Таблица атрибутов физических таблиц
+    objects:
+      physical_attribute:
+        route: "/"
+        symbol: "phс"
+        title: Колонка физической таблицы
+    menu: >
+      (
+        {
+          "location": "Архитектура/Информационная/Физическая модель/Колонки",
+          "link": "/entities/seaf.ia.physical_attributes/reestr"
+        }
+      )
+    schema:
+      type: object
+      patternProperties:
+        "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$": # Шаблон
+          type: object  # Взаимодействие будет объект
+          properties:   # со следующей структурой
+            name:       # Имя атрибута (должно соответствовать правилам наименования принятым в компании)
+              title: Наименование
+              type: string
+              minLength: 2
+            description: # Описание назначения атрибута в текстовом формате.
+              title: Описание
+              type: string
+            type: # Указание типа атрибута.
+              title: Тип
+              type: string
+              minLength: 3
+            constrains: # Перечень ограничений для данного атрибута.
+              title: Ограничения
+              type: array
+              minItems: 0 # Минимум один шаг
+              items:
+                type: string
+                minLength: 5
+            phys_table:         # Имя физической таблицы, к которой принадлежит атрибут.
+              title: Таблица
+              $ref: "#/$rels/seaf.ia.physical_tables.physical_table"
+            link_table:         # Ссылка на связанную таблицу (в случае, если атрибут ссылочный).
+              title: Связанная таблица
+              $ref: "#/$rels/seaf.ia.physical_tables.physical_table"
+            link_table_key:         # Имя атрибута в связанной таблице (в случае, если атрибут ссылочный).
+              title: Ключ в связанной таблице
+              $ref: "#/$rels/seaf.ia.physical_attributes.physical_attribute"
+        # Сообщаем, что перечисленные поля обязательны
+          required:
+            - name
+            - description
+            - type
+            - phys_table

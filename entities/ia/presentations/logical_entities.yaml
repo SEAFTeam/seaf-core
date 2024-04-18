@@ -1,0 +1,69 @@
+entities:
+  seaf.ia.logical_entities:
+    presentations:
+      reestr:
+        type: table
+        headers:
+          - value: code
+            text: Код
+          - value: name
+            text: Наименование
+            link: self_link
+          - value: status
+            text: Статус
+          - value: business_term
+            text: Родительский бизнес термин
+            link: term_link
+        source: >
+          (
+            [seaf.ia.logical_entities.$spread().
+                {
+                    "code": *.code,
+                    "name": *.name,
+                    "self_link": "/entities/seaf.ia.logical_entities/card?id=" & $keys(),
+                    "status": *.status,
+                    "business_term": ($id := *.business_term; $$.business_terms.$spread()[$keys() = $id].*.name),
+                    "term_link": "/entities/seaf.ia.business_terms/card?id=" & *.business_term
+                }]
+          )
+
+      card:
+        type: markdown
+        template: templates/logical_entity.md
+        source: >
+          (
+            seaf.ia.logical_entities.$spread()[$keys()=$params.id].{
+                  "id": $keys()[0],
+                  "code": *.code,
+                  "name": *.name,
+                  "description": *.description,
+                  "category": *.category,
+                  "status": *.status,
+                  "business_term": ($id := *.business_term; $$.business_terms.$spread()[$keys() = $id].*.name),
+                  "term_link": "/entities/business_terms/card?id=" & *.business_term,
+                  "comments": *.comments
+                }
+          )
+
+      reestr_by_BT:
+        type: table
+        headers:
+          - value: code
+            text: Код
+            link: self_link
+          - value: name
+            text: Наименование
+          - value: status
+            text: Статус
+        source: >
+          (
+            [seaf.ia.logical_entities.$spread().(
+            $id := $keys(); *[business_term=$params.bt_id].
+              {
+                    "code": code,
+                    "self_link": "/entities/seaf.ia.logical_entities/card?id=" & $id,
+                    "name": name,
+                    "status": status
+              }
+            )]
+          )
