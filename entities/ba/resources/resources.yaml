@@ -1,0 +1,47 @@
+entities:
+
+  seaf.ba.resources:
+    title: Ресурсы
+    description: > 
+      Любые объекты, которые используются или трансформируются в Процессах,
+       принимаются или отчуждаются Участниками, непосредственно или при использовании Продуктов
+
+    objects:     # DO NOT code objects of resources -- they are almost any non-ba object (see schema)
+      resources:
+        route: "/"
+        title: Ресурсы
+        symbol: "resources"
+
+
+    schema:
+      $resources: # Used to be included into other ba entities relations attributes
+
+        anyOf:    # edit in case:
+                  ### new resource entity added into core -- add $ref accordingly
+                  ### new resource entity imported within extension -- add $ref accordingly
+                  ### resource entity became/stopts to be considerable as resource -- add/remove $ref accordingly
+          - $ref: "#/$rels/components.component"
+          - $ref: "#/$rels/seaf.app.integrations.integrations"
+          - $ref: "#/$rels/seaf.ia.business_objects.business_objects"
+          - $ref: "#/$rels/seaf.ia.data_objects.data_objects"
+          - $ref: "#/$rels/seaf.ta.components.server.server"
+          - $ref: "#/$rels/seaf.ta.components.hw_storage.hw_storage"
+          - $ref: "#/$rels/seaf.ta.components.network.network"
+          - $ref: "#/$rels/seaf.ta.components.user_device.user_device"
+          - $ref: "#/$rels/seaf.ta.services.dc_region.dc_region"
+          - $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
+          - $ref: "#/$rels/seaf.ta.services.dc.dc"
+          - $ref: "#/$rels/seaf.ta.services.office.office"
+          - $ref: "#/$rels/seaf.ta.services.cluster.cluster"
+          - $ref: "#/$rels/seaf.ta.services.compute_service.compute_service"
+          - $ref: "#/$rels/seaf.ta.services.storage.storage"
+          - $ref: "#/$rels/seaf.ta.services.cluster_virtualizationn.cluster_virtualization"
+          - $ref: "#/$rels/seaf.ta.services.k8s.k8s"
+          - $ref: "#/$rels/seaf.ta.services.network.network"
+          - $ref: "#/$rels/seaf.ta.services.network_links.network_links"
+          - $ref: "#/$rels/seaf.ta.services.backup.backup"
+          - $ref: "#/$rels/seaf.ta.services.monitoring.monitoring"
+          - $ref: "#/$rels/seaf.ta.services.software.software"
+
+        
+
