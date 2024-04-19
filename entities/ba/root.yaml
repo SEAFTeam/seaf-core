@@ -1,6 +1,8 @@
 imports:
 
-  - self/self.yaml
+  - base/base.yaml                # Иконки, функции, сущности для представления АБ
+  - menu.yaml                     # Конфигурация меню
+
   - parties/parties.yaml
   - products/products.yaml
   - processes/processes.yaml
