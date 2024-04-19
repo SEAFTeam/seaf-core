@@ -16,7 +16,7 @@ entities:
             link: entity_link
         source: >
           (
-            [seaf.ia.logical_attributes.$spread().
+            [$."seaf.ia.logical_attributes".$spread().
                 {
                     "code": *.code,
                     "name": *.name,
@@ -46,7 +46,7 @@ entities:
             link: entity_link
         source: >
           (
-          [seaf.ia.logical_attributes.*[logical_entity=$params.id].
+          [$."seaf.ia.logical_attributes".*[logical_entity=$params.id].
               {
                   "code": code,
                   "name": name,
@@ -67,7 +67,7 @@ entities:
             text: Наименование аттрибута
         source: >
           (
-          [seaf.ia.logical_attributes.*[link_attr=$params.id].
+          [$."seaf.ia.logical_attributes".*[link_attr=$params.id].
               {
                   "logical_entity": ($id := logical_entity; $$.logical_entities.$spread()[$keys() = $id].*.name),
                   "entity_link": "/entities/seaf.ia.logical_entities/card?id=" & logical_entity,

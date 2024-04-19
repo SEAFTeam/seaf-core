@@ -16,7 +16,7 @@ entities:
             link: term_link
         source: >
           (
-            [seaf.ia.logical_entities.$spread().
+            [$."seaf.ia.logical_entities".$spread().
                 {
                     "code": *.code,
                     "name": *.name,
@@ -32,7 +32,7 @@ entities:
         template: templates/logical_entity.md
         source: >
           (
-            seaf.ia.logical_entities.$spread()[$keys()=$params.id].{
+            $."seaf.ia.logical_entities".$spread()[$keys()=$params.id].{
                   "id": $keys()[0],
                   "code": *.code,
                   "name": *.name,
@@ -57,7 +57,7 @@ entities:
             text: Статус
         source: >
           (
-            [seaf.ia.logical_entities.$spread().(
+            [$."seaf.ia.logical_entities".$spread().(
             $id := $keys(); *[business_term=$params.bt_id].
               {
                     "code": code,

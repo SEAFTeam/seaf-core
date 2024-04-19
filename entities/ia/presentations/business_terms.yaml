@@ -19,7 +19,7 @@ entities:
             text: Статус
         source: >
           (
-            [business_terms.$spread().{
+            [$."seaf.ia.business_terms".$spread().{
                   "id": $keys()[0],
                   "name": *.name,
                   "link": "/entities/seaf.ia.business_terms/card?id=" & $keys()[0],
@@ -35,7 +35,7 @@ entities:
         template: templates/business_term.md
         source: >
           (
-            seaf.ia.business_terms.$spread()[$keys()=$params.id].{
+            $."seaf.ia.business_terms".$spread()[$keys()=$params.id].{
                   "id": $keys()[0],
                   "name": *.name,
                   "description": *.description,

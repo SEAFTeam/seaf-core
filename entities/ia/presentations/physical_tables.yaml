@@ -21,13 +21,13 @@ entities:
 
         source: >
           (
-            [seaf.ia.physical_tables.$spread().
+            [$."seaf.ia.physical_tables".$spread().
                 {
                     "name": *.name,
                     "self_link": "/entities/seaf.ia.physical_tables/card?id=" & $keys(),
                     "description": *.description,
-                    "as": ($id := *.as; $$.autosystems.$spread()[$keys() = $id].*.name),
-                    "as_link": "/entities/autosystems/card?id=" & *.as,
+                    "as": *.as,
+                    "as_link": "components/component/card?id=" & *.as,
                     "rdb": *.rdb,
                     "logic_link": ($id := *.logic_link; $$.logical_entities.$spread()[$keys() = $id].*.name),
                     "link": "/entities/seaf.ia.logical_entities/card?id=" & *.logic_link
@@ -39,7 +39,7 @@ entities:
         template: templates/physical_table.md
         source: >
           (
-            seaf.ia.physical_tables.$spread()[$keys()=$params.id].{
+            $."seaf.ia.physical_tables".$spread()[$keys()=$params.id].{
                   "id": $keys()[0],
                   "name": *.name,
                   "description": *.description,
@@ -67,7 +67,7 @@ entities:
             text: СУБД
         source: >
           (
-            [seaf.ia.physical_tables.$spread().(
+            [$."seaf.ia.physical_tables".$spread().(
             $id := $keys(); *[logic_link=$params.id].
               {
                     "name": name,
@@ -93,7 +93,7 @@ entities:
             text: СУБД
         source: >
           (
-            [seaf.ia.physical_tables.$spread().(
+            [$."seaf.ia.physical_tables".$spread().(
             $id := $keys(); *[as=$params.id].
               {
                     "name": name,

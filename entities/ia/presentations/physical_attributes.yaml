@@ -20,7 +20,7 @@ entities:
             text: Ключ в связанной таблице
         source: >
           (
-            [seaf.ia.physical_attributes.$spread().
+            [$."seaf.ia.physical_attributes".$spread().
                 {
                     "name": *.name,
                     "description": *.description,
@@ -44,7 +44,7 @@ entities:
             text: Тип
         source: >
           (
-          [seaf.ia.physical_attributes.*[phys_table=$params.id].
+          [$."seaf.ia.physical_attributes".*[phys_table=$params.id].
               {
                     "name": name,
                     "description": description,
