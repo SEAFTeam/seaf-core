@@ -1,41 +1,34 @@
 docs:
 
   seaf.ba.main:
-    location: SEAF/Бизнес-архитектура/Intro
+    location: SEAF/Архитектура Бизнеса/Intro
     description: SEAF-CORE BA explained
     type: markdown
     source: ba_main.md
 
-  seaf.ba.root_domain:
-    location: SEAF/Бизнес-архитектура/Декларация корневого домена
-    description: >
-      how-to: Первичная декларация корневого домена
-    type: markdown
-    source: root_domain.md
-
   seaf.ba.ownership:
-    location: SEAF/Бизнес-архитектура/Владение
+    location: SEAF/Архитектура Бизнеса/Владение
     description: >
       how-to: Описание владения Продуктами и Процессами
     type: markdown
     source: ownership.md
 
   seaf.ba.products_usage:
-    location: SEAF/Бизнес-архитектура/Продукты
+    location: SEAF/Архитектура Бизнеса/Продукты
     description: >
       how-to: Описание Продуктов и их использования 
     type: markdown
     source: products_usage.md
 
   seaf.ba.processes_rels:
-    location: SEAF/Бизнес-архитектура/Процессы
+    location: SEAF/Архитектура Бизнеса/Процессы
     description: >
       how-to: Мэппинги процессов 
     type: markdown
     source: processes_rels.md
 
   seaf.ba.biz_ea:
-    location: SEAF/Бизнес-архитектура/Связи с объектами EA
+    location: SEAF/Архитектура Бизнеса/Связи с объектами EA
     description: >
       how-to: 
     type: markdown
@@ -44,7 +37,7 @@ docs:
 
 
   seaf.ba.tutorial:
-    #location: /Архитектура/Бизнес-архитектура/Руководство "Минимальная БА"
+    #location: /Архитектура/Архитектура Бизнеса/Руководство "Минимальная БА"
     description: BA minimal tutorial
     type: markdown
     source: ba_tutorial.md
