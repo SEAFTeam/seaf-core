@@ -37,3 +37,57 @@ functions:
           $link := $v;
           /*$log("-*-> "& $link,["MTG"]);*/
       )
+    get_item: >
+     (
+         $object := $.o;
+         $item := $.i;
+         ($lookup($.**, $object)~>$lookup($item));
+     )
+    get_parent: >
+     (
+         /* o - объект, r - root поиска */
+         $obj := $.o;
+         $root := $.r?$.r:$.**;
+         $keys($root)~> $single(function ($key) {
+                  $lookup($root, $key)~>$keys()~>$single(function($v) { $v =  $obj })
+             });
+     )
+# Функция получения всех атрибутов ссылающихся на внешние объекты
+# $.o - объект для разбора
+    get_refs_all: >
+     (
+         $component := $.o?$.o:"seaf.ta.services.storage";
+         $lookup($.entities,$component).**."properties"~>$map(
+             function($v){ $v.$sift(function($v, $k) {$c:= $lookup($v.**, "$ref")})
+             })~>$merge()~>$each(function($v, $k) { {$k : $lookup($v.**, "$ref") }})~>$merge();     
+     )
+# Функция нахождения АС/ФП по уровню критичности
+# $c - Уровень критичности AC/ФП, если не указан, то любой
+    get_app_tree: >
+     (
+         $c := $.c?$.c:"";
+      
+             $app_serv := $map([$.'seaf.app.services', $.components], function($v){(
+                     $each($v,function($v, $k){ 
+                         $v.type = "service" ? $contains($v.sber.criticality,$c) ? {$k:{'criticality':$v.sber.criticality, 'app_components':[], 'ta_services':[], 'ta_components':[]}} 
+                     }); 
+             )~>$merge()})~>$merge(); 
+      
+             $app_comp := $each($.components, function($v, $k) { 
+                 $exists($v.sber.is_component_of) ? 
+                 (
+                     $app_serv~>|$lookup($app_serv, $v.sber.is_component_of)|{"app_components" : $append(app_components,[$k])}|;
+                     {$k:$v.sber.is_component_of}
+                 )     
+             })~>$merge();
+          
+             $ta_serv := $map($keys(), function($v){ 
+                  $v~>/^seaf.ta.services/?$lookup($, $v)~>$each(function($val, $k){
+                      $val."app_components"? {$k:($val."app_components"~>$filter(function($v){ $map($keys($app_comp), function($key){ 
+                          $v = $key?($app_serv~>|$lookup($app_serv, $lookup($app_comp, $key) )|{"ta_services" : $append(ta_services,[$k])~>$distinct()}|; true;)}) }))
+                             ~>$map(function($v){$lookup($app_comp,$v)})~>$distinct()~>$map(function($v){$type($v) = 'string'?[$v]:$v})} 
+                  })~>$merge() 
+              })~>$merge();
+     
+             $app_serv;
+     )
