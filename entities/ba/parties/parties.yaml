@@ -2,6 +2,7 @@ entities:
 
   seaf.ba.parties:
     title: Участники
+
     schema:
 
       type: object
@@ -25,11 +26,23 @@ entities:
                     $ref: "#/$rels/seaf.ba.products.product"
                 required:
                   - id
+            accepts:
+              title: для
+              description: отношение Ресурс - для кого? -> для Участника
+              type: array
+              items:
+                $ref: "#/properties/seaf.ba.resources/$resources"
+            feeds:
+              title: передает
+              description: отношение Участникк -передает или отчуждает что? -> Ресурс
+              type: array
+              items:
+                $ref: "#/properties/seaf.ba.resources/$resources"
             is_part_of:
               title: Является частью
               description: Отношение n к 1 для описания строгих иерархических связей
               $ref: "#/$rels/seaf.ba.parties.party"
-            relates:
+            relates_to:
               title: Агрегирующая сущность
               description: Отношение n к m для описания множественных категорий (фасетных признаков)
               type: array
@@ -45,190 +58,86 @@ entities:
 
     presentations:
 
-      party_summary:
+      org_str_wrapper:
+        title: Оргструктура
         type: markdown
-        template: templates/party_summary.md
-        source: >
-          (
-            $domain:= $params.domain;
+        template: templates/org_str_wrapper.md
 
-
-            $party:= $spread($."seaf.ba.parties")[$keys($) = $domain];
-            
-            $counterparts:= [$spread($."seaf.ba.parties")[
-                                                            $contains($keys($), $domain) and 
-                                                            $substringBefore($keys($), $domain) = "" and
-                                                            $substringAfter($keys($), $domain) != "" and
-                                                            $count([$.*.is_part_of[$contains($, $domain)]])=0
-                                                          ]
-                                                          .{  "domain": $keys($), 
-                                                              "title": $.*.title, 
-                                                              "description": $.*.description,
-                                                              "has_interest": $.*.has_interest.id
-                                                        
-                                                            }
-                            ];
-
-            $members:= [$spread($."seaf.ba.parties")[$domain in $.*.is_part_of].{"domain": $keys($), "title": $.*.title, "description": $.*.description}];
-
-            $managedBy:= [$party.*.is_part_of.{"domain": $, "title": $lookup($$."seaf.ba.parties", $).title, "description": $lookup($$."seaf.ba.parties", $).description}];
-
-            $owned_products:= $spread($."seaf.ba.products")[$.*.owner = $domain];
-            $owned_products:= $map($owned_products, function($v) {
-                                {"id": $keys($v),
-                                 "body": $v.*
-                                }
-                              });
-
-            $consumed_products_id:= $party.*.has_interest.id;
-            $consumed_products:=  $map($consumed_products_id, function($v) {
-                                    {"id": $v,
-                                    "body": $lookup($$."seaf.ba.products",$v)
-                                    }
-                                  });
-
-            $processes_owned:= $spread($."seaf.ba.processes")[$.*.owner = $domain];
-            $processes_owned:= $map($processes_owned, function($v) {
-                                {"id": $keys($v),
-                                 "body": $v.*,
-                                 "alias": [$map($v.*.alias, function($vv) {                                            
-                                            {"alias_id": $vv,
-                                            "alias_body": $lookup($$."seaf.ba.processes", $vv)}
-                                          })]
-                                 }
-                              });
-            
-
-            $consumers:= $reduce($map($counterparts, function($v){(
-                  $products:= $map($v.has_interest.id, function($vv) {
-                    $vv in $owned_products.id ? $vv
-                  });
-                  $count($products) >0 ?  {"node": $v, "interest": $products}
-                )}), $append);
-                $log($consumers);
-
-            $sa_nodes:= $merge([
-              {$keys($party): {"title": $party.*.title, "symbol": "domain", "tag": "self"}},
-              $owned_products.{$.id: {"title": $.body.title, "symbol": "owned", "tag": "owned"}},
-              $consumers.node.{$.domain: {"title": $.title, "symbol": "consumer", "tag": "consumers"}},
-              $consumed_products.{$.id: {"title": $.body.title, "symbol": "consumed", "tag": "consumed"}}
-
-            
-            ]);$log($counterparts);
-
-            $sa_links:= [];
-            $sa_links:= $append($sa_links, $map($owned_products, function($v){
-                                              {
-                                                "from": $v.id,
-                                                "to": $keys($party),
-                                                "title": "владелец",
-                                                "style": "->"
-                                              }
-                                            })
-                        );
-            $sa_links:= $append($sa_links, $reduce($map($consumers, function($v){
-                                                      $map($consumers.interest, function($vv){
-                                                          {
-                                                            "from": $v.node.domain,
-                                                            "to": $vv,
-                                                            "title": "заинтересован",
-                                                            "style": "->"
-                                                          }
-                                                      })
-                                                    }), 
-                                            $append)
-                        );
-            $sa_links:= $append($sa_links, $map($party.*.has_interest.id, function($v) {
-            
-                                                          {
-                                                            "from": $keys($party),
-                                                            "to": $v,
-                                                            "title": "заинтересован",
-                                                            "style": "->"
-                                                          }
-
-                                            })
-                        );
-
-
-            $sa:= $encodeUrl($string({
-              "nodes": $sa_nodes,
-              "links": $sa_links
-            }));
-
-            $party:= {"id": $keys($party),
-                      "body": $party.*, 
-                      "products_num": $count($owned_products) + $count($consumed_products),
-                      "counterparts_num": $count($counterparts), 
-                      "counterparts": $counterparts,
-                      "members_num": $count($members),
-                      "members": $members,
-                      "managedBy_num": $count($managedBy),
-                      "managedBy": $managedBy,
-                      "owner_num": $count($owned_products),
-                      "owner": $owned_products,
-                      "consumes_num": $count($consumed_products),
-                      "consumes": $consumed_products,
-                      "processes_owned_num": $count($processes_owned),
-                      "processes_owned": $processes_owned,
-                      "sa": $sa
-
-                     }
-          )
-      party_context:
+      org_str_graph:
+        title: Оргструктура (граф)
         type: smartants
         source: >
           (
-            $sa_config:= {
-              "grid": 
-                [{"row": 
-                  [ {"col": "consumers"},
-                    {"col": "self"}
-                  ]
-                  },
-                  {"row": 
-                   [ {"col": "owned"},
-                    {"col": "consumed"}
-                  ]
-                  }
-                  
-                ]
-              
-            };
+            $parties:= $spread($."seaf.ba.parties").[$~>|$.*|{"entity_id": "parties"}|];
 
-            $sa_symbols:= {
-              "domain": '<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-people-fill">
-                        <path transform="scale(3)" fill="goldenrod" d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
-                        </svg>',
+            $getSymbol:= function($title, $entity_id, $symbol_width) {(
+                $symbol_title:= $split($entity_id, ".")[-1];
+                $symbol_obj:= $eval("$.\"seaf.icons\"." & $symbol_title);
+                $symbol_gliph:= $symbol_obj.gliph;
+                $symbol_template:= $symbol_gliph ?
+                  $match($symbol_gliph, /^(<svg)[^>]+>/, 1).match &
+                  '<rect x="0" y="-960" width={{vbWidth}} height="960" rx="300" fill="' & $symbol_obj.back_color & '"/>' &
+                  '<text style="font-size:800px;" x="1200" y="-250" fill="' & $symbol_obj.fore_color & '" font-family="monospace">{{title}}</text>' &
+                  $match($symbol_gliph, /(<path)[^>]+>/, 1).match &
+                  '</svg>'
+                ;
+                $symbol_template:= $symbol_template
+                    ? $symbol_template
+                    : $."seaf.icons".no_icon;
+                $symbol_svg:= $replace($symbol_template, /\{\{title\}\}/, $title);
+                $symbol_svg:= $replace($symbol_svg, /\{\{fore_color\}\}/, $symbol_obj.fore_color);
+                $symbol_svg:= $replace($symbol_svg, /\{\{back_color\}\}/, $symbol_obj.back_color);
+                $symbol_svg:= $replace($symbol_svg, /\{\{absWidth\}\}/, $string($symbol_width));
+                $symbol_svg:= $replace($symbol_svg, /\{\{vbWidth\}\}/, $string(4000*$symbol_width/100));
+                {"title": $symbol_title & "_" & $title, "svg": $symbol_svg}
+            )};
 
-              "owned": '<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-box2-heart-fill">
-                        <path transform="scale(3)" fill="mediumseagreen" d="M3.75 0a1 1 0 0 0-.8.4L.1 4.2a.5.5 0 0 0-.1.3V15a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V4.5a.5.5 0 0 0-.1-.3L13.05.4a1 1 0 0 0-.8-.4h-8.5ZM8.5 4h6l.5.667V5H1v-.333L1.5 4h6V1h1v3ZM8 7.993c1.664-1.711 5.825 1.283 0 5.132-5.825-3.85-1.664-6.843 0-5.132Z"/>
-                        </svg>',
-              "consumed": '<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-box-seam-fill">
-                          <path transform="scale(3)" fill="lightcoral" fill-rule="evenodd" d="M15.528 2.973a.75.75 0 0 1 .472.696v8.662a.75.75 0 0 1-.472.696l-7.25 2.9a.75.75 0 0 1-.557 0l-7.25-2.9A.75.75 0 0 1 0 12.331V3.669a.75.75 0 0 1 .471-.696L7.443.184l.01-.003.268-.108a.75.75 0 0 1 .558 0l.269.108.01.003 6.97 2.789ZM10.404 2 4.25 4.461 1.846 3.5 1 3.839v.4l6.5 2.6v7.922l.5.2.5-.2V6.84l6.5-2.6v-.4l-.846-.339L8 5.961 5.596 5l6.154-2.461L10.404 2Z"/>
-                          </svg>',
-              "consumer": '<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-people-fill">
-                          <path transform="scale(3)" fill="indianred" d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
-                          </svg>'
 
-            };
 
-            $data:= $params.sa;
-            $sa:= $merge([{"config": $sa_config}, {"symbols": $sa_symbols}, $eval($decodeUrl($data))]);     
+            $pre_nodes:= $parties.$map($, function($v) {(
+                $title:= $v.*.title;
+                $size:= $length($title);
+                $symbol_width:= 25 + ($size > 7 ? $size*14 : $size*16 );
+                $symbol:= $getSymbol($title, $v.*.entity_id, $symbol_width);
+                { "nodes": {
+                      ($split($v.$keys(), ".")[-1] ? $split($v.$keys(), ".")[-1] : $v.$keys()): {
+                          "title": $title, 
+                          "symbol": $symbol.title}
+                      },
+                   "links": $append(
+                              $v.*.is_part_of ?
+                                [
+                                    { "from": ($split($v.$keys(), ".")[-1] ? $split($v.$keys(), ".")[-1] : $v.$keys()),
+                                      "to": ($split($v.*.is_part_of, ".")[-1] ? $split($v.*.is_part_of, ".")[-1] : $v.*.is_part_of),
+                                      "title": "является частью",
+                                      "style": "->"
+                                    }
 
-            $nodes_repl:= $merge($map($sa.nodes.$spread(), function($v) {
-            {$replace($v.$keys(), ".", ""): $v.*}
-            }));
+                                ] : [],
 
-            $links_repl:= $map($sa.links, function($v) {
-              {
-                "from": $replace($v.from, ".", ""),
-                "to": $replace($v.to, ".", ""),
-                "title": $v.title,
-                "style": $v.style
-              }
-            });
+                              $map($v.*.relates_to, function($vv) {
+                                $vv ?
+                                  { "from": ($split($v.$keys(), ".")[-1] ? $split($v.$keys(), ".")[-1] : $v.$keys()),
+                                    "to": ($split($vv, ".")[-1] ? $split($vv, ".")[-1] : $vv),
+                                    "title": "относится к",
+                                    "style": "-[#green]->"
+                                  }
+                              })
+                            ),   
 
-            $sa:= $sa~>|$|{"nodes": $nodes_repl, "links": [$links_repl]}|               
-            
+                  "symbols": {
+                      $symbol.title: $symbol.svg}
+                };
+            )});
+
+            {"config": {
+              "distance": 10,
+              "trackWidth": 24,
+              "hideLeafTitles": true
+              },
+             "symbols": $merge($pre_nodes.symbols), 
+             "nodes": $merge($pre_nodes.nodes),
+             "links": [$pre_nodes.links]
+            } 
           )
+
