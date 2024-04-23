@@ -1,6 +1,6 @@
 entities:
   seaf.ba.products:
-    title: Продукты или услуги
+    title: Продукты
     schema:
       type: object
       patternProperties:
@@ -17,11 +17,24 @@ entities:
               title: Владелец продукта
               type: string
               $ref: "#/$rels/seaf.ba.parties.party"
+            receives:
+              title: поступает на вход
+              description: Ресурс - идет на вход чему? -> Продукту
+              type: array
+              items:
+                $ref: "#/properties/seaf.ba.resources/$resources"
+            delivers:
+              title: предоставляет
+              description: отношение Продукт - предоставляет  что? -> Ресурс
+              type: array
+              items:
+                $ref: "#/properties/seaf.ba.resources/$resources"
             used_in:
               title: используется в
               type: array
               items:
                 $ref: "#/$rels/seaf.ba.products.product"
+
           required:
             - title
             - owner
@@ -33,81 +46,90 @@ entities:
 
     presentations:
 
-      product_summary:
+      landscape_wrapper:
+        title: Продуктовый ландшафт
         type: markdown
-        template: templates/product_summary.md
+        template: templates/landscape_wrapper.md
+
+      landscape_graph:
+        title: Продуктовый ландшафт (граф)
+        type: smartants
         source: >
           (
-            $id:= $params.id;
+            $parties:= $spread($."seaf.ba.parties").[$~>|$.*|{"entity_id": "parties"}|];
+            $products:= $spread($."seaf.ba.products").[$~>|$.*|{"entity_id": "products"}|];
 
-            $product:= $spread($$."seaf.ba.products")[$keys($) = $id];
+            $getSymbol:= function($title, $entity_id, $symbol_width) {(
+                $symbol_title:= $split($entity_id, ".")[-1];
+                $symbol_obj:= $eval("$.\"seaf.icons\"." & $symbol_title);
+                $symbol_gliph:= $symbol_obj.gliph;
+                $symbol_template:= $symbol_gliph ?
+                  $match($symbol_gliph, /^(<svg)[^>]+>/, 1).match &
+                  '<rect x="0" y="-960" width={{vbWidth}} height="960" rx="300" fill="' & $symbol_obj.back_color & '"/>' &
+                  '<text style="font-size:800px;" x="1200" y="-250" fill="' & $symbol_obj.fore_color & '" font-family="monospace">{{title}}</text>' &
+                  $match($symbol_gliph, /(<path)[^>]+>/, 1).match &
+                  '</svg>'
+                ;
+                $symbol_template:= $symbol_template
+                    ? $symbol_template
+                    : $."seaf.icons".no_icon;
+                $symbol_svg:= $replace($symbol_template, /\{\{title\}\}/, $title);
+                $symbol_svg:= $replace($symbol_svg, /\{\{fore_color\}\}/, $symbol_obj.fore_color);
+                $symbol_svg:= $replace($symbol_svg, /\{\{back_color\}\}/, $symbol_obj.back_color);
+                $symbol_svg:= $replace($symbol_svg, /\{\{absWidth\}\}/, $string($symbol_width));
+                $symbol_svg:= $replace($symbol_svg, /\{\{vbWidth\}\}/, $string(4000*$symbol_width/100));
+                {"title": $symbol_title & "_" & $title, "svg": $symbol_svg}
+            )};
 
-            $owner:= $spread($$."seaf.ba.parties")[$keys($) = $spread($$."seaf.ba.products")[$keys($) = $id].*.owner];
-            $owner:= $owner ? {
-                      "id": $keys($owner),
-                      "body": $owner.*,
-                      "alias": $map($owner.*.alias, function($vv) {                                            
-                                {"alias_id": $vv,
-                                 "alias_body": $lookup($$."seaf.ba.parties", $vv)}
+
+            $parties_products:= $append($parties, $products);
+
+            $pre_nodes:= $parties_products.$map($, function($v) {(
+                $title:= $v.*.title;
+                $size:= $length($title);
+                $symbol_width:= 25 + ($size > 7 ? $size*14 : $size*16 );
+                $symbol:= $getSymbol($title, $v.*.entity_id, $symbol_width);
+                { "nodes": {
+                      ($split($v.$keys(), ".")[-1] ? $split($v.$keys(), ".")[-1] : $v.$keys()): {
+                          "title": $title, 
+                          "symbol": $symbol.title}
+                      },
+                   "links": $append(
+                              $v.*.owner ?
+                                [
+                                    { "from": ($split($v.$keys(), ".")[-1] ? $split($v.$keys(), ".")[-1] : $v.$keys()),
+                                      "to": ($split($v.*.owner, ".")[-1] ? $split($v.*.owner, ".")[-1] : $v.*.owner),
+                                      "title": "владелец",
+                                      "style": "->"
+                                    }
+
+                                ] : [],
+
+                              $map($v.*.has_interest, function($vv) {
+                                $count($vv)>0 ?
+                                  { "from": ($split($v.$keys(), ".")[-1] ? $split($v.$keys(), ".")[-1] : $v.$keys()),
+                                    "to": ($split($vv.id, ".")[-1] ? $split($vv.id, ".")[-1] : $vv.id),
+                                    "title": "заинтересован",
+                                    "style": "-[#green]->"
+                                  
+                                  }
                               })
-                      };
+                            ),   
 
-            $consumers:= $spread($$."seaf.ba.parties")[$id in $.*.has_interest.id];
-            $consumers:= $map($consumers, function($v) {
-                                {"id": $keys($v),
-                                 "body": $v.*,
-                                 "alias": [$map($v.*.alias, function($vv) {                                            
-                                            {"alias_id": $vv,
-                                             "alias_body": $lookup($$."seaf.ba.parties", $vv)}
-                                          })]
-                                 }
-                              });
+                  "symbols": {
+                      $symbol.title: $symbol.svg}
+                };
+            )});
 
-            $wrappers_id:= $product.*.used_in;
-            $wrappers:= $map($wrappers_id, function($v) {
-                                {"id": $v,
-                                 "body": $lookup($$."seaf.ba.products", $v),
-                                 "alias": [$map($lookup($$."seaf.ba.products", $v).alias, function($vv) {                                            
-                                            {"alias_id": $vv,
-                                             "alias_body": $lookup($$."seaf.ba.products", $vv)}
-                                          })]
-                                 }
-                              });
-
-            $wraps:= $spread($$."seaf.ba.products")[$id in $.*.used_in];
-            $wraps:= $map($wraps, function($v) {
-                                {"id": $keys($v),
-                                 "body": $v.*,
-                                 "alias": [$map($v.*.alias, function($vv) {                                            
-                                            {"alias_id": $vv,
-                                             "alias_body": $lookup($$."seaf.ba.products", $vv)}
-                                          })]
-                                 }
-                              });
-            $processes:= $spread($."seaf.ba.processes")[$id in $.*.products];
-            $processes:= $map($processes, function($v) {
-                                {"id": $keys($v),
-                                 "body": $v.*,
-                                 "alias": [$map($v.*.alias, function($vv) {                                            
-                                            {"alias_id": $vv,
-                                            "alias_body": $lookup($$."seaf.ba.processes", $vv)}
-                                          })]
-                                 }
-                              });
-
-
-
-            {
-              "id": $id,
-              "body": $product.*,
-              "owner": $owner,
-              "consumers_num": $count($consumers),
-              "consumers": $consumers,
-              "wrappers_num": $count($wrappers),
-              "wrappers": $wrappers,
-              "wraps_num": $count($wraps),
-              "wraps": $wraps,
-              "processes_num": $count($processes), 
-              "processes": $processes 
-            }
+            {"config": {
+              "distance": 10,
+              "trackWidth": 24,
+              "hideLeafTitles": true
+              },
+             "symbols": $merge($pre_nodes.symbols), 
+             "nodes": $merge($pre_nodes.nodes),
+             "links": [$pre_nodes.links]
+            } 
           )
+
+
