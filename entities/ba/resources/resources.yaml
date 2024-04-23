@@ -12,14 +12,13 @@ entities:
         title: Ресурсы
         symbol: "resources"
 
-
     schema:
       $resources: # Used to be included into other ba entities relations attributes
 
         anyOf:    # edit in case:
                   ### new resource entity added into core -- add $ref accordingly
                   ### new resource entity imported within extension -- add $ref accordingly
-                  ### resource entity became/stopts to be considerable as resource -- add/remove $ref accordingly
+                  ### resource entity becames/stops to be considerable as resource -- add/remove $ref accordingly
           - $ref: "#/$rels/components.component"
           - $ref: "#/$rels/seaf.app.integrations.integrations"
           - $ref: "#/$rels/seaf.ia.business_objects.business_objects"
@@ -43,5 +42,154 @@ entities:
           - $ref: "#/$rels/seaf.ta.services.monitoring.monitoring"
           - $ref: "#/$rels/seaf.ta.services.software.software"
 
-        
+    presentations:
+
+      resources_usage_wrapper:
+        title: Использование ресурсов
+        type: markdown
+        template: templates/resources_usage_wrapper.md
+
+      resources_usage_graph:
+        title: Использование ресурсов (граф)
+        type: smartants
+        source: >
+          (
+            $processes:= $spread($."seaf.ba.processes").($~>|$.*|{"entity_id": "processes"}|);
+
+            /*Нестим Процессы в Продукты: Продукт.Процесс*/
+            $nested_processes:= $reduce($map($processes, function($v){(
+                         $map($v.*.products, function($vv) {
+                                {$split($vv,".")[-1] & "." & $split($v.$keys(),".")[-1]: $v.*}
+                                  
+                            })
+            )}), $append);$log($processes);$log($nested_processes);
+
+            /*Получаем перечень сущностей, которые являются Ресурсом*/
+            $resource_types:= $.entities."seaf.ba.resources".schema.**."$ref".$substringAfter($, "#/$rels/").$replace($, "."&$split($ , ".")[-1], "", 1);
+
+            /*Получаем перечень объектов-Ресурсов*/
+            $resources:= $reduce($map($resource_types, function($v) {
+              $spread($eval("$." & "\"" & $v & "\"")).($~>|$.*|{"entity_id": $split($v, ".")[-1]}|)
+            }), $append);
+
+            /*Отфильтровываем Ресурсы, которые не связаны с Процессами*/
+            $resources:= $resources[$.$keys() in $processes.*.consumes or $.$keys() in $processes.*.produces or $.$keys() in $processes.*.supported];
+
+
+            $products:= $spread($."seaf.ba.products")[$.$keys() in $processes.*.products].($~>|$.*|{"entity_id": "products"}|);
+
+
+            $parties:= $spread($."seaf.ba.parties")[$.$keys() in $processes.*.owner or $.$keys() in $products.*.owner].($~>|$.*|{"entity_id": "parties"}|);
+
+
+            $getSymbol:= function($title, $entity_id, $symbol_width) {(
+                $symbol_title:= $split($entity_id, ".")[-1];
+                $symbol_obj:= $eval("$.\"seaf.icons\"." & $symbol_title);
+                $symbol_gliph:= $symbol_obj.gliph;
+                $symbol_template:= $symbol_gliph ?
+                  $match($symbol_gliph, /^(<svg)[^>]+>/, 1).match &
+                  '<rect x="0" y="-960" width={{vbWidth}} height="960" rx="300" fill="' & $symbol_obj.back_color & '"/>' &
+                  '<text style="font-size:800px;" x="1200" y="-250" fill="' & $symbol_obj.fore_color & '" font-family="monospace">{{title}}</text>' &
+                  $match($symbol_gliph, /(<path)[^>]+>/, 1).match &
+                  '</svg>'
+                ;
+                $symbol_template:= $symbol_template
+                    ? $symbol_template
+                    : $."seaf.icons".no_icon;
+                $symbol_svg:= $replace($symbol_template, /\{\{title\}\}/, $title);
+                $symbol_svg:= $replace($symbol_svg, /\{\{fore_color\}\}/, $symbol_obj.fore_color);
+                $symbol_svg:= $replace($symbol_svg, /\{\{back_color\}\}/, $symbol_obj.back_color);
+                $symbol_svg:= $replace($symbol_svg, /\{\{absWidth\}\}/, $string($symbol_width));
+                $symbol_svg:= $replace($symbol_svg, /\{\{vbWidth\}\}/, $string(4000*$symbol_width/100));
+                {"title": $symbol_title & "_" & $title, "svg": $symbol_svg}
+            )};
+
+            $no_process:= $append($append($parties, $products), $resources);    
+
+            /*Готовим ноды не Процессы*/
+            $no_process:= $no_process.$map($, function($v) {(
+                $title:= $v.*.title;
+                $size:= $length($title);
+                $symbol_width:= 25 + ($size > 7 ? $size*14 : $size*16 );
+                $symbol:= $getSymbol($title, $v.*.entity_id, $symbol_width);
+                { 
+                      ($split($v.$keys(), ".")[-1] ? $split($v.$keys(), ".")[-1] : $v.$keys()): $v.*
+                }
+            )});
+
+            /*Все ноды, включая процессы*/
+            $objects:= $append($nested_processes, $no_process);
+
+            /*Зная метамодель, готовим SA structure*/
+            $pre_nodes:= $objects.$map($, function($v) {(
+                $title:= $v.*.title;
+                $size:= $length($title);
+                $symbol_width:= 25 + ($size > 7 ? $size*14 : $size*16 );
+                $symbol:= $getSymbol($title, $v.*.entity_id, $symbol_width);
+                { "nodes": {
+                      ($v.$keys()): {
+                          "title": $title, 
+                          "symbol": $symbol.title}
+                      },
+
+                   "links": $append($append($append(
+
+                              $v.*.owner
+                                ? [
+                                    { "from": $v.$keys(),
+                                      "to": ($split($v.*.owner, ".")[-1] ? $split($v.*.owner, ".")[-1] : $v.*.owner),
+                                      "title": "владелец",
+                                      "style": "->"
+                                    }
+                                  ]
+                                : [],
+
+                              $map($v.*.supported, function($vv) {
+                                $count($vv)>0 ?
+                                  { "to": $v.$keys(),
+                                    "from": ($split($vv, ".")[-1] ? $split($vv, ".")[-1] : $vv),
+                                    "title": "поддерживает",
+                                    "style": "-[#green]->"                                  
+                                  }
+                              })
+                            ),
+
+                              $map($v.*.consumes, function($vv) {
+                                $count($vv)>0 ?
+                                  { "to": $v.$keys(),
+                                    "from": ($split($vv, ".")[-1] ? $split($vv, ".")[-1] : $vv),
+                                    "title": "потребляется",
+                                    "style": "-[#orange]->"
+                                  }
+                              })
+                            ),  
+
+                                $map($v.*.produces, function($vv) {
+                                $count($vv)>0 ?
+                                  { "from": $v.$keys(),
+                                    "to": ($split($vv, ".")[-1] ? $split($vv, ".")[-1] : $vv),
+                                    "title": "проииводит",
+                                    "style": "-[#orange]->"
+                                  }
+                              })
+                            ), 
+
+                  "symbols": {
+                      $symbol.title: $symbol.svg}
+                };
+            )});
+
+
+            {"config": {
+              "distance": 10,
+              "trackWidth": 24,
+              "hideLeafTitles": true
+              },
+             "symbols": $merge($pre_nodes.symbols), 
+             "nodes": $merge($pre_nodes.nodes),
+             "links": [$pre_nodes.links]
+            } 
+          )
+
+    
 
