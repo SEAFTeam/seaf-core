@@ -10,5 +10,18 @@ seaf.nav:
         order: 100
       - title: Участники
         link: "/entities/seaf.ba.parties/org_str_wrapper"
+        order: 200
       - title: Продуктовый ландшафт
         link: "/entities/seaf.ba.products/landscape_wrapper"
+        order: 210
+      - title: Процессы
+        includes:
+          - title: Карта процессов
+            link: "/entities/seaf.ba.processes/process_map_wrapper"
+            order: 220
+          - title: Сеть процессов
+            link: "/entities/seaf.ba.processes/process_network_wrapper"
+            order: 230
+      - title: Использование ресурсов
+        link: "/entities/seaf.ba.resources/resources_usage_wrapper"
+        order: 300
