@@ -87,7 +87,13 @@ functions:
                           $v = $key?($app_serv~>|$lookup($app_serv, $lookup($app_comp, $key) )|{"ta_services" : $append(ta_services,[$k])~>$distinct()}|; true;)}) }))
                              ~>$map(function($v){$lookup($app_comp,$v)})~>$distinct()~>$map(function($v){$type($v) = 'string'?[$v]:$v})} 
                   })~>$merge() 
-              })~>$merge();
+             })~>$merge();
      
+             $ta_obj := $keys()~>$filter(function($v){$v~>/^seaf.ta.services|seaf.ta.components/})~>$map(function($parent_key){     
+                 $lookup($,$parent_key)~>$each(function($val, $k){
+                     {$k:{'type':$contains($parent_key,"services")?'services':'components', 'parrent_key':$parent_key,'val':$val, 'components':[],'services':[]}}
+                 })~>$merge()
+             })~>$merge();
+      
              $app_serv;
      )
