@@ -23,7 +23,7 @@
    }
 
    class "seaf.ta.components.user_device" as user_device_id  #lightblue {
-           *Title: Network Appliance
+           *Title: User Device
            *1: network_connection
            *2: office_id
    }
