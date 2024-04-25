@@ -1,0 +1,31 @@
+entities:
+  seaf.ia.data_objects:
+    presentations:
+      registry:
+        type: table
+        headers:
+          - value: id
+            text: Идентификатор
+            link: link
+          - value: title
+            text: Наименование
+            align: left
+            link: link
+          - value: business_object
+            text: Связь с бизнес-объектом
+            align: left
+            link: business_object_link
+          - value: master_system
+            text: Мастер система
+            align: left
+        source: >
+          (
+              [$."seaf.ia.data_objects".$spread().{
+                  "id": $keys()[0],
+                  "link": "/entities/seaf.ia.data_objects/blank?seaf-data-object-id=" & $keys()[0],
+                  "title": *.title,
+                  "business_object": *.business_object,
+                  "business_object_link": "/entities/seaf.ia.business_objects/card?id=" & *.business_object,
+                  "master_system": *.master_system
+              }]
+          )

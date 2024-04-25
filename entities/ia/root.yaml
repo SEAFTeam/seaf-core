@@ -1,5 +1,4 @@
 imports:
-  - business_objects.yaml
-  - data_objects.yaml
-  - presentations/root.yaml
+  - business_objects/root.yaml
+  - data_objects/root.yaml
   - menu/root.yaml

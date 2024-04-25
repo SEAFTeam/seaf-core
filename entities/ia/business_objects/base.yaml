@@ -10,27 +10,13 @@ entities:
             title:
               title: Наименование
               type: string
-            status:
-              title: Статус
-              enum:
-                - Планируется
-                - Разрабатывается или модифицируется
-                - Используется
-                - Выводится из эксплуатации
-                - В архиве
             processes:
               title: Используется в бизнес-процессах
               type: array
               items:
                 $ref: "#/$rels/seaf.ba.processes.process"
-            comments:
-              title: Комментарии, риски, проблемы
-              type: array
-              items:
-                type: string
           required:
             - title
-            - status
             - processes
     objects:
       business_objects:
