@@ -4,6 +4,7 @@ imports:
   - components.yaml
   # Технологический сервис
   - services.yaml
+  - environments.yaml
   - presentation/root.yaml
   - menu/root.yaml
   - functions/root.yaml
