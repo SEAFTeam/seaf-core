@@ -5,9 +5,9 @@ seaf.nav:
       - title: Доменная структура
         link: "/entities/seaf.ba.meta/domain_map"
         order: 10
-      - title: Метамодель БА
-        link: "/entities/seaf.ba.meta/ba_metamodel_wrapper"
-        order: 100
+      # - title: Метамодель БА
+      #   link: "/entities/seaf.ba.meta/ba_metamodel_wrapper"
+      #   order: 100
       - title: Участники
         link: "/entities/seaf.ba.parties/org_str_wrapper"
         order: 200
