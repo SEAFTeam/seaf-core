@@ -41,7 +41,13 @@ seaf.icons:
             </svg>'
     back_color: darkorange
     fore_color: dimgrey
-  
+
+  business_objects:
+    gliph: '<svg xmlns="http://www.w3.org/2000/svg" height="100" viewBox="0 -960 {{vbWidth}} 4000" width="{{absWidth}}" fill="{{fore_color}}">
+            <path d="M200-160v-240h120v240H200Zm240 0v-440h120v440H440Zm240 0v-640h120v640H680Z"/>
+            </svg>'
+    back_color: turquoise
+    fore_color: dimgrey
 
 
 
