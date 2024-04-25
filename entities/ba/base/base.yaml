@@ -86,156 +86,181 @@ entities:
 
           )
 
-
-      ba_metamodel_wrapper:
-        title: Метамодель БА
-        description: Актуальная метамодель БА с учетом всех подключенных расширений
-        type: markdown
-        template: templates/ba_metamodel_wrapper.md
-
-      ba_metamodel_grid:
-        type: mkr-grid
-        source: >
-          (
-            {
-                "type": "rows",
-                "items": [
-                            { "type": "columns",
-                              "items": [
-                                      { "type": "rows",
-                                        "width": "40%",
-                                        "items": [
+      # ba_metamodel_grid:
+      #   type: mkr-grid
+      #   source: >
+      #     (
+      #       {
+      #           "type": "rows",
+      #           "items": [
+      #                       { "type": "columns",
+      #                         "items": [
+      #                                 { "type": "rows",
+      #                                   "width": "40%",
+      #                                   "items": [
 
 
-                                                { "title": "Участники",
-                                                  "icon": "person",
-                                                  "style": {
-                                                        "border": true,
-                                                        "padding": "12px",
-                                                        "margin": "4px"
-                                                  },
-                                                  "src": ""
-                                                },
+      #                                           { "title": "Участники",
+      #                                             "icon": "person",
+      #                                             "style": {
+      #                                                   "border": true,
+      #                                                   "padding": "12px",
+      #                                                   "margin": "4px"
+      #                                             },
+      #                                             "src": ""
+      #                                           },
 
 
-                                                { "title": "Продукты",
-                                                  "icon": "shopping_cart",
-                                                  "style": {
-                                                        "border": true,
-                                                        "padding": "12px",
-                                                        "margin": "4px"
-                                                  },
-                                                  "src": ""
-                                                },
+      #                                           { "title": "Продукты",
+      #                                             "icon": "shopping_cart",
+      #                                             "style": {
+      #                                                   "border": true,
+      #                                                   "padding": "12px",
+      #                                                   "margin": "4px"
+      #                                             },
+      #                                             "src": ""
+      #                                           },
 
 
-                                                { "title": "Процессы",
-                                                  "icon": "conveyor_belt",
-                                                  "style": {
-                                                        "border": true,
-                                                        "padding": "12px",
-                                                        "margin": "4px"
-                                                  },
-                                                  "src": ""
-                                                },
+      #                                           { "title": "Процессы",
+      #                                             "icon": "conveyor_belt",
+      #                                             "style": {
+      #                                                   "border": true,
+      #                                                   "padding": "12px",
+      #                                                   "margin": "4px"
+      #                                             },
+      #                                             "src": ""
+      #                                           },
 
 
-                                                { "title": "Ресурсы",
-                                                  "icon": "view_in_ar",
-                                                  "style": {
-                                                        "border": true,
-                                                        "padding": "12px",
-                                                        "margin": "4px"
-                                                  },
-                                                  "src": ""
-                                                }
+      #                                           { "title": "Ресурсы",
+      #                                             "icon": "view_in_ar",
+      #                                             "style": {
+      #                                                   "border": true,
+      #                                                   "padding": "12px",
+      #                                                   "margin": "4px"
+      #                                             },
+      #                                             "src": ""
+      #                                           }
 
 
-                                        ]
-                                      },
+      #                                   ]
+      #                                 },
 
-                                      {"type": "rows",
-                                        "width": "60%",
-                                        "items": [
-                                                { "title": "Актуальная метамодель БА",
-                                                  "icon": "model_training",
-                                                    "style": {
-                                                        "border": true,
-                                                        "padding": "12px",
-                                                        "margin": "4px"
-                                                    },
-                                                    "src": "@entity/seaf.ba.meta/ba_metamodel"
-                                                }
-                                        ]
-                                      }
+      #                                 {"type": "rows",
+      #                                   "width": "60%",
+      #                                   "items": [
+      #                                           { "title": "Актуальная метамодель БА",
+      #                                             "icon": "model_training",
+      #                                               "style": {
+      #                                                   "border": true,
+      #                                                   "padding": "12px",
+      #                                                   "margin": "4px"
+      #                                               },
+      #                                               "src": "@entity/seaf.ba.meta/ba_metamodel"
+      #                                           }
+      #                                   ]
+      #                                 }
 
 
-                              ]
-                            }
-                ]
-            }         
+      #                         ]
+      #                       }
+      #           ]
+      #       }         
 
-          )
-      # todo Добавить связи на метамодель
-      # todo Разметить БА неБА и Ресуры-неБА
-      ba_metamodel:
-        type: smartants
-        source: >
-          (
-            $arch_entities:= $arch_objects_entities($$);
-            $ba_arch_entities:= $arch_entities[$contains($.entity_id, ".ba.")];
+      #     )
 
-            $getSymbol:= function($title, $entity_id, $symbol_width) {(
-                $symbol_title:= $split($entity_id, ".")[-1];
-                $symbol_obj:= $eval("$.\"seaf.icons\"." & $symbol_title);
-                $symbol_gliph:= $symbol_obj.gliph;
-                $symbol_template:= $symbol_gliph ?
-                  $match($symbol_gliph, /^(<svg)[^>]+>/, 1).match &
-                  '<rect x="0" y="-960" width={{vbWidth}} height="960" rx="300" fill="' & $symbol_obj.back_color & '"/>' &
-                  '<text style="font-size:800px;" x="1200" y="-250" fill="' & $symbol_obj.fore_color & '" font-family="monospace">{{title}}</text>' &
-                  $match($symbol_gliph, /(<path)[^>]+>/, 1).match &
-                  '</svg>'
+      # ba_metamodel_wrapper:
+      #   title: Метамодель БА
+      #   description: Актуальная метамодель БА с учетом всех подключенных расширений
+      #   type: markdown
+      #   template: templates/ba_metamodel_wrapper.md
 
-                ;
-                $symbol_template:= $symbol_template
-                    ? $symbol_template
-                    : $."seaf.icons".no_icon;
-                $symbol_svg:= $replace($symbol_template, /\{\{title\}\}/, $title);
-                $symbol_svg:= $replace($symbol_svg, /\{\{fore_color\}\}/, $symbol_obj.fore_color);
-                $symbol_svg:= $replace($symbol_svg, /\{\{back_color\}\}/, $symbol_obj.back_color);
-                $symbol_svg:= $replace($symbol_svg, /\{\{absWidth\}\}/, $string($symbol_width));
-                $symbol_svg:= $replace($symbol_svg, /\{\{vbWidth\}\}/, $string(4000*$symbol_width/100));
-                {"title": $symbol_title & "_" & $title, "svg": $symbol_svg}
-            )};
+      # # todo Добавить связи на метамодель
+      # # todo Разметить БА неБА и Ресуры-неБА
+      # ba_metamodel:
+      #   type: smartants
+      #   source: >
+      #     (
+      #       $arch_entities:= $arch_objects_entities($$);
+      #       $ba_arch_entities:= $arch_entities[$contains($.entity_id, ".ba.")];
 
-            $pre_nodes:= $ba_arch_entities.$map($, function($v) {(
-                $title:= $v.entity_title;
-                $size:= $length($title);
-                $symbol_width:= 25 + ($size > 7 ? $size*14 : $size*16 );
-                $symbol:= $getSymbol($title, $v.entity_id, $symbol_width);
-                { "nodes": {
-                      $.entity_id: {
-                          "title": $title, 
-                          "symbol": $symbol.title}
-                      },
-                   "links": [],   
-                  "symbols": {
-                      $symbol.title: $symbol.svg}
-                };
-            )});
+      #       $getSymbol:= function($title, $entity_id, $symbol_width) {(
+      #           $symbol_title:= $split($entity_id, ".")[-1];
+      #           $symbol_obj:= $eval("$.\"seaf.icons\"." & $symbol_title);
+      #           $symbol_gliph:= $symbol_obj.gliph;
+      #           $symbol_template:= $symbol_gliph ?
+      #             $match($symbol_gliph, /^(<svg)[^>]+>/, 1).match &
+      #             '<rect x="0" y="-960" width={{vbWidth}} height="960" rx="300" fill="' & $symbol_obj.back_color & '"/>' &
+      #             '<text style="font-size:800px;" x="1200" y="-250" fill="' & $symbol_obj.fore_color & '" font-family="monospace">{{title}}</text>' &
+      #             $match($symbol_gliph, /(<path)[^>]+>/, 1).match &
+      #             '</svg>'
 
-            {"config": {
-              "distance": 10,
-              "trackWidth": 24,
-              /*"hideBoundaryTitles": true,*/
-              "hideLeafTitles": true
-              },
-             "symbols": $merge($pre_nodes.symbols), 
-             "nodes": $merge($pre_nodes.nodes)
-            } 
+      #           ;
+      #           $symbol_template:= $symbol_template
+      #               ? $symbol_template
+      #               : $."seaf.icons".no_icon;
+      #           $symbol_svg:= $replace($symbol_template, /\{\{title\}\}/, $title);
+      #           $symbol_svg:= $replace($symbol_svg, /\{\{fore_color\}\}/, $symbol_obj.fore_color);
+      #           $symbol_svg:= $replace($symbol_svg, /\{\{back_color\}\}/, $symbol_obj.back_color);
+      #           $symbol_svg:= $replace($symbol_svg, /\{\{absWidth\}\}/, $string($symbol_width));
+      #           $symbol_svg:= $replace($symbol_svg, /\{\{vbWidth\}\}/, $string(4000*$symbol_width/100));
+      #           {"title": $symbol_title & "_" & $title, "svg": $symbol_svg}
+      #       )};
+
+      #       $pre_nodes:= $ba_arch_entities.$map($, function($v) {(
+      #           $title:= $v.entity_title;
+      #           $size:= $length($title);
+      #           $symbol_width:= 25 + ($size > 7 ? $size*14 : $size*16 );
+      #           $symbol:= $getSymbol($title, $v.entity_id, $symbol_width);
+      #           { "nodes": {
+      #                 $.entity_id: {
+      #                     "title": $title, 
+      #                     "symbol": $symbol.title}
+      #                 },
+      #              "links": [],   
+      #             "symbols": {
+      #                 $symbol.title: $symbol.svg}
+      #           };
+      #       )});
+
+      #       $links:= [
+      #                   {   "from": "seaf.ba.parties",
+      #                       "to": "seaf.ba.products",
+      #                       "title": "заинтересован",
+      #                       "style": "->"
+      #                   },
+      #                   {   "to": "seaf.ba.parties",
+      #                       "from": "seaf.ba.products",
+      #                       "title": "владелец",
+      #                       "style": "->"
+      #                   },
+      #                   {   "to": "seaf.ba.parties",
+      #                       "from": "seaf.ba.processes",
+      #                       "title": "владелец",
+      #                       "style": "->"
+      #                   },
+      #                   {   "to": "seaf.ba.products",
+      #                       "from": "seaf.ba.processes",
+      #                       "title": "относится к",
+      #                       "style": "->"
+      #                   }
+
+      #                ]; 
+
+      #       {"config": {
+      #         "distance": 10,
+      #         "trackWidth": 24,
+      #         /*"hideBoundaryTitles": true,*/
+      #         "hideLeafTitles": true
+      #         },
+      #        "symbols": $merge($pre_nodes.symbols), 
+      #        "nodes": $merge($pre_nodes.nodes),
+      #        "links": $links
+      #       } 
 
           
-          )
+      #     )
 
 functions:
 
