@@ -89,38 +89,15 @@ entities:
             $parties:= $spread($."seaf.ba.parties")[$.$keys() in $processes.*.*.owner].[$~>|$.*|{"entity_id": "parties"}|];
             $requirements:= $spread($."seaf.change.requirements")[$.$keys() in $processes.*.*.requirements].[$~>|$.*|{"entity_id": "requirements"}|];
 
-
-            $getSymbol:= function($title, $entity_id, $symbol_width) {(
-                $symbol_title:= $split($entity_id, ".")[-1];
-                $symbol_obj:= $eval("$.\"seaf.icons\"." & $symbol_title);
-                $symbol_gliph:= $symbol_obj.gliph;
-                $symbol_template:= $symbol_gliph ?
-                  $match($symbol_gliph, /^(<svg)[^>]+>/, 1).match &
-                  '<rect x="0" y="-960" width={{vbWidth}} height="960" rx="300" fill="' & $symbol_obj.back_color & '"/>' &
-                  '<text style="font-size:800px;" x="1200" y="-250" fill="' & $symbol_obj.fore_color & '" font-family="monospace">{{title}}</text>' &
-                  $match($symbol_gliph, /(<path)[^>]+>/, 1).match &
-                  '</svg>'
-                ;
-                $symbol_template:= $symbol_template
-                    ? $symbol_template
-                    : $."seaf.icons".no_icon;
-                $symbol_svg:= $replace($symbol_template, /\{\{title\}\}/, $title);
-                $symbol_svg:= $replace($symbol_svg, /\{\{fore_color\}\}/, $symbol_obj.fore_color);
-                $symbol_svg:= $replace($symbol_svg, /\{\{back_color\}\}/, $symbol_obj.back_color);
-                $symbol_svg:= $replace($symbol_svg, /\{\{absWidth\}\}/, $string($symbol_width));
-                $symbol_svg:= $replace($symbol_svg, /\{\{vbWidth\}\}/, $string(4000*$symbol_width/100));
-                {"title": $symbol_title & "_" & $title, "svg": $symbol_svg}
-            )};
-
-
             $processes_parties:= $append($processes, $parties);
             $processes_parties_requirements:= $append($processes_parties, $requirements);
 
+            $icons:= $."seaf.icons";
             $pre_nodes:= $processes_parties_requirements.$map($, function($v) {(
                 $title:= $v.*.title;
                 $size:= $length($title);
                 $symbol_width:= 25 + ($size > 7 ? $size*14 : $size*16 );
-                $symbol:= $getSymbol($title, $v.*.entity_id, $symbol_width);
+                $symbol:= $getSymbol($title, $v.*.entity_id, $symbol_width, $icons);
                 { "nodes": {
                       ($split($v.$keys(), ".")[-1] ? $split($v.$keys(), ".")[-1] : $v.$keys()): {
                           "title": $title, 
@@ -180,40 +157,16 @@ entities:
         source: >
           (
             $processes:= $spread($."seaf.ba.processes").[$~>|$.*|{"entity_id": "processes"}|];
-
-
-            $getSymbol:= function($title, $entity_id, $symbol_width) {(
-                $symbol_title:= $split($entity_id, ".")[-1];
-                $symbol_obj:= $eval("$.\"seaf.icons\"." & $symbol_title);
-                $symbol_gliph:= $symbol_obj.gliph;
-                $symbol_template:= $symbol_gliph ?
-                  $match($symbol_gliph, /^(<svg)[^>]+>/, 1).match &
-                  '<rect x="0" y="-960" width={{vbWidth}} height="960" rx="300" fill="' & $symbol_obj.back_color & '"/>' &
-                  '<text style="font-size:800px;" x="1200" y="-250" fill="' & $symbol_obj.fore_color & '" font-family="monospace">{{title}}</text>' &
-                  $match($symbol_gliph, /(<path)[^>]+>/, 1).match &
-                  '</svg>'
-
-                ;
-                $symbol_template:= $symbol_template
-                    ? $symbol_template
-                    : $."seaf.icons".no_icon;
-                $symbol_svg:= $replace($symbol_template, /\{\{title\}\}/, $title);
-                $symbol_svg:= $replace($symbol_svg, /\{\{fore_color\}\}/, $symbol_obj.fore_color);
-                $symbol_svg:= $replace($symbol_svg, /\{\{back_color\}\}/, $symbol_obj.back_color);
-                $symbol_svg:= $replace($symbol_svg, /\{\{absWidth\}\}/, $string($symbol_width));
-                $symbol_svg:= $replace($symbol_svg, /\{\{vbWidth\}\}/, $string(4000*$symbol_width/100));
-                {"title": $symbol_title & "_" & $title, "svg": $symbol_svg}
-            )};
-
             
             $processes_parties:= $append($processes, $parties);
             $processes_parties_requirements:= $append($processes_parties, $requirements);
-
+            
+            $icons:= $."seaf.icons";
             $pre_nodes:= $processes.$map($, function($v) {(
                 $title:= $v.*.title;
                 $size:= $length($title);
                 $symbol_width:= 25 + ($size > 7 ? $size*14 : $size*16 );
-                $symbol:= $getSymbol($title, $v.*.entity_id, $symbol_width);
+                $symbol:= $getSymbol($title, $v.*.entity_id, $symbol_width, $icons);
                 { "nodes": {
                       $v.$keys(): {
                           "title": $title, 
