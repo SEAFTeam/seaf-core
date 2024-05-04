@@ -31,38 +31,22 @@ entities:
       domain_map:
         type: markdown
         template: templates/domain_map.md
+        source: >
+          (
+            $count($arch_objects($$))
+          )
 
       objects_domain_structure:
         type: smartants
         source: >
           (
-            $getSymbol:= function($title, $entity_id, $symbol_width) {(
-                $symbol_title:= $split($entity_id, ".")[-1];
-                $symbol_obj:= $eval("$.\"seaf.icons\"." & $symbol_title);
-                $symbol_gliph:= $symbol_obj.gliph;
-                $symbol_template:= $symbol_gliph ?
-                  $match($symbol_gliph, /^(<svg)[^>]+>/, 1).match &
-                  '<rect x="0" y="-960" width={{vbWidth}} height="960" rx="300" fill="' & $symbol_obj.back_color & '"/>' &
-                  '<text style="font-size:800px;" x="1200" y="-250" fill="' & $symbol_obj.fore_color & '" font-family="monospace">{{title}}</text>' &
-                  $match($symbol_gliph, /(<path)[^>]+>/, 1).match &
-                  '</svg>'
-                ;
-                $symbol_template:= $symbol_template
-                    ? $symbol_template
-                    : $."seaf.icons".no_icon;
-                $symbol_svg:= $replace($symbol_template, /\{\{title\}\}/, $title);
-                $symbol_svg:= $replace($symbol_svg, /\{\{fore_color\}\}/, $symbol_obj.fore_color);
-                $symbol_svg:= $replace($symbol_svg, /\{\{back_color\}\}/, $symbol_obj.back_color);
-                $symbol_svg:= $replace($symbol_svg, /\{\{absWidth\}\}/, $string($symbol_width));
-                $symbol_svg:= $replace($symbol_svg, /\{\{vbWidth\}\}/, $string(4000*$symbol_width/100));
-                {"title": $symbol_title & "_" & $title, "svg": $symbol_svg}
-            )};
+            $icons:= $."seaf.icons";
 
             $pre_nodes:= $arch_objects($$).$map($, function($v) {(
                 $title:= $split($.object_id, ".")[-1];
                 $size:= $length($title);
                 $symbol_width:= 25 + ($size > 7 ? $size*14 : $size*16 );
-                $symbol:= $getSymbol($title, $.entity_id, $symbol_width);
+                $symbol:= $getSymbol($title, $.entity_id, $symbol_width, $icons);
                 {"nodes": {
                     $.object_id: {
                         "title": $title, 
@@ -351,13 +335,83 @@ functions:
     code: >
       (
         $ctxG:= ctxG;
-        $ctxG.entities.$spread()[$.*.objects and $not("aspects" in $.$keys())].
+        [$ctxG.entities.$spread()[$.*.objects and $not("aspects" in $.$keys())].
           {"entity_id": $.$keys(), 
            "entity_title": $.*.title
-          };
+          }];
       )
     result:
       type: array
       description: >
         Delivers "arch object's entities" list (array). 
         Any entity declared wich has "objects" attribute configuired will be insourced in this dataset
+
+  seaf_ddd_tree:
+    title: Получение дерева DDD из идентификатора объекта
+    params:
+      - type: string
+        title: Идентификатор объекта
+        alias: obj_id
+        required: true
+    code: >
+      (
+          $obj_id:= obj_id;
+
+          $getDDDWrappers:= function($obj_id){(
+            $domains:= $split($obj_id, ".");
+            $domains:= $count($domains) > 0
+              ? $domains
+              : [];
+            $getPaths:= function($domains, $i, $paths){(
+              $paths:= $i=0
+                        ? $domains[0]
+                        : $append($paths, $paths[$i-1] & "." & $domains[$i]);
+              $i < $count($domains)-1 
+                ? $getPaths($domains, $i+1, $paths)
+                : $paths 
+            )};
+            $paths:= $getPaths($domains, 0, []);
+            
+            { 
+              "domains": [$domains],  /*includes $obj_id tail*/
+              "paths": [$paths]       /*includes $obj_id itself*/
+            }
+          )};
+
+          $getDDDWrappers($obj_id);
+      )
+    result:
+      type: object
+      description: >
+        domains -- массив идентификаторов доменов (d1, d2, ...), 
+        paths -- массив "путей" (d1, d1.d2, ...)
+
+  seaf_ddd_top:
+    title: Получение DDD верхнего уровня
+    params:
+      - type: object
+        title: Объекты сущности
+        alias: objects
+    code: >
+      (
+        $ctxG:= ctxG;
+        $objects:= objects.$spread();
+        $tops:= $map($objects, function($v) {(
+                  $paths:= $seaf_ddd_tree($v.$keys()).paths;
+
+                  $getTop:= function($paths, $i){(
+                    $paths[$i] in $objects.$keys()
+                      ? $paths[$i]
+                      : $getTop($paths, $i+1)
+                  )};
+
+                  $top:= $getTop($paths, 0);
+                )});
+
+        [$distinct($tops)]        
+      )
+    result:
+      type: array
+      description: Верхние DDD домены
+
+
