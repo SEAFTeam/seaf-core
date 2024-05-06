@@ -50,7 +50,7 @@ seaf.ia.business_objects:
         sber:
             status: Используется
         processes:
-            - sber.berezak.ba.processes.process_1
+            - sber.berezka.ba.processes.process_1
 ```
 
 **Объект данных**
