@@ -58,7 +58,7 @@ functions:
      (
          $component := $.o?$.o:"seaf.ta.services.storage";
          $lookup($.entities,$component).**."properties"~>$map(
-             function($v){ $v.$sift(function($v, $k) {$c:= $lookup($v.**, "$ref")})
+             function($v){ $v.$sift(function($v, $k) {$lookup($v.**, "$ref")})
              })~>$merge()~>$each(function($v, $k) { {$k : $lookup($v.**, "$ref") }})~>$merge();     
      )
 # Функция нахождения АС/ФП по уровню критичности
