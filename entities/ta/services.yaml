@@ -650,9 +650,6 @@ entities:
             path:
               title: Место хранения РК
               type: string
-            schedule:
-              title: Частота резервного копирования
-              type: string
             replication:
               title: Репликация в другой ЦОД
               type: boolean
@@ -665,7 +662,6 @@ entities:
             - backup_id
             - availabilityzone_id
             - path
-            - schedule
 
   seaf.ta.services.monitoring:
     title: Monitoring Service
