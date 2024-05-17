@@ -435,9 +435,6 @@ entities:
             cluster_autoscaler:
               title: Работа автомасштабирования воркер нод кластера
               type: boolean
-            hpa:
-              title: HPA\VPA для деплойментов
-              type: boolean
             keys:
               title: Хранилище секретов кластера
               type: string
