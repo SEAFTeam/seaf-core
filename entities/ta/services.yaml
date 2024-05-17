@@ -406,9 +406,6 @@ entities:
               type: array
               items:
                 $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
-            cluster_fqdn:
-              title: Имя кластера Kubernetes
-              type: string
             is_own:
               title: Кластер куплен как услуга
               type: boolean
@@ -452,7 +449,6 @@ entities:
           required:
             - kubernetes_id
             - availabilityzone_id
-            - cluster_fqdn
             - software
             - master_qty
             - worker_qty
