@@ -90,7 +90,7 @@ entities:
                   title: Количество NIC
                   type: integer
                 availabilityzone_id:
-                  title: В какие зоны доступности входит DC
+                  title: В какие зоны доступности входит
                   type: array
                   items:
                     $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
