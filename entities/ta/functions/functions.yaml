@@ -12,12 +12,12 @@ functions:
   get_titles: >
    (
           $component := $.c;
-          $prop := ($lookup($.entities, $component).schema.**."$ref"~>$map(
+          $prop := ($append($lookup($.entities, $component).schema.**."$ref",["#/$defs/"&$component])~>$distinct()~>$map(
               function($v){
-                  $contains($v, "def")?(
+                  $contains($v, "defs")?(
                           $v:= $v~>$replace(/.*\/(.*)/, "$1");
                           $v = $component?(
-                               $lookup($.entities, $component).schema.**.properties~>$merge()
+                               $lookup($.entities, $component).**.properties~>$merge()
                            ):$lookup($.entities.**, $v).properties
                   )
               }))~>$merge();
