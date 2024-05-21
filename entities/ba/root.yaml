@@ -1,10 +1,10 @@
 imports:
 
-  - base/base.yaml                # Иконки, функции, сущности для представления АБ
+  - base/base.yaml                # Иконки, меню, тесты
   - menu.yaml                     # Конфигурация меню
 
-  - parties/parties.yaml
-  - products/products.yaml
-  - processes/processes.yaml
-  - resources/resources.yaml
+  - parties/parties.yaml          # Мета-сущность seaf.ba.parties
+  - products/products.yaml        # Мета-сущность seaf.ba.products
+  - processes/processes.yaml      # Мета-сущность seaf.ba.processes
+  - resources/resources.yaml      # Мета-сущность seaf.ba.resources
 
