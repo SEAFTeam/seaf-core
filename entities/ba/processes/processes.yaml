@@ -74,20 +74,68 @@ entities:
         title: Карта процессов
         type: markdown
         template: templates/process_map_wrapper.md
+        source: >
+          (
+            $domain:= $params.domain;
+            
+            {"count": $count($."seaf.ba.products".$keys()),
+             "domain": $domain
+            }
+
+          )
 
       process_network_wrapper:
         title: Сеть процессов
         type: markdown
         template: templates/process_network_wrapper.md
+        source: >
+          (
+            $domain:= $params.domain;
+            
+            {"count": $count($."seaf.ba.products".$keys()),
+             "domain": $domain
+            }
+
+          )
+
+      process_distribution_wrapper:
+        title: Распределение Процессов по Продуктам
+        type: markdown
+        template: templates/process_distribution_wrapper.md
+        source: >
+          (
+            $domain:= $params.domain;
+            
+            {"count": $count($."seaf.ba.products".$keys()),
+             "domain": $domain
+            }
+
+          )
 
       process_network_graph:
         title: Сеть процессов (граф)
         type: smartants
         source: >
           (
-            $processes:= $spread($."seaf.ba.processes").[$~>|$.*|{"entity_id": "processes"}|];
-            $parties:= $spread($."seaf.ba.parties")[$.$keys() in $processes.*.*.owner].[$~>|$.*|{"entity_id": "parties"}|];
-            $requirements:= $spread($."seaf.change.requirements")[$.$keys() in $processes.*.*.requirements].[$~>|$.*|{"entity_id": "requirements"}|];
+            $ctx:= $params.domain;
+
+            $processes:= $ctx and $_essentials._jsonata_function
+                ? $context_content_refined($ctx, $).observable[($.$keys() = "membersOrd" or $.$keys() = "membersCtx") and $.*.body.entity_id = "seaf.ba.processes"].*.[{$.id: $.body}]  
+                : $spread($."seaf.ba.processes").[$~>|$.*|{"entity_id": "processes"}|];
+
+            /*$processes:= $spread($."seaf.ba.processes").[$~>|$.*|{"entity_id": "processes"}|];*/
+
+            $parties:= $ctx and $_essentials._jsonata_function
+                ? $context_content_refined($ctx, $).observable[($.$keys() = "membersOrd" or $.$keys() = "membersCtx") and $.*.body.entity_id = "seaf.ba.parties"].*[$.$keys() in $processes.*.*.owner].[{$.id: $.body}]  
+                : $spread($."seaf.ba.parties")[$.$keys() in $processes.*.*.owner].[$~>|$.*|{"entity_id": "parties"}|];
+
+            /*$parties:= $spread($."seaf.ba.parties")[$.$keys() in $processes.*.*.owner].[$~>|$.*|{"entity_id": "parties"}|];*/
+
+            $requirements:= $ctx and $_essentials._jsonata_function
+                ? $context_content_refined($ctx, $).observable[($.$keys() = "membersOrd" or $.$keys() = "membersCtx") and $.*.body.entity_id = "seaf.change.requirements"].*[$.$keys() in $processes.*.*.requirements].[{$.id: $.body}]  
+                : $spread($."seaf.change.requirements")[$.$keys() in $processes.*.*.owner].[$~>|$.*|{"entity_id": "requirements"}|];
+
+            /*$requirements:= $spread($."seaf.change.requirements")[$.$keys() in $processes.*.*.requirements].[$~>|$.*|{"entity_id": "requirements"}|];*/
 
             $processes_parties:= $append($processes, $parties);
             $processes_parties_requirements:= $append($processes_parties, $requirements);
@@ -156,7 +204,13 @@ entities:
         type: smartants
         source: >
           (
-            $processes:= $spread($."seaf.ba.processes").[$~>|$.*|{"entity_id": "processes"}|];
+            $ctx:= $params.domain;
+
+            $processes:= $ctx and $_essentials._jsonata_function
+                ? $context_content_refined($ctx, $).observable[($.$keys() = "membersOrd" or $.$keys() = "membersCtx") and $.*.body.entity_id = "seaf.ba.processes"].*.[{$.id: $.body}]  
+                : $spread($."seaf.ba.processes").[$~>|$.*|{"entity_id": "processes"}|];
+
+            /*$processes:= $spread($."seaf.ba.processes").[$~>|$.*|{"entity_id": "processes"}|];*/
             
             $processes_parties:= $append($processes, $parties);
             $processes_parties_requirements:= $append($processes_parties, $requirements);
@@ -197,3 +251,76 @@ entities:
              "links": [$pre_nodes.links]
             } 
           )
+
+      process_distribution_graph:
+        title: Распределение Процессов по Продуктам (граф)
+        type: smartants
+        source: >
+          (
+            $ctx:= $params.domain;
+
+            $processes:= $ctx and $_essentials._jsonata_function
+                ? $context_content_refined($ctx, $).observable[($.$keys() = "membersOrd" or $.$keys() = "membersCtx") and $.*.body.entity_id = "seaf.ba.processes"].*.[{$.id: $.body}]  
+                : $spread($."seaf.ba.processes").[$~>|$.*|{"entity_id": "processes"}|];
+
+
+            $parties:= $ctx and $_essentials._jsonata_function
+                ? $context_content_refined($ctx, $).observable[($.$keys() = "membersOrd" or $.$keys() = "membersCtx") and $.*.body.entity_id = "seaf.ba.parties"].*[$.$keys() in $processes.*.*.owner].[{$.id: $.body}]  
+                : $spread($."seaf.ba.parties")[$.$keys() in $processes.*.*.owner].[$~>|$.*|{"entity_id": "parties"}|];
+
+            $products:= $ctx and $_essentials._jsonata_function
+                ? $context_content_refined($ctx, $).observable[($.$keys() = "membersOrd" or $.$keys() = "membersCtx") and $.*.body.entity_id = "seaf.ba.products"].*.[{$.id: $.body}]  
+                : $spread($."seaf.ba.products").[$~>|$.*|{"entity_id": "products"}|];
+
+            $processes_parties:= $append($processes, $parties);
+            $processes_parties_products:= $append($processes_parties, $products);
+
+            $icons:= $."seaf.icons";
+            $pre_nodes:= $processes_parties_products.$map($, function($v) {(
+                $title:= $v.*.title;
+                $size:= $length($title);
+                $symbol_width:= 25 + ($size > 7 ? $size*14 : $size*16 );
+                $symbol:= $getSymbol($title, $v.*.entity_id, $symbol_width, $icons);
+                { "nodes": {
+                      ($split($v.$keys(), ".")[-1] ? $split($v.$keys(), ".")[-1] : $v.$keys()): {
+                          "title": $title, 
+                          "symbol": $symbol.title}
+                      },
+                   "links": $append(
+                                      $v.*.owner ?
+                                        [
+                                            { "from": ($split($v.$keys(), ".")[-1] ? $split($v.$keys(), ".")[-1] : $v.$keys()),
+                                              "to": ($split($v.*.owner, ".")[-1] ? $split($v.*.owner, ".")[-1] : $v.*.owner),
+                                              "title": "владелец",
+                                              "style": "->"
+                                            }
+
+                                        ] : [],
+
+                                      $map($v.*.products, function($vv) {
+                                        $count($vv)>0 ?
+                                          { "from": ($split($v.$keys(), ".")[-1] ? $split($v.$keys(), ".")[-1] : $v.$keys()),
+                                            "to": ($split($vv, ".")[-1] ? $split($vv, ".")[-1] : $vv),
+                                            "title": "относится к",
+                                            "style": "-[#green]->"
+                                          
+                                          }
+                                      })
+                                    ),   
+
+                  "symbols": {
+                      $symbol.title: $symbol.svg}
+                };
+            )});
+
+            {"config": {
+              "distance": 10,
+              "trackWidth": 24,
+              "hideLeafTitles": true
+              },
+             "symbols": $merge($pre_nodes.symbols), 
+             "nodes": $merge($pre_nodes.nodes),
+             "links": [$pre_nodes.links]
+            } 
+          )
+
