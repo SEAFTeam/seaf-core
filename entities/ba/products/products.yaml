@@ -50,14 +50,32 @@ entities:
         title: Продуктовый ландшафт
         type: markdown
         template: templates/landscape_wrapper.md
+        source: >
+          (
+            $domain:= $params.domain;
+            
+            {"count": $count($."seaf.ba.products".$keys()),
+             "domain": $domain
+            }
+
+          
+          )
 
       landscape_graph:
         title: Продуктовый ландшафт (граф)
         type: smartants
         source: >
           (
-            $parties:= $spread($."seaf.ba.parties").[$~>|$.*|{"entity_id": "parties"}|];
-            $products:= $spread($."seaf.ba.products").[$~>|$.*|{"entity_id": "products"}|];
+
+            $ctx:= $params.domain;
+
+            $parties:= $ctx and $_essentials._jsonata_function
+                ? $context_content_refined($ctx, $).observable[($.$keys() = "membersOrd" or $.$keys() = "membersCtx") and $.*.body.entity_id = "seaf.ba.parties"].*.[{$.id: $.body}]  
+                : $spread($."seaf.ba.parties").[$~>|$.*|{"entity_id": "parties"}|];
+
+            $products:= $ctx and $_essentials._jsonata_function
+                ? $context_content_refined($ctx, $).observable[($.$keys() = "membersOrd" or $.$keys() = "membersCtx") and $.*.body.entity_id = "seaf.ba.products"].*.[{$.id: $.body}]  
+                : $spread($."seaf.ba.products").[$~>|$.*|{"entity_id": "products"}|];
 
             $parties_products:= $append($parties, $products);
             
