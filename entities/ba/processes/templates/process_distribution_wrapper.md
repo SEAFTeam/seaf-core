@@ -1,7 +1,7 @@
 {{#count}}
-# Карта процессов
+# Распределение Процессов по продуктам
 
-![](@entity/seaf.ba.processes/process_map_graph?domain={{domain}})
+![](@entity/seaf.ba.processes/process_distribution_graph?domain={{domain}})
 {{/count}}
 {{^count}}
 :warning: Процессы не опредены
