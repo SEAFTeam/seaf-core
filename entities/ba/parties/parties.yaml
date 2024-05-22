@@ -62,35 +62,61 @@ entities:
         title: Оргструктура
         type: markdown
         template: templates/org_str_wrapper.md
+        source: >
+          (
+            $domain:= $params.domain;
+
+            {"count": $count($."seaf.ba.parties".$keys()),
+             "domain": $domain
+            }
+          )
 
       org_str_graph:
         title: Оргструктура (граф)
         type: smartants
         source: >
           (
-            $parties:= $spread($."seaf.ba.parties").[$~>|$.*|{"entity_id": "parties"}|];
+            $icons:= $."seaf.icons";
+            $ctx:= $params.domain;
+
+
+            $parties:= $ctx and $_essentials._jsonata_function
+                ? $context_content_refined($ctx, $).observable[($.$keys() = "membersOrd" or $.$keys() = "membersCtx") and $.*.body.entity_id = "seaf.ba.parties"].*.[{$.id: $.body}]  
+           
+                /*? $context_content_refined($ctx, $).observable.*[$.body.entity_id = "seaf.ba.parties"].[{$.id: $.body}]*/
+                : $spread($."seaf.ba.parties").[$~>|$.*|{"entity_id": "parties"}|];
 
             $icons:= $."seaf.icons";
             $pre_nodes:= $parties.$map($, function($v) {(
-                $title:= $v.*.title;
-                $size:= $length($title);
-                $symbol_width:= 25 + ($size > 7 ? $size*14 : $size*16 );
-                $symbol:= $getSymbol($title, $v.*.entity_id, $symbol_width, $icons);
-                { "nodes": {
-                      ($split($v.$keys(), ".")[-1] ? $split($v.$keys(), ".")[-1] : $v.$keys()): {
-                          "title": $title, 
-                          "symbol": $symbol.title}
-                      },
-                   "links": $append(
-                              $v.*.is_part_of ?
-                                [
-                                    { "from": ($split($v.$keys(), ".")[-1] ? $split($v.$keys(), ".")[-1] : $v.$keys()),
-                                      "to": ($split($v.*.is_part_of, ".")[-1] ? $split($v.*.is_part_of, ".")[-1] : $v.*.is_part_of),
-                                      "title": "является частью",
-                                      "style": "->"
-                                    }
+                                    $title:= $v.*.title;
+                                    $size:= $length($title);
+                                    $symbol_width:= 25 + ($size > 7 ? $size*14 : $size*16 );
+                                    $symbol:= $_essentials._jsonata_function
+                                      ? $getSymbol_t1($title, $v.*.entity_id, $symbol_width, $icons)
+                                      : $getSymbol($title, $v.*.entity_id, $symbol_width, $icons);
+                                    $node_id:= $split($v.$keys(), ".")[-1]
+                                                ? $split($v.$keys(), ".")[-1]
+                                                : $v.$keys();
+                                    
+                                    { "nodes": {
+                                          $node_id: {
+                                                      "title": $title, 
+                                                      "symbol": $symbol.title
+                                                     }
+                                      },
 
-                                ] : [],
+                                      "links": $append(
+                                                  $v.*.is_part_of
+                                                    ? [
+                                                        { "from": $node_id,
+                                                          "to": ($split($v.*.is_part_of, ".")[-1]
+                                                                  ? $split($v.*.is_part_of, ".")[-1]
+                                                                  : $v.*.is_part_of),
+                                                          "title": "является частью",
+                                                          "style": "->"
+                                                        }
+                                                      ]
+                                                    : [],
 
                               $map($v.*.relates_to, function($vv) {
                                 $vv ?
@@ -117,4 +143,45 @@ entities:
              "links": [$pre_nodes.links]
             } 
           )
+
+functions:
+
+  seaf_parties_contexts:
+    title: Авто-контексты
+    description: Возвращает перечень авто-контекстов (Участники с доменными именами верхнего уровня) и пути в меню
+    params:
+      - type: object
+        title: Область поиска контекстов (глобальный Контекст -- $$)
+        alias: ctx
+        required: true
+    code: >
+      (   
+          $ctx:= ctx;
+
+          $parties:= $ctx."seaf.ba.parties";
+          $top_domains:= $parties
+            ? $seaf_ddd_top($parties);                        /*auto top domains discovery goes through parties (main arch entity)*/
+          $contexts_id:= $distinct($top_domains);
+
+          $contexts:= $map($contexts_id, function($v){(
+                        $full_paths:= $seaf_ddd_tree($v).paths;
+
+                        $menu_path:= function($arr, $i, $path){(
+                          $obj:= $arch_objects($ctx)[$.object_id = $arr[$i] and $.entity_id = "seaf.ba.parties"];
+                          $not($i > 0)
+                            ? $path:= $obj.object_title
+                            : $path:= $path & "/" & $obj.object_title;
+
+                          $i < $count($arr)-1
+                            ? $menu_path($arr, $i+1, $path)
+                            : {"context": $v, "menu_path": $path, "entity_id": $obj.entity_id, "entity_title": $obj.entity_title}
+                        )}; $menu_path([$full_paths], 0, "");
+
+                      )});
+            [$contexts];
+      )
+    result:
+      type: array
+      description: массив объектов {location, link(presentation)}
+
 
