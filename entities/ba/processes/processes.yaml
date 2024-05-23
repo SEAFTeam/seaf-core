@@ -142,10 +142,12 @@ entities:
 
             $icons:= $."seaf.icons";
             $pre_nodes:= $processes_parties_requirements.$map($, function($v) {(
-                $title:= $v.*.title;
+                $title:= $v.*.title ? $v.*.title : "untitled";
                 $size:= $length($title);
                 $symbol_width:= 25 + ($size > 7 ? $size*14 : $size*16 );
-                $symbol:= $getSymbol($title, $v.*.entity_id, $symbol_width, $icons);
+                                    $symbol:= $_essentials._jsonata_function
+                                      ? $getSymbol_t1($title, $v.*.entity_id, $symbol_width, $icons)
+                                      : $getSymbol($title, $v.*.entity_id, $symbol_width, $icons);
                 { "nodes": {
                       ($split($v.$keys(), ".")[-1] ? $split($v.$keys(), ".")[-1] : $v.$keys()): {
                           "title": $title, 
@@ -217,10 +219,12 @@ entities:
             
             $icons:= $."seaf.icons";
             $pre_nodes:= $processes.$map($, function($v) {(
-                $title:= $v.*.title;
+                $title:= $v.*.title ? $v.*.title : "untitled";
                 $size:= $length($title);
                 $symbol_width:= 25 + ($size > 7 ? $size*14 : $size*16 );
-                $symbol:= $getSymbol($title, $v.*.entity_id, $symbol_width, $icons);
+                                    $symbol:= $_essentials._jsonata_function
+                                      ? $getSymbol_t1($title, $v.*.entity_id, $symbol_width, $icons)
+                                      : $getSymbol($title, $v.*.entity_id, $symbol_width, $icons);
                 { "nodes": {
                       $v.$keys(): {
                           "title": $title, 
@@ -277,10 +281,12 @@ entities:
 
             $icons:= $."seaf.icons";
             $pre_nodes:= $processes_parties_products.$map($, function($v) {(
-                $title:= $v.*.title;
+                $title:= $v.*.title ? $v.*.title : "untitled";
                 $size:= $length($title);
                 $symbol_width:= 25 + ($size > 7 ? $size*14 : $size*16 );
-                $symbol:= $getSymbol($title, $v.*.entity_id, $symbol_width, $icons);
+                                    $symbol:= $_essentials._jsonata_function
+                                      ? $getSymbol_t1($title, $v.*.entity_id, $symbol_width, $icons)
+                                      : $getSymbol($title, $v.*.entity_id, $symbol_width, $icons);
                 { "nodes": {
                       ($split($v.$keys(), ".")[-1] ? $split($v.$keys(), ".")[-1] : $v.$keys()): {
                           "title": $title, 
