@@ -1,5 +1,4 @@
 imports:
-#  - Architecture/root.yaml
   - entities/root.yaml
   - presentations/root.yaml
 

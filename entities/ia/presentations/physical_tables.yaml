@@ -17,8 +17,6 @@ entities:
           - value: logic_link
             text: Логическая сущность
             link: link
-
-
         source: >
           (
             [$."seaf.ia.physical_tables".$spread().
@@ -27,9 +25,9 @@ entities:
                     "self_link": "/entities/seaf.ia.physical_tables/card?id=" & $keys(),
                     "description": *.description,
                     "as": *.as,
-                    "as_link": "components/component/card?id=" & *.as,
+                    "as_link": "/entities/components/blank?dh-component-id=" & *.as,
                     "rdb": *.rdb,
-                    "logic_link": ($id := *.logic_link; $$.logical_entities.$spread()[$keys() = $id].*.name),
+                    "logic_link": ($id := *.logic_link; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.name),
                     "link": "/entities/seaf.ia.logical_entities/card?id=" & *.logic_link
                 }]
           )
@@ -44,11 +42,12 @@ entities:
                   "name": *.name,
                   "description": *.description,
                   "as": *.as,
+                  "as_link": "/entities/components/blank?dh-component-id=" & *.as,
                   "rdb": *.rdb,
                   "db": *.db,
                   "schema": *.schema,
                   "loc_attr": *.loc_attr,
-                  "logic_link": ($id := *.logic_link; $$.logical_entities.$spread()[$keys() = $id].*.name),
+                  "logic_link": *.logic_link,
                   "link": "/entities/seaf.ia.logical_entities/card?id=" & *.logic_link
                 }
           )

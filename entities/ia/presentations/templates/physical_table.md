@@ -5,7 +5,7 @@
 :------------  | :------------
 Наименование | {{name}}
 Назначение | {{description}}
-АС | {{as}}
+АС | [{{as}}]({{as_link}})
 СУБД | {{rdb}}
 БД | {{db}}
 Схема | {{schema}}
@@ -13,4 +13,4 @@
 Связанная логическая сущность | [{{logic_link}}]({{link}})
 
 ## Атрибуты Физической таблицы
-![Мета аттрибуты](@entity/physical_attributes/reestr_by_PhT?id={{id}})
+![Мета аттрибуты](@entity/seaf.ia.physical_attributes/reestr_by_PhT?id={{id}})

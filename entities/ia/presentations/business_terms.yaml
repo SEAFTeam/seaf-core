@@ -11,8 +11,9 @@ entities:
             link: link
           - value: description
             text: Описание
-          - value: owner
-            text: Ответственный
+          - value: processes
+            text: Бизнес-процесс
+            link: bp_link
           - value: creation_date
             text: Дата создания
           - value: status
@@ -24,7 +25,8 @@ entities:
                   "name": *.name,
                   "link": "/entities/seaf.ia.business_terms/card?id=" & $keys()[0],
                   "description": *.description,
-                  "owner": *.owner,
+                  "processes": *.processes,
+                  "bp_link": "/entities/seaf.ba.processes/process_summary?id=" & *.processes,
                   "creation_date": *.creation_date,
                   "status": *.status
                 }]

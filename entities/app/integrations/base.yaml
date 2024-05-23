@@ -41,6 +41,8 @@ entities:
               title: Объекты данных
               type: array
               items:
+#                $ref: "#/$rels/seaf.ia.physical_tables.physical_table"
+#                $ref: "#/$rels/seaf.ia.logical_entities.logical_entity"
                 $ref: "#/$rels/seaf.ia.data_objects.data_object"
           required:
             - title

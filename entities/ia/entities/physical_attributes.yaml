@@ -38,6 +38,11 @@ entities:
               items:
                 type: string
                 minLength: 5
+            logical_entity:         # Ссылка на сущность логической модели
+              title: Ссылка на сущность
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ia.logical_entities.logical_entity"
             phys_table:         # Имя физической таблицы, к которой принадлежит атрибут.
               title: Таблица
               $ref: "#/$rels/seaf.ia.physical_tables.physical_table"
