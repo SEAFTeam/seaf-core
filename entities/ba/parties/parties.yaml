@@ -88,7 +88,7 @@ entities:
 
             $icons:= $."seaf.icons";
             $pre_nodes:= $parties.$map($, function($v) {(
-                                    $title:= $v.*.title;
+                                    $title:= $v.*.title ? $v.*.title : "untitled";
                                     $size:= $length($title);
                                     $symbol_width:= 25 + ($size > 7 ? $size*14 : $size*16 );
                                     $symbol:= $_essentials._jsonata_function

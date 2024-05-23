@@ -79,7 +79,7 @@ entities:
             $resources:= $resources[$.$keys() in $processes.*.*.consumes or $.$keys() in $processes.*.*.produces or $.$keys() in $processes.*.*.supported];
             
             $resources:= $ctx and $_essentials._jsonata_function
-                ? $context_content_refined($ctx, $).observable[($.$keys() = "membersOrd" or $.$keys() = "membersCtx") and $.*.id in $resources.$keys()].[{$.id: $.body}]  
+                ? $context_content_refined($ctx, $).observable[($.$keys() = "membersOrd" or $.$keys() = "membersCtx") and $.*.id in $resources.$keys()].[{$.*.id: $.*.body}]  
                 : $resources;
 
             $parties:= $ctx and $_essentials._jsonata_function
@@ -100,10 +100,12 @@ entities:
 
             $icons:= $."seaf.icons";
             $pre_nodes:= $processes_parties_requirements_resources.$map($, function($v) {(
-                $title:= $v.*.title;
+                $title:= $v.*.title ? $v.*.title : "untitled";
                 $size:= $length($title);
                 $symbol_width:= 25 + ($size > 7 ? $size*14 : $size*16 );
-                $symbol:= $getSymbol($title, $v.*.entity_id, $symbol_width, $icons);
+                                    $symbol:= $_essentials._jsonata_function
+                                      ? $getSymbol_t1($title, $v.*.entity_id, $symbol_width, $icons)
+                                      : $getSymbol($title, $v.*.entity_id, $symbol_width, $icons);
                 { "nodes": {
                       ($split($v.$keys(), ".")[-1] ? $split($v.$keys(), ".")[-1] : $v.$keys()): {
                           "title": $title, 
