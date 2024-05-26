@@ -1,4 +1,3 @@
 imports:
 
   - docs.yaml
-  - federation/federated_example.yaml
