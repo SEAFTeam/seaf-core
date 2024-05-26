@@ -8,9 +8,9 @@ seaf.nav:
             link: "/entities/seaf.ba.parties/org_str_wrapper"
             order: 200
             # includes:
-              # - title: Фликс
-              #   link: "/entities/seaf.ba.parties/org_str_wrapper?domain=flix"
-              #   order: 200
+            #   - title: Фликс
+            #     link: "/entities/seaf.ba.parties/org_str_wrapper?domain=flix"
+            #     order: 200
           - title: Продуктовый ландшафт
             link: "/entities/seaf.ba.products/landscape_wrapper"
             order: 210
