@@ -1,0 +1,122 @@
+entities:
+  contexts:
+    presentations:
+      integration:
+        title: Представление (интеграций) в PlantUML
+        params:
+          title: Требуемые параметры для презентации
+          type: object
+          properties:
+            "dh-context-id":
+              title: Идентификатор контекста
+              type: string
+              pattern: ^[0-9a-zA-Z][a-zA-Z0-9_-]*(\.[a-zA-Z][a-zA-Z0-9_-]*)*$
+            "dh-focus-id":
+              title: Идентификатор требующий подсветку
+              type: string
+              pattern: ^[0-9a-zA-Z][a-zA-Z0-9_-]*(\.[a-zA-Z0-9][a-zA-Z0-9_-]*)*$
+          required:
+            - dh-context-id
+        type: plantuml
+        $constructor: >  # Переносим необходимую информацию из контекста в презентацию 
+          (
+            $id := $params."dh-context-id";
+            $context := $lookup(contexts, $id);
+            $prototype := entities.contexts.presentations.integration;
+
+            /* Преобразует относительные пути к файлам в прямые*/
+            $toDirectRes := function($value) {
+                $substring($value, 0, 4) = "res:" ? $value : "res://contexts/" & $id & "#" & $value
+            };
+
+            /* Если явно указан puml файл, просто рендерим его */
+            ($type($context.uml) = "string") and ($substring($context.uml, -5) = ".puml") ? (
+                {
+                  "type": "plantuml",
+                  "source": $toDirectRes($context.uml)
+                }
+            ) : (
+                $result := $context.source ? ($merge([$prototype, {
+                    "origin": { "_source": $context.source, "_origin": "($)" }
+                }])) : $prototype;
+
+                /* Если в контексте переопределен шаблон, используем его по прямой ссылке */
+                $result := $context.template 
+                    ? $merge([$result, { "template":  $toDirectRes($context.template) }])
+                    : $result;
+            )
+          )
+        template: templates/template.puml
+        source: >
+          (
+            $id := $params."dh-context-id";
+            $focusId := $params."dh-focus-id";
+            /* Получаем доступ к оригинальным данным */
+            $manifest := _origin ? _origin : $;
+            /* Получаем контекст */
+            $context := $lookup($manifest.contexts, $id);
+            /* Если в контексте задан источник, берем его за основу */
+            $manifest := _source ? _source : $;
+          
+            $isExtraLinks := $not($string($context."extra-links") = "false");
+          
+            /* Получаем коллекцию дефолтных вспомогательных функций */
+            $defFunctions := $manifest.entities.contexts.api;
+          
+            /* Получаем коллекцию дефолтных параметров */
+            $defConfig := $manifest.entities.contexts.config;
+          
+            /* Получаем параметры из контекста */
+            $customConfig := $context.config;
+          
+            /* Формируем итоговый конфиг */
+            $config := $mergedeep([$defConfig,$customConfig]);
+          
+            /* Определяем движок рендеринга */
+            $renderCore := $lookup({
+              "elk": "!pragma layout elk",
+              "smetana": "!pragma layout smetana"
+            }, $config.renderCore);
+
+            /* Формируем заголовок */
+            $header := "$Header(\"" & ($context.title ? $context.title : $id ) & "\", \"" & $context.uml."$autor" & "\", \"" & $context.uml."$version" & "\" , \"" & $context.uml."$moment" & "\")\n";
+
+            /* Получаем все компоненты входящие в контекст */
+            $components := $eval($defFunctions.fetchComponentsExtraIntegrations, $merge([$params, {
+              "manifest": $manifest,
+              "contextId": $id,
+              "extra-links": $isExtraLinks,
+              "componentId": $params.componentId
+            }]));
+
+            /* Генерируем области */
+            $areas := $eval($defFunctions.fetchAreas, {
+              "components": $components
+            });
+          
+            /* Генерируем PlantUML диаграмму компонентов */
+            $elements := $eval($defFunctions.makePumlComponentDiagram, {
+              "manifest": $manifest,
+              "areas": $areas,
+              "components": $components,
+              "focusId": $focusId
+            });
+
+            /* Получаем список связей */
+            $links := $eval($defFunctions.fetchIntegrations, {
+              "components": $components,
+              "integrations": $manifest."seaf.app.integrations"
+            });
+          
+            /* Генерируем код связей */
+            $linksCode := $eval($defFunctions.makePumlComponentsLinks, {
+              "links": $links
+            });
+          
+            /* Готовим данные для передачи в шаблон */
+            {
+              "renderCore": $renderCore,
+              "presentation": $defConfig.defaultPresentation,
+              "code": $header & $elements & $linksCode
+            }
+          )
