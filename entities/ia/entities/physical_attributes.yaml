@@ -5,7 +5,7 @@ entities:
     objects:
       physical_attribute:
         route: "/"
-        symbol: "phс"
+        symbol: "pha"
         title: Колонка физической таблицы
     menu: >
       (
@@ -17,42 +17,48 @@ entities:
     schema:
       type: object
       patternProperties:
-        "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$": # Шаблон
-          type: object  # Взаимодействие будет объект
-          properties:   # со следующей структурой
-            name:       # Имя атрибута (должно соответствовать правилам наименования принятым в компании)
+        "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$":
+          type: object 
+          properties:
+            name:               # Имя атрибута (должно соответствовать правилам наименования принятым в компании)
               title: Наименование
               type: string
-              minLength: 2
-            description: # Описание назначения атрибута в текстовом формате.
-              title: Описание
+            status:             # Статус (enum: EXISTS)
+              title: Статус
               type: string
-            type: # Указание типа атрибута.
+            type:               # Типа атрибута.
               title: Тип
               type: string
-              minLength: 3
-            constrains: # Перечень ограничений для данного атрибута.
+            description:        # Описание назначения атрибута в текстовом формате.
+              title: Описание
+              type: string
+            constraints:        # Перечень ограничений для данного атрибута.
               title: Ограничения
               type: array
-              minItems: 0 # Минимум один шаг
+              minItems: 0       # Минимальное количество значений
               items:
                 type: string
-                minLength: 5
-            logical_entity:         # Ссылка на сущность логической модели
-              title: Ссылка на сущность
-              type: array
-              items:
-                $ref: "#/$rels/seaf.ia.logical_entities.logical_entity"
-            phys_table:         # Имя физической таблицы, к которой принадлежит атрибут.
-              title: Таблица
+            pdn_flag:           # Флаг наличия персональных данных
+              title: ПДН
+              type: boolean
+            cde_flag:           # Флаг наличия критичных данных
+              title: CDE
+              type: boolean
+            physical_table:     # Имя физической таблицы, к которой принадлежит атрибут.
+              title: Физическая таблица
               $ref: "#/$rels/seaf.ia.physical_tables.physical_table"
-            link_table:         # Ссылка на связанную таблицу (в случае, если атрибут ссылочный).
+            linked_table:       # Ссылка на связанную таблицу (в случае, если атрибут ссылочный).
               title: Связанная таблица
               $ref: "#/$rels/seaf.ia.physical_tables.physical_table"
-            link_table_key:         # Имя атрибута в связанной таблице (в случае, если атрибут ссылочный).
+            linked_key:         # Имя атрибута в связанной таблице (в случае, если атрибут ссылочный).
               title: Ключ в связанной таблице
               $ref: "#/$rels/seaf.ia.physical_attributes.physical_attribute"
-        # Сообщаем, что перечисленные поля обязательны
+            business_term:      # Ссылка на соответствующие термины Бизнес-глоссария или сущности концептуальной модели данных
+              title: Бизнес термин
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ia.business_terms.business_term"
+        # Обязательные поля
           required:
             - name
             - description

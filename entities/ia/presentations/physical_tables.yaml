@@ -8,15 +8,15 @@ entities:
             text: Наименование
             link: self_link
           - value: description
-            text: Назначение
-          - value: as
-            text: АС
+            text: Описание
+          - value: app_name
+            text: Автоматизированная система
             link: as_link
-          - value: rdb
+          - value: dbms
             text: СУБД
-          - value: logic_link
+          - value: logical_entity
             text: Логическая сущность
-            link: link
+            link: le_link
         source: >
           (
             [$."seaf.ia.physical_tables".$spread().
@@ -24,11 +24,11 @@ entities:
                     "name": *.name,
                     "self_link": "/entities/seaf.ia.physical_tables/card?id=" & $keys(),
                     "description": *.description,
-                    "as": *.as,
-                    "as_link": "/entities/components/blank?dh-component-id=" & *.as,
-                    "rdb": *.rdb,
-                    "logic_link": ($id := *.logic_link; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.name),
-                    "link": "/entities/seaf.ia.logical_entities/card?id=" & *.logic_link
+                    "app_name": *.app_name,
+                    "as_link": "/entities/components/blank?dh-component-id=" & *.app_name,
+                    "dbms": *.dbms,
+                    "logical_entity": ($id := *.logical_entity; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.name),
+                    "le_link": "/entities/seaf.ia.logical_entities/card?id=" & *.logical_entity
                 }]
           )
 
@@ -40,15 +40,23 @@ entities:
             $."seaf.ia.physical_tables".$spread()[$keys()=$params.id].{
                   "id": $keys()[0],
                   "name": *.name,
+                  "status": *.status,
+                  "type": *.type,
                   "description": *.description,
-                  "as": *.as,
-                  "as_link": "/entities/components/blank?dh-component-id=" & *.as,
-                  "rdb": *.rdb,
-                  "db": *.db,
+                  "app_name": *.app_name,
+                  "as_link": "/entities/components/blank?dh-component-id=" & *.app_name,
+                  "dbms": *.dbms,
+                  "database": *.database,
                   "schema": *.schema,
                   "loc_attr": *.loc_attr,
-                  "logic_link": *.logic_link,
-                  "link": "/entities/seaf.ia.logical_entities/card?id=" & *.logic_link
+                  "rows_count": *.rows_count,
+                  "cols_count": *.cols_count,
+                  "pdn_flag": *.pdn_flag,
+                  "cde_flag": *.cde_flag,
+                  "logical_entity": *.logical_entity,
+                  "le_link": "/entities/seaf.ia.logical_entities/card?id=" & *.logical_entity,
+                  "business_term": *.business_term,
+                  "bt_link": "/entities/seaf.ia.logical_entities/card?id=" & *.business_term
                 }
           )
 
@@ -59,21 +67,18 @@ entities:
             text: Наименование
             link: self_link
           - value: description
-            text: Назначение
-          - value: as
-            text: АС
-          - value: rdb
-            text: СУБД
+            text: Описание
+          - value: app_name
+            text: Автоматизированная система
         source: >
           (
             [$."seaf.ia.physical_tables".$spread().(
-            $id := $keys(); *[logic_link=$params.id].
+            $id := $keys(); *[logical_entity=$params.id].
               {
                     "name": name,
                     "self_link": "/entities/seaf.ia.physical_tables/card?id=" & $id,
                     "description": description,
-                    "as": as,
-                    "rdb": rdb
+                    "app_name": app_name
               }
             )]
           )
@@ -85,10 +90,10 @@ entities:
             text: Наименование
             link: self_link
           - value: description
-            text: Назначение
-          - value: as
-            text: АС
-          - value: rdb
+            text: Описание
+          - value: app_name
+            text: Автоматизированная система
+          - value: dbms
             text: СУБД
         source: >
           (
@@ -98,7 +103,7 @@ entities:
                     "name": name,
                     "self_link": "/entities/seaf.ia.physical_tables/card?id=" & $id,
                     "description": description,
-                    "rdb": rdb
+                    "dbms": dbms
               }
             )]
           )
