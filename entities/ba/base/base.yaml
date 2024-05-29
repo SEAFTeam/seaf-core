@@ -1,6 +1,5 @@
 imports:
   - icons.yaml
-  # - tests.yaml
 
 entities:
 
