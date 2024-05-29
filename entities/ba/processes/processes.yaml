@@ -1,6 +1,6 @@
 entities:
   seaf.ba.processes:
-    title: Бизнес-процессы
+    title: Процессы
     schema:
       type: object
       patternProperties:
@@ -17,21 +17,44 @@ entities:
               title: Владелец
               type: string 
               $ref: "#/$rels/seaf.ba.parties.party"
-            is_part_of:  #todo changed from "relates" -- check hex
-              title: композитная сущность (процесс более высокого уровня)
-              type: string
-              $ref: "#/$rels/seaf.ba.processes.process"
             next_processes:
               title: следующий процесс в последовательности
               type: array
               items:
                 $ref: "#/$rels/seaf.ba.processes.process"
+            supported:
+              title: поддерживает
+              description: Ресурсы - используются, но не трансформируются, реализуют выполнение чего?-> Процесса
+              type: array
+              items:
+                $ref: "#/properties/seaf.ba.resources/$resources"
+            consumes:
+              title: потребляется
+              description: Ресурсы - потребляются, расходуются при выполнении чего?-> Процесса
+              type: array
+              items:
+                $ref: "#/properties/seaf.ba.resources/$resources"
+            produces:
+              title: производит
+              description: отношение Процесс - имеет на выход  что? -> Ресурсы
+              type: array
+              items:
+                $ref: "#/properties/seaf.ba.resources/$resources"
             requirements:
               title: Требования процесса
               type: array
               items:
                 $ref: "#/$rels/seaf.change.requirements.requirement"
-            products: #todo not converted to hex
+            is_part_of: 
+              title: композитная сущность (процесс более высокого уровня)
+              type: string
+              $ref: "#/$rels/seaf.ba.processes.process"
+            products:
+              title: Отнесение к Продукту
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ba.products.product"
+            relates_to: #todo not converted to hex
               title: Связь с продуктами
               type: array
               items:
@@ -47,79 +70,263 @@ entities:
 
     presentations:
 
-      process_summary:
+      process_map_wrapper:
+        title: Карта процессов
         type: markdown
-        template: templates/process_summary.md
+        template: templates/process_map_wrapper.md
         source: >
           (
-            $id:= $params.id;
-
-            $process:= $spread($$."seaf.ba.processes")[$keys($) = $id];
-
-            $owner:= $spread($$."seaf.ba.parties")[$keys($) = $process.*.owner];
-            $owner:= $owner ? {
-                      "id": $keys($owner),
-                      "body": $owner.*
-                      };
-            $products:= $spread($$."seaf.products")[$keys($) in $process.*.products];
-            $products:=   $map($products, function($v) {
-                            {
-                              "id": $keys($v),
-                              "body": $v.*
-                            }
-                          });
-
-            $reqs:= $spread($$."seaf.change.requirements")[$keys($) in $process.*.requirements];
-            $reqs:=   $map($reqs, function($v) {
-                            {
-                              "id": $keys($v),
-                              "body": $v.*,
-                              "alias": $map($process.*.alias, function($vv) {                                            
-                                        {"alias_id": $vv,
-                                        "alias_body": $lookup($$."seaf.ba.requirements", $vv)}
-                                      })
-                              }
-                          });
-
-            $systems:= $spread($$.components)[$id in $.*.processes];
-            $systems:=   $map($systems, function($v) {
-                            {
-                              "id": $keys($v),
-                              "body": $v.*,
-                              "alias": $map($process.*.alias, function($vv) {                                            
-                                        {"alias_id": $vv,
-                                        "alias_body": $lookup($$.components, $vv)}
-                                      })
-                              }
-                          });
-
-            $biz_obj:= $spread($$."seaf.ia.business_objects")[$id in $.*.processes];
-            $biz_obj:=   $map($biz_obj, function($v) {
-                            {
-                              "id": $keys($v),
-                              "body": $v.*,
-                              "alias": $map($process.*.alias, function($vv) {                                            
-                                        {"alias_id": $vv,
-                                        "alias_body": $lookup($$."seaf.ia.business_objects", $vv)}
-                                      })
-                              }
-                          });
-
-
-
-
-            {
-              "id": $id,
-              "body": $process.*,
-              "owner_num": $count($owner),
-              "owner": $owner,
-              "requirements_num": $count($reqs),
-              "requirements": $reqs,
-              "products_num": $count($products),
-              "products": $products,
-              "systems_num": $count($systems),
-              "systems": $systems,
-              "biz_obj_num": $count($biz_obj), 
-              "biz_obj": $biz_obj 
+            $domain:= $params.domain;
+            
+            {"count": $count($."seaf.ba.products".$keys()),
+             "domain": $domain
             }
+
           )
+
+      process_network_wrapper:
+        title: Сеть процессов
+        type: markdown
+        template: templates/process_network_wrapper.md
+        source: >
+          (
+            $domain:= $params.domain;
+            
+            {"count": $count($."seaf.ba.products".$keys()),
+             "domain": $domain
+            }
+
+          )
+
+      process_distribution_wrapper:
+        title: Распределение Процессов по Продуктам
+        type: markdown
+        template: templates/process_distribution_wrapper.md
+        source: >
+          (
+            $domain:= $params.domain;
+            
+            {"count": $count($."seaf.ba.products".$keys()),
+             "domain": $domain
+            }
+
+          )
+
+      process_network_graph:
+        title: Сеть процессов (граф)
+        type: smartants
+        source: >
+          (
+            $ctx:= $params.domain;
+
+            $processes:= $ctx and $_essentials._jsonata_function
+                ? $context_content_refined($ctx, $).observable[($.$keys() = "membersOrd" or $.$keys() = "membersCtx") and $.*.body.entity_id = "seaf.ba.processes"].*.[{$.id: $.body}]  
+                : $spread($."seaf.ba.processes").[$~>|$.*|{"entity_id": "processes"}|];
+
+            /*$processes:= $spread($."seaf.ba.processes").[$~>|$.*|{"entity_id": "processes"}|];*/
+
+            $parties:= $ctx and $_essentials._jsonata_function
+                ? $context_content_refined($ctx, $).observable[($.$keys() = "membersOrd" or $.$keys() = "membersCtx") and $.*.body.entity_id = "seaf.ba.parties"].*[$.$keys() in $processes.*.*.owner].[{$.id: $.body}]  
+                : $spread($."seaf.ba.parties")[$.$keys() in $processes.*.*.owner].[$~>|$.*|{"entity_id": "parties"}|];
+
+            /*$parties:= $spread($."seaf.ba.parties")[$.$keys() in $processes.*.*.owner].[$~>|$.*|{"entity_id": "parties"}|];*/
+
+            $requirements:= $ctx and $_essentials._jsonata_function
+                ? $context_content_refined($ctx, $).observable[($.$keys() = "membersOrd" or $.$keys() = "membersCtx") and $.*.body.entity_id = "seaf.change.requirements"].*[$.$keys() in $processes.*.*.requirements].[{$.id: $.body}]  
+                : $spread($."seaf.change.requirements")[$.$keys() in $processes.*.*.owner].[$~>|$.*|{"entity_id": "requirements"}|];
+
+            /*$requirements:= $spread($."seaf.change.requirements")[$.$keys() in $processes.*.*.requirements].[$~>|$.*|{"entity_id": "requirements"}|];*/
+
+            $processes_parties:= $append($processes, $parties);
+            $processes_parties_requirements:= $append($processes_parties, $requirements);
+
+            $icons:= $."seaf.icons";
+            $pre_nodes:= $processes_parties_requirements.$map($, function($v) {(
+                $title:= $v.*.title ? $v.*.title : "untitled";
+                $size:= $length($title);
+                $symbol_width:= 25 + ($size > 7 ? $size*14 : $size*16 );
+                                    $symbol:= $_essentials._jsonata_function
+                                      ? $getSymbol_t1($title, $v.*.entity_id, $symbol_width, $icons)
+                                      : $getSymbol($title, $v.*.entity_id, $symbol_width, $icons);
+                { "nodes": {
+                      ($split($v.$keys(), ".")[-1] ? $split($v.$keys(), ".")[-1] : $v.$keys()): {
+                          "title": $title, 
+                          "symbol": $symbol.title}
+                      },
+                   "links": $append($append(
+                              $v.*.owner ?
+                                [
+                                    { "from": ($split($v.$keys(), ".")[-1] ? $split($v.$keys(), ".")[-1] : $v.$keys()),
+                                      "to": ($split($v.*.owner, ".")[-1] ? $split($v.*.owner, ".")[-1] : $v.*.owner),
+                                      "title": "владелец",
+                                      "style": "->"
+                                    }
+
+                                ] : [],
+
+                              $map($v.*.next_processes, function($vv) {
+                                $count($vv)>0 ?
+                                  { "from": ($split($v.$keys(), ".")[-1] ? $split($v.$keys(), ".")[-1] : $v.$keys()),
+                                    "to": ($split($vv, ".")[-1] ? $split($vv, ".")[-1] : $vv),
+                                    "title": "next",
+                                    "style": "-[#green]->"
+                                  
+                                  }
+                              })
+                            ), 
+                              $map($v.*.requirements, function($vv) {
+                                $count($vv)>0 ?
+                                  { "from": ($split($v.$keys(), ".")[-1] ? $split($v.$keys(), ".")[-1] : $v.$keys()),
+                                    "to": ($split($vv, ".")[-1] ? $split($vv, ".")[-1] : $vv),
+                                    "title": "предъявляет",
+                                    "style": "-[#orange]->"
+                                  
+                                  }
+                              })
+                            ),   
+
+                  "symbols": {
+                      $symbol.title: $symbol.svg}
+                };
+            )});
+
+            {"config": {
+              "distance": 10,
+              "trackWidth": 24,
+              "hideLeafTitles": true
+              },
+             "symbols": $merge($pre_nodes.symbols), 
+             "nodes": $merge($pre_nodes.nodes),
+             "links": [$pre_nodes.links]
+            } 
+          )
+
+      process_map_graph:
+        title: Сеть процессов (граф)
+        type: smartants
+        source: >
+          (
+            $ctx:= $params.domain;
+
+            $processes:= $ctx and $_essentials._jsonata_function
+                ? $context_content_refined($ctx, $).observable[($.$keys() = "membersOrd" or $.$keys() = "membersCtx") and $.*.body.entity_id = "seaf.ba.processes"].*.[{$.id: $.body}]  
+                : $spread($."seaf.ba.processes").[$~>|$.*|{"entity_id": "processes"}|];
+
+            /*$processes:= $spread($."seaf.ba.processes").[$~>|$.*|{"entity_id": "processes"}|];*/
+            
+            $processes_parties:= $append($processes, $parties);
+            $processes_parties_requirements:= $append($processes_parties, $requirements);
+            
+            $icons:= $."seaf.icons";
+            $pre_nodes:= $processes.$map($, function($v) {(
+                $title:= $v.*.title ? $v.*.title : "untitled";
+                $size:= $length($title);
+                $symbol_width:= 25 + ($size > 7 ? $size*14 : $size*16 );
+                                    $symbol:= $_essentials._jsonata_function
+                                      ? $getSymbol_t1($title, $v.*.entity_id, $symbol_width, $icons)
+                                      : $getSymbol($title, $v.*.entity_id, $symbol_width, $icons);
+                { "nodes": {
+                      $v.$keys(): {
+                          "title": $title, 
+                          "symbol": $symbol.title}
+                      },
+                   "links": $v.*.is_part_of ?
+                                [
+                                    { "from":  $v.$keys(),
+                                      "to": $v.*.is_part_of,
+                                      "title": "является частью",
+                                      "style": "->"
+                                    }
+
+                                ] : [],
+
+                  "symbols": {
+                      $symbol.title: $symbol.svg}
+                };
+            )});
+
+            {"config": {
+              "distance": 10,
+              "trackWidth": 24,
+              "hideLeafTitles": true
+              },
+             "symbols": $merge($pre_nodes.symbols), 
+             "nodes": $merge($pre_nodes.nodes),
+             "links": [$pre_nodes.links]
+            } 
+          )
+
+      process_distribution_graph:
+        title: Распределение Процессов по Продуктам (граф)
+        type: smartants
+        source: >
+          (
+            $ctx:= $params.domain;
+
+            $processes:= $ctx and $_essentials._jsonata_function
+                ? $context_content_refined($ctx, $).observable[($.$keys() = "membersOrd" or $.$keys() = "membersCtx") and $.*.body.entity_id = "seaf.ba.processes"].*.[{$.id: $.body}]  
+                : $spread($."seaf.ba.processes").[$~>|$.*|{"entity_id": "processes"}|];
+
+
+            $parties:= $ctx and $_essentials._jsonata_function
+                ? $context_content_refined($ctx, $).observable[($.$keys() = "membersOrd" or $.$keys() = "membersCtx") and $.*.body.entity_id = "seaf.ba.parties"].*[$.$keys() in $processes.*.*.owner].[{$.id: $.body}]  
+                : $spread($."seaf.ba.parties")[$.$keys() in $processes.*.*.owner].[$~>|$.*|{"entity_id": "parties"}|];
+
+            $products:= $ctx and $_essentials._jsonata_function
+                ? $context_content_refined($ctx, $).observable[($.$keys() = "membersOrd" or $.$keys() = "membersCtx") and $.*.body.entity_id = "seaf.ba.products"].*.[{$.id: $.body}]  
+                : $spread($."seaf.ba.products").[$~>|$.*|{"entity_id": "products"}|];
+
+            $processes_parties:= $append($processes, $parties);
+            $processes_parties_products:= $append($processes_parties, $products);
+
+            $icons:= $."seaf.icons";
+            $pre_nodes:= $processes_parties_products.$map($, function($v) {(
+                $title:= $v.*.title ? $v.*.title : "untitled";
+                $size:= $length($title);
+                $symbol_width:= 25 + ($size > 7 ? $size*14 : $size*16 );
+                                    $symbol:= $_essentials._jsonata_function
+                                      ? $getSymbol_t1($title, $v.*.entity_id, $symbol_width, $icons)
+                                      : $getSymbol($title, $v.*.entity_id, $symbol_width, $icons);
+                { "nodes": {
+                      ($split($v.$keys(), ".")[-1] ? $split($v.$keys(), ".")[-1] : $v.$keys()): {
+                          "title": $title, 
+                          "symbol": $symbol.title}
+                      },
+                   "links": $append(
+                                      $v.*.owner ?
+                                        [
+                                            { "from": ($split($v.$keys(), ".")[-1] ? $split($v.$keys(), ".")[-1] : $v.$keys()),
+                                              "to": ($split($v.*.owner, ".")[-1] ? $split($v.*.owner, ".")[-1] : $v.*.owner),
+                                              "title": "владелец",
+                                              "style": "->"
+                                            }
+
+                                        ] : [],
+
+                                      $map($v.*.products, function($vv) {
+                                        $count($vv)>0 ?
+                                          { "from": ($split($v.$keys(), ".")[-1] ? $split($v.$keys(), ".")[-1] : $v.$keys()),
+                                            "to": ($split($vv, ".")[-1] ? $split($vv, ".")[-1] : $vv),
+                                            "title": "относится к",
+                                            "style": "-[#green]->"
+                                          
+                                          }
+                                      })
+                                    ),   
+
+                  "symbols": {
+                      $symbol.title: $symbol.svg}
+                };
+            )});
+
+            {"config": {
+              "distance": 10,
+              "trackWidth": 24,
+              "hideLeafTitles": true
+              },
+             "symbols": $merge($pre_nodes.symbols), 
+             "nodes": $merge($pre_nodes.nodes),
+             "links": [$pre_nodes.links]
+            } 
+          )
+

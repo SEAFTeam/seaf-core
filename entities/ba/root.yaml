@@ -1,7 +1,10 @@
 imports:
 
-  - self/self.yaml
-  - parties/parties.yaml
-  - products/products.yaml
-  - processes/processes.yaml
+  - base/base.yaml                # Иконки, меню, тесты
+  - menu.yaml                     # Конфигурация меню
+
+  - parties/parties.yaml          # Мета-сущность seaf.ba.parties
+  - products/products.yaml        # Мета-сущность seaf.ba.products
+  - processes/processes.yaml      # Мета-сущность seaf.ba.processes
+  - resources/resources.yaml      # Мета-сущность seaf.ba.resources
 
