@@ -189,6 +189,7 @@ entities:
                       $symbol.title: $symbol.svg}
                 };
             )});
+            $nodes:= $merge($pre_nodes.nodes);
 
             {"config": {
               "distance": 10,
@@ -196,8 +197,8 @@ entities:
               "hideLeafTitles": true
               },
              "symbols": $merge($pre_nodes.symbols), 
-             "nodes": $merge($pre_nodes.nodes),
-             "links": [$pre_nodes.links]
+             "nodes": $nodes,
+             "links": [$pre_nodes.links][$.from in $nodes.$keys() and $.to in $nodes.$keys()]
             } 
           )
 
@@ -245,13 +246,15 @@ entities:
                 };
             )});
 
+            $nodes:= $merge($pre_nodes.nodes);
+
             {"config": {
               "distance": 10,
               "trackWidth": 24,
               "hideLeafTitles": true
               },
              "symbols": $merge($pre_nodes.symbols), 
-             "nodes": $merge($pre_nodes.nodes),
+             "nodes": $nodes,
              "links": [$pre_nodes.links]
             } 
           )
@@ -319,14 +322,16 @@ entities:
                 };
             )});
 
+            $nodes:= $merge($pre_nodes.nodes);
+
             {"config": {
               "distance": 10,
               "trackWidth": 24,
               "hideLeafTitles": true
               },
              "symbols": $merge($pre_nodes.symbols), 
-             "nodes": $merge($pre_nodes.nodes),
-             "links": [$pre_nodes.links]
+             "nodes": $nodes,
+             "links": [$pre_nodes.links][$.from in $nodes.$keys() and $.to in $nodes.$keys()]
             } 
           )
 
