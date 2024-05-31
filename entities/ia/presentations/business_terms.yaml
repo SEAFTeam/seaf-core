@@ -16,8 +16,6 @@ entities:
             link: bp_link
           - value: creation_date
             text: Дата создания
-          - value: status
-            text: Статус
         source: >
           (
             [$."seaf.ia.business_terms".$spread().{
@@ -27,8 +25,7 @@ entities:
                   "description": *.description,
                   "processes": *.processes,
                   "bp_link": "/entities/seaf.ba.processes/process_summary?id=" & *.processes,
-                  "creation_date": *.creation_date,
-                  "status": *.status
+                  "creation_date": *.creation_date
                 }]
           )
 
@@ -41,7 +38,6 @@ entities:
                   "id": $keys()[0],
                   "name": *.name,
                   "description": *.description,
-                  "status": *.status,
                   "processes": *.processes,
                   "creation_date": *.creation_date,
                   "modify_date": *.modify_date,

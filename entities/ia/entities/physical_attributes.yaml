@@ -23,9 +23,9 @@ entities:
             name:               # Имя атрибута (должно соответствовать правилам наименования принятым в компании)
               title: Наименование
               type: string
-            status:             # Статус (enum: EXISTS)
-              title: Статус
-              type: string
+            # status:             # Статус (enum: EXISTS)
+            #   title: Статус
+            #   type: string
             type:               # Типа атрибута.
               title: Тип
               type: string
