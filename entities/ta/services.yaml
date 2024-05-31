@@ -28,6 +28,11 @@ entities:
               type: array
               items:
                 $ref: "#/$rels/seaf.app.integrations.integrations"
+            stand_id:
+              title: Имя стенда внутри окружения
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.stand.stand"
 
 #### Описания технологических сервисов. Добавляются все необходимые поля и устанавливаются правила их наполнения ####
   seaf.ta.services.dc_region:
@@ -112,7 +117,6 @@ entities:
               $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
           required:
             - dc_id
-            - dc_name
             - dc_ownership
             - dc_type
             - dc_vendor
@@ -147,7 +151,6 @@ entities:
                 $ref: "#/$rels/seaf.ta.services.network.network"
           required:
             - office_id
-            - name
             - address
 
   seaf.ta.services.cluster:
@@ -165,7 +168,7 @@ entities:
               title: Cluster ID
               type: string
             availabilityzone_id:
-              title: В какие зоны доступности входит DC
+              title: В какие зоны доступности входит
               type: array
               items:
                 $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
@@ -197,7 +200,7 @@ entities:
   seaf.ta.services.compute_service:
     title: Compute Service
     objects:
-      cluster:
+      compute_service:
         route: "/"
         title: Вычислительный сервис
     schema: # JSON Schema контролирующая описание объекта сущности
@@ -206,10 +209,10 @@ entities:
           $ref: "#/$defs/seaf.ta.services.base.entity"
           properties:
             compute_id:
-              title: Compute Service IDВчера
+              title: Compute Service ID
               type: string
             availabilityzone_id:
-              title: В какие зоны доступности входит DC
+              title: В какие зоны доступности входит
               type: array
               items:
                 $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
@@ -235,7 +238,7 @@ entities:
   seaf.ta.services.storage:
     title: Storage
     objects:
-      server:
+      storage:
         route: "/"
         title: Система хранения данных
     schema: # JSON Schema контролирующая описание объекта сущности
@@ -273,12 +276,12 @@ entities:
                   items:
                     $ref: "#/$rels/seaf.ta.components.server.server"
                 availabilityzone_id:
-                  title: В какие зоны доступности входит DC
+                  title: В какие зоны доступности входит
                   type: array
                   items:
                     $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
                 hw_storage_connected:
-                  title: В какие зоны доступности входит DC
+                  title: Какие СХД подключены
                   type: array
                   items:
                     $ref: "#/$rels/seaf.ta.components.hw_storage.hw_storage"
@@ -303,7 +306,7 @@ entities:
                   type: string
                   enum: [Simple Storage Service]
                 availabilityzone_id:
-                  title: В какие зоны доступности входит DC
+                  title: В какие зоны доступности входит
                   type: array
                   items:
                     $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
@@ -324,7 +327,7 @@ entities:
                   items:
                     $ref: "#/$rels/seaf.ta.services.network.network"
                 hw_storage_connected:
-                  title: В какие зоны доступности входит DC
+                  title: Какие СХД подключены
                   type: array
                   items:
                     $ref: "#/$rels/seaf.ta.components.hw_storage.hw_storage"
@@ -371,7 +374,7 @@ entities:
               items:
                 $ref: "#/$rels/seaf.ta.components.server.server"
             availabilityzone_id:
-              title: В какие зоны доступности входит DC
+              title: В какие зоны доступности входит
               type: array
               items:
                 $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
@@ -399,13 +402,10 @@ entities:
               title: Kubernetes cluster ID
               type: string
             availabilityzone_id:
-              title: В какие зоны доступности входит DC
+              title: В какие зоны доступности входит
               type: array
               items:
                 $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
-            cluster_fqdn:
-              title: Имя кластера Kubernetes
-              type: string
             is_own:
               title: Кластер куплен как услуга
               type: boolean
@@ -432,9 +432,6 @@ entities:
             cluster_autoscaler:
               title: Работа автомасштабирования воркер нод кластера
               type: boolean
-            hpa:
-              title: HPA\VPA для деплойментов
-              type: boolean
             keys:
               title: Хранилище секретов кластера
               type: string
@@ -452,7 +449,6 @@ entities:
           required:
             - kubernetes_id
             - availabilityzone_id
-            - cluster_fqdn
             - software
             - master_qty
             - worker_qty
@@ -492,7 +488,7 @@ entities:
                   title: Офис
                   $ref: "#/$rels/seaf.ta.services.office.office"
                 availabilityzone_id:
-                  title: В какие зоны доступности входит DC
+                  title: В какие зоны доступности входит
                   type: array
                   items:
                     $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
@@ -541,7 +537,7 @@ entities:
                   title: Офис
                   $ref: "#/$rels/seaf.ta.services.office.office"
                 availabilityzone_id:
-                  title: В какие зоны доступности входит DC
+                  title: В какие зоны доступности входит
                   type: array
                   items:
                     $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
@@ -600,6 +596,11 @@ entities:
                 anyOf:
                   - $ref: "#/$rels/seaf.ta.components.network.network"
                   - $ref: "#/$rels/seaf.ta.components.user_device.user_device"
+            network_connection:
+              title: Перечисление связанных сетей
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.network.network"
             ch_number:
               title: Номер канала
               type: string
@@ -642,15 +643,12 @@ entities:
               title: Backup System ID
               type: string
             availabilityzone_id:
-              title: В какие зоны доступности входит DC
+              title: В какие зоны доступности входит
               type: array
               items:
                 $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
             path:
               title: Место хранения РК
-              type: string
-            schedule:
-              title: Частота резервного копирования
               type: string
             replication:
               title: Репликация в другой ЦОД
@@ -664,7 +662,6 @@ entities:
             - backup_id
             - availabilityzone_id
             - path
-            - schedule
 
   seaf.ta.services.monitoring:
     title: Monitoring Service
@@ -681,7 +678,7 @@ entities:
               title: Monitoring System ID
               type: string
             availabilityzone_id:
-              title: В какие зоны доступности входит DC
+              title: В какие зоны доступности входит
               type: array
               items:
                 $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
@@ -690,8 +687,9 @@ entities:
               type: string
             role:
               title: Роль
-              type: string
-              enum: [Инфраструктурный, Прикладной, Журналирование, Трейсинг]
+              type: array
+              items:
+                enum: [Инфраструктурный, Прикладной, Журналирование, Трейсинг]
             ha:
               title: Высокая доступность системы мониторинга
               type: boolean
