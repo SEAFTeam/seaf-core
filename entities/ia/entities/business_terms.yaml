@@ -6,12 +6,12 @@ entities:
       business_term:
         route: "/"
         title: Бизнес-термин
-        symbol: "busobj"
+        symbol: "bt"
     menu: >
       (
         {
             'location': 'Архитектура/Информационная/Бизнес глоссарий',
-            'link': 'entities/seaf.ia.business_terms/reestr'
+            'link': 'entities/seaf.ia.business_terms/registry'
         }
       )
     schema:
@@ -20,13 +20,13 @@ entities:
         "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$":
           type: object
           properties:
-            name:       # Существительное в единственном числе именительного падежа, без сокращений.
+            title:       # Существительное в единственном числе именительного падежа, без сокращений.
               title: Наименование
               type: string
             description:    # Логическое раскрытие термина. Без сокращений.
               title: Описание
               type: string
-          #  status:         # черновик/ используется/ архив
+          #  status:         # будет заменено на общую модель статуса
           #    title: Статус
           #    enum:
           #      - Планируется
@@ -34,11 +34,11 @@ entities:
           #      - Используется
           #      - Выводится из эксплуатации
           #      - В архиве
-            processes:
-              title: Используется в бизнес-процессах
-              type: array
-              items:
-                $ref: "#/$rels/seaf.ba.processes.process"
+            # processes:  # бизнес термины добаляются в бизнес процессах
+            #   title: Используется в бизнес-процессах
+            #   type: array
+            #   items:
+            #     $ref: "#/$rels/seaf.ba.processes.process"
             creation_date:  # Дата внесения термина в инструмент описания
               title: Дата внесения термина
               type: string
@@ -59,6 +59,6 @@ entities:
               minLength: 5
         # Сообщаем, что перечисленные поля обязательны
           required:
-            - name
+            - title
 #            - description
-            - status
+#            - status

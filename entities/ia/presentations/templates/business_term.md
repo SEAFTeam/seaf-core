@@ -3,14 +3,22 @@
 
 Мета атрибуты|Значения
 :------------  | :------------
-Наименование | {{name}}
+Наименование | {{title}}
 Описание | {{description}}
-Используется в бизнес-процессах | {{processes}}
 Дата внесения термина | {{creation_date}}
 Дата изменения термина | {{modify_date}}
 Ответственный (ФИО) |{{owner}}
 Комментарий | {{comments}}
 Нормативный/правовой документ | {{legal_doc}}
 
+## Используется в бизнес-процессах:
+{{#processes}}
+{{.}}
+
+{{/processes}}
+{{^processes}}
+нет
+{{/processes}}
+
 ## Связанные Логические сущности
-![Логические сущности](@entity/seaf.ia.logical_entities/reestr_by_BT?bt_id={{id}})
+![Логические сущности](@entity/seaf.ia.logical_entities/registry_by_BT?bt_id={{id}})

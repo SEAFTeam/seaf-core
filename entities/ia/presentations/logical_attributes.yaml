@@ -1,12 +1,12 @@
 entities:
   seaf.ia.logical_attributes:
     presentations:
-      reestr:
+      registry:
         type: table
         headers:
           - value: code
             text: Код
-          - value: name
+          - value: title
             text: Наименование
             link: self_link
           - value: logical_entity
@@ -20,11 +20,11 @@ entities:
             [$."seaf.ia.logical_attributes".$spread().
                 {
                     "code": *.code,
-                    "name": *.name,
+                    "title": *.title,
                     "self_link": "/entities/seaf.ia.logical_attributes/card?id=" & $keys(),
-                    "logical_entity": ($id := *.logical_entity; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.name),
+                    "logical_entity": ($id := *.logical_entity; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.title),
                     "le_link": "/entities/seaf.ia.logical_entities/card?id=" & *.logical_entity,
-                    "link_attr": ($id := *.link_attr; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.name),
+                    "link_attr": ($id := *.link_attr; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.title),
                     "entity_link": "/entities/seaf.ia.logical_entities/card?id=" & *.link_attr
                 }]
           )
@@ -37,7 +37,7 @@ entities:
             $."seaf.ia.logical_attributes".$spread()[$keys()=$params.id].{
                   "id": $keys()[0],
                   "code": *.code,
-                  "name": *.name,
+                  "title": *.title,
                   "status": *.status,
                   "description": *.description,
                   "logical_entity": *.logical_entity,
@@ -50,28 +50,31 @@ entities:
                 }
           )
 
-      reestr_by_LE:
+      registry_by_LE:
         type: table
         headers:
           - value: code
             text: Код
-          - value: name
+          - value: title
             text: Наименование
+            link: self_link
           - value: link_attr
             text: Связанная сущность
             link: entity_link
         source: >
           (
-          [$."seaf.ia.logical_attributes".*[logical_entity=$params.id].
-              {
-                  "code": code,
-                  "name": name,
-                  "link_attr": ($id := link_attr; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.name),
-                  "entity_link": "/entities/seaf.ia.logical_entities/card?id=" & link_attr
-              }]
+            $param_id := $params.id;
+            [$."seaf.ia.logical_attributes".$spread()[*.logical_entity = $param_id].({
+              "code": *.code,
+              "title": *.title,
+              "self_link": "/entities/seaf.ia.logical_attributes/card?id=" & $keys(),
+              "link_attr": [($id := *.link_attr; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.title)],
+              "entity_link": "/entities/seaf.ia.logical_entities/card?id=" & *.link_attr
+            })]
           )
 
-      reestr_by_LA:
+
+      registry_by_LA:
         type: table
         headers:
           - value: logical_entity
@@ -79,15 +82,15 @@ entities:
             link: entity_link
           - value: code
             text: Код атрибута
-          - value: name
+          - value: title
             text: Наименование атрибута
         source: >
           (
           [$."seaf.ia.logical_attributes".*[link_attr=$params.id].
               {
-                  "logical_entity": ($id := logical_entity; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.name),
+                  "logical_entity": ($id := logical_entity; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.title),
                   "entity_link": "/entities/seaf.ia.logical_entities/card?id=" & logical_entity,
                   "code": code,
-                  "name": name
+                  "title": title
               }]
           )

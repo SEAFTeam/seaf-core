@@ -12,10 +12,11 @@ entities:
           - value: physical_table
             text: Физическая таблица
             link: pht_link
-          - value: pdn_flag
-            text: Персональные данные
-          - value: cde_flag
-            text: Критичные данных
+          - value: linked_table
+            text: Связанная таблица
+            link: lt_link
+          - value: linked_key
+            text: Ключ в связанной таблице
         source: >
           (
             [$."seaf.ia.physical_attributes".$spread().
@@ -25,8 +26,9 @@ entities:
                     "type": *.type,
                     "physical_table":  ($id := *.physical_table; $$."seaf.ia.physical_tables".$spread()[$keys() = $id].*.title),
                     "pht_link": "/entities/seaf.ia.physical_tables/card?id=" & *.physical_table,
-                    "pdn_flag": *.pdn_flag,
-                    "cde_flag": *.cde_flag
+                    "linked_table":  ($id := *.linked_table; $$."seaf.ia.physical_tables".$spread()[$keys() = $id].*.title),
+                    "lt_link": "/entities/seaf.ia.physical_tables/card?id=" & *.linked_table,
+                    "linked_key": *.linked_key
                 }]
           )
 

@@ -11,7 +11,7 @@ entities:
       (
         {
           "location": "Архитектура/Информационная/Физическая модель/Колонки",
-          "link": "/entities/seaf.ia.physical_attributes/reestr"
+          "link": "/entities/seaf.ia.physical_attributes/registry"
         }
       )
     schema:
@@ -20,7 +20,7 @@ entities:
         "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$":
           type: object 
           properties:
-            name:               # Имя атрибута (должно соответствовать правилам наименования принятым в компании)
+            title:               # Имя атрибута (должно соответствовать правилам наименования принятым в компании)
               title: Наименование
               type: string
             # status:             # Статус (enum: EXISTS)
@@ -44,6 +44,12 @@ entities:
             cde_flag:           # Флаг наличия критичных данных
               title: CDE
               type: boolean
+            PK_flag:           # Флаг PRIMARY KEY
+              title: PRIMARY KEY
+              type: boolean
+            FK_flag:           # Флаг FOREIGN KEY
+              title: FOREIGN KEY
+              type: boolean
             physical_table:     # Имя физической таблицы, к которой принадлежит атрибут.
               title: Физическая таблица
               $ref: "#/$rels/seaf.ia.physical_tables.physical_table"
@@ -60,7 +66,7 @@ entities:
                 $ref: "#/$rels/seaf.ia.business_terms.business_term"
         # Обязательные поля
           required:
-            - name
+            - title
             - description
             - type
             - phys_table
