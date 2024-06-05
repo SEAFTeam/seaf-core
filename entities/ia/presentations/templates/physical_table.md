@@ -3,7 +3,7 @@
 
 Мета атрибуты | Значения
 :------------  | :------------
-Наименование | {{name}}
+Наименование | {{title}}
 Статус | {{status}}
 Тип представления | {{type}}
 Описание | {{description}}
@@ -16,8 +16,12 @@
 Количество столбцов | {{cols_count}}
 Наличие персональных данных | {{pdn_flag}}
 Наличие критических данных | {{cde_flag}}
-Связанный бизнес термин | [{{business_term}}]({{bt_link}})
-Связанная логическая сущность | [{{logical_entity}}]({{le_link}})
+
+## Связанные бизнес термины
+![Бизнес термины](@entity/seaf.ia.business_terms/registry_by_PhT?id={{id}})
+
+## Связанные логические сущности
+![Логические сущности](@entity/seaf.ia.logical_entities/registry_by_PhT?id={{id}})
 
 ## Атрибуты Физической таблицы
-![Мета аттрибуты](@entity/seaf.ia.physical_attributes/reestr_by_PhT?id={{id}})
+![Мета аттрибуты](@entity/seaf.ia.physical_attributes/registry_by_PhT?id={{id}})

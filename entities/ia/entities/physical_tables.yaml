@@ -11,7 +11,7 @@ entities:
       (
         {
           "location": "Архитектура/Информационная/Физическая модель/Таблицы",
-          "link": "/entities/seaf.ia.physical_tables/reestr"
+          "link": "/entities/seaf.ia.physical_tables/registry"
         }
       )
     schema:
@@ -20,7 +20,7 @@ entities:
         "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$":
           type: object
           properties:
-            name:          # Имя таблицы (должно соответствовать правилам наименования принятым в компании)
+            title:          # Имя таблицы (должно соответствовать правилам наименования принятым в компании)
               title: Наименование
               type: string
             status:        # Статус (enum: EXISTS)
@@ -74,6 +74,6 @@ entities:
                 $ref: "#/$rels/seaf.ia.logical_entities.logical_entity"
         # Обязательные поля
           required:
-            - name
+            - title
             - description
             - app_name

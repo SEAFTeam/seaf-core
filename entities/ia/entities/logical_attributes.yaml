@@ -11,7 +11,7 @@ entities:
       (
         {
           "location": "Архитектура/Информационная/Логическая модель/Атрибуты",
-          "link": "/entities/seaf.ia.logical_attributes/reestr"
+          "link": "/entities/seaf.ia.logical_attributes/registry"
         }
       )
     schema:
@@ -60,5 +60,5 @@ entities:
         # Сообщаем, что перечисленные поля обязательны
           required:
             - code
-            - name
+            - title
             - logical_entity

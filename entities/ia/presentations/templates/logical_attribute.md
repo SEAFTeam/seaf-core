@@ -4,10 +4,12 @@
 Мета атрибуты | Значения
 :------------  | :------------
 Код | {{code}}
-Наименование | {{name}}
+Наименование | {{title}}
 Статус | {{status}}
 Описание | {{description}}
 Логическая сущность | [{{logical_entity}}]({{le_link}})
-Бизнес термин | [{{business_term}}]({{bt_link}})
 Ссылочный атрибут | [{{link_attr}}]({{entity_link}})
 Тип связи | {{link_type}}
+
+## Связанные бизнес термины
+![Бизнес термины](@entity/seaf.ia.business_terms/registry_by_LA?id={{id}})

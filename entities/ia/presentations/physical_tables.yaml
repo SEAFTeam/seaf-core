@@ -1,10 +1,10 @@
 entities:
   seaf.ia.physical_tables:
     presentations:
-      reestr:
+      registry:
         type: table
         headers:
-          - value: name
+          - value: title
             text: Наименование
             link: self_link
           - value: description
@@ -14,21 +14,16 @@ entities:
             link: as_link
           - value: dbms
             text: СУБД
-          - value: logical_entity
-            text: Логическая сущность
-            link: le_link
         source: >
           (
             [$."seaf.ia.physical_tables".$spread().
                 {
-                    "name": *.name,
+                    "title": *.title,
                     "self_link": "/entities/seaf.ia.physical_tables/card?id=" & $keys(),
                     "description": *.description,
                     "app_name": *.app_name,
                     "as_link": "/entities/components/blank?dh-component-id=" & *.app_name,
-                    "dbms": *.dbms,
-                    "logical_entity": ($id := *.logical_entity; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.name),
-                    "le_link": "/entities/seaf.ia.logical_entities/card?id=" & *.logical_entity
+                    "dbms": *.dbms
                 }]
           )
 
@@ -39,7 +34,7 @@ entities:
           (
             $."seaf.ia.physical_tables".$spread()[$keys()=$params.id].{
                   "id": $keys()[0],
-                  "name": *.name,
+                  "title": *.title,
                   "status": *.status,
                   "type": *.type,
                   "description": *.description,
@@ -53,17 +48,15 @@ entities:
                   "cols_count": *.cols_count,
                   "pdn_flag": *.pdn_flag,
                   "cde_flag": *.cde_flag,
-                  "logical_entity": *.logical_entity,
-                  "le_link": "/entities/seaf.ia.logical_entities/card?id=" & *.logical_entity,
                   "business_term": *.business_term,
                   "bt_link": "/entities/seaf.ia.logical_entities/card?id=" & *.business_term
                 }
           )
 
-      reestr_by_LE:
+      registry_by_LE:
         type: table
         headers:
-          - value: name
+          - value: title
             text: Наименование
             link: self_link
           - value: description
@@ -71,11 +64,12 @@ entities:
           - value: app_name
             text: Автоматизированная система
         source: >
-          (
+          ( 
+            $param_id := $params.id;
             [$."seaf.ia.physical_tables".$spread().(
-            $id := $keys(); *[logical_entity=$params.id].
+            $id := $keys(); *[$param_id in logical_entity].
               {
-                    "name": name,
+                    "title": title,
                     "self_link": "/entities/seaf.ia.physical_tables/card?id=" & $id,
                     "description": description,
                     "app_name": app_name
@@ -83,10 +77,10 @@ entities:
             )]
           )
 
-      reestr_by_AS:
+      registry_by_AS:
         type: table
         headers:
-          - value: name
+          - value: title
             text: Наименование
             link: self_link
           - value: description
@@ -100,7 +94,7 @@ entities:
             [$."seaf.ia.physical_tables".$spread().(
             $id := $keys(); *[as=$params.id].
               {
-                    "name": name,
+                    "title": title,
                     "self_link": "/entities/seaf.ia.physical_tables/card?id=" & $id,
                     "description": description,
                     "dbms": dbms
