@@ -411,8 +411,8 @@ entities:
             align: left
             width: 20%
 
-          - value: kubernetes_id
-            text:  Kubernetes cluster ID
+          - value: container_id
+            text:  Какие контейнеры включает
             sortable: true
             align: left
             width: 20%
@@ -427,11 +427,11 @@ entities:
              $.*.{
                 "title": title,
                 "description": description,
-                "kubernetes_id": kubernetes_id,
+                "container_id": container_id,
                 "link": '/entities/seaf.ta.components.k8s_pod/list?ta-component-id=' & $COMPONENT_ID,
-                "k_link" :  $eval($get_link,{"hr":$refs."kubernetes_id","val":kubernetes_id })
+                "k_link" :  $eval($get_link,{"hr":$refs."container_id","val":container_id })
               }
-            )]^(name)]
+            )]^(title)]
           )
           
 
@@ -479,7 +479,7 @@ entities:
                 "description": description,
                 "link": '/entities/seaf.ta.components.k8s_container/list?ta-component-id=' & $COMPONENT_ID
               }
-            )]^(name)]
+            )]^(title)]
           )
 
       list:
@@ -524,7 +524,7 @@ entities:
                 "description": description,
                 "link": '/entities/seaf.ta.components.k8s_image/list?ta-component-id=' & $COMPONENT_ID
               }
-            )]^(name)]
+            )]^(title)]
           )
           
 
@@ -542,4 +542,3 @@ entities:
         template: templates/list.md
         source: >
           ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
-

@@ -27,7 +27,7 @@ entities:
               "description": description,          
               "link": '/entities/seaf.ta.services.dc_region/list?ta-component-id=' & $COMPONENT_ID 
                 }
-            )]^(region_name)]
+            )]^(title)]
           )
 
       list:
@@ -87,7 +87,7 @@ entities:
               "link": '/entities/seaf.ta.services.dc_az/list?ta-component-id=' & $COMPONENT_ID,
               "r_link" : "/entities/"& $refs."region_id" &"/list?ta-component-id=" & region_id
                 }
-            )]^(az_name)]
+            )]^(title)]
           )
 
       list:
@@ -148,7 +148,7 @@ entities:
                 "link": '/entities/seaf.ta.services.dc/list?ta-component-id=' & $COMPONENT_ID,
                 "avail_link" : "/entities/"& $refs."availabilityzone_id" &"/list?ta-component-id=" & availabilityzone_id
               }
-            )]^(dc_name)]
+            )]^(title)]
           )
 
       list:
@@ -205,7 +205,7 @@ entities:
                 "address": address,
                 "link": '/entities/seaf.ta.services.office/list?ta-component-id=' & $COMPONENT_ID
               }
-            )]^(name)]
+            )]^(title)]
           )
 
       list:
@@ -228,6 +228,13 @@ entities:
       table:
         type: table
         headers:
+          - value: title
+            text: Наименование
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
           - value: cluster_fqdn
             text: FQDN имя кластера
             sortable: true
@@ -255,6 +262,7 @@ entities:
             [[$."seaf.ta.services.cluster".$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
+                "title": title,                
                 "description": description,
                 "availabilityzone_id": availabilityzone_id,
                 "cluster_fqdn": cluster_fqdn,
@@ -262,7 +270,7 @@ entities:
                 "avail_link" :  $eval($get_link,{"hr":$refs."availabilityzone_id","val":availabilityzone_id})
               }
           
-              )]^(cluster_fqdn)];  
+              )]^(title)];  
           )
 
       list:
@@ -325,7 +333,7 @@ entities:
                 "link": '/entities/seaf.ta.services.storage/list?ta-component-id=' & $COMPONENT_ID,
                 "avail_link" :  $eval($get_link,{"hr":$refs."availabilityzone_id","val":availabilityzone_id})
               }
-            )]^(storage_id)]
+            )]^(title)]
           )
 
       list:
@@ -381,7 +389,7 @@ entities:
                 "link": '/entities/seaf.ta.services.cluster_virtualization/list?ta-component-id=' & $COMPONENT_ID
           
               }
-            )]^(virtualization_id)]
+            )]^(title)]
           )      
 
       list:
@@ -438,7 +446,7 @@ entities:
                 "avail_link" :  $eval($get_link,{"hr":$refs."availabilityzone_id","val":availabilityzone_id}),
                 "link": '/entities/seaf.ta.services.k8s/list?ta-component-id=' & $COMPONENT_ID
               }
-            )]^(cluster_fqdn)]
+            )]^(title)]
           )
       list:
         title: Кластер k8s
@@ -517,7 +525,7 @@ entities:
                 "o_link" :  $eval($get_link,{"hr":$refs."office_id","val":office_id}),
                 "avail_link" :  $eval($get_link,{"hr":$refs."availabilityzone_id","val":availabilityzone_id})
               }
-            )]^(type)]
+            )]^(title)]
           )
 
       list:
@@ -623,7 +631,7 @@ entities:
                 "avail_link" :  $eval($get_link,{"hr":$refs."availabilityzone_id","val":availabilityzone_id}),
                 "link": '/entities/seaf.ta.services.backup/list?ta-component-id=' & $COMPONENT_ID
               }
-            )]^(name)]
+            )]^(title)]
           )
 
       list:
