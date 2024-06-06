@@ -352,11 +352,12 @@ entities:
             sortable: true
             align: left
             width: 20%
-            link: c_link
+            link: k_link
 
         source: >
           (
             $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.components.k8s_pod"}, $]);
+            $get_link := $.functions."seaf.ta".get_link;
             [[$."seaf.ta.components.k8s_pod".$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
@@ -364,7 +365,7 @@ entities:
                 "description": description,
                 "container_id": container_id,
                 "link": '/entities/seaf.ta.components.k8s_pod/list?ta-component-id=' & $COMPONENT_ID,
-                "c_link": "/entities/"& $refs."container_id" &"/list?ta-component-id=" & container_id[0]
+                "k_link" :  $eval($get_link,{"hr":$refs."container_id","val":container_id })
               }
             )]^(title)]
           )
