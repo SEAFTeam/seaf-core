@@ -347,12 +347,12 @@ entities:
             align: left
             width: 20%
 
-          - value: kubernetes_id
-            text:  Kubernetes cluster ID
+          - value: container_id
+            text:  Какие контейнеры включает
             sortable: true
             align: left
             width: 20%
-            link: k_link
+            link: c_link
 
         source: >
           (
@@ -362,11 +362,11 @@ entities:
              $.*.{
                 "title": title,
                 "description": description,
-                "kubernetes_id": kubernetes_id,
+                "container_id": container_id,
                 "link": '/entities/seaf.ta.components.k8s_pod/list?ta-component-id=' & $COMPONENT_ID,
-                "k_link" : "/entities/"& $refs."kubernetes_id" &"/list?ta-component-id=" & kubernetes_id
+                "c_link": "/entities/"& $refs."container_id" &"/list?ta-component-id=" & container_id[0]
               }
-            )]^(name)]
+            )]^(title)]
           )
           
 
@@ -411,7 +411,7 @@ entities:
                 "description": description,
                 "link": '/entities/seaf.ta.components.k8s_container/list?ta-component-id=' & $COMPONENT_ID
               }
-            )]^(name)]
+            )]^(title)]
           )
 
       list:
@@ -455,7 +455,7 @@ entities:
                 "description": description,
                 "link": '/entities/seaf.ta.components.k8s_image/list?ta-component-id=' & $COMPONENT_ID
               }
-            )]^(name)]
+            )]^(title)]
           )
           
 
@@ -509,7 +509,7 @@ entities:
                 "device_type": device_type,    
                 "link": '/entities/seaf.ta.components.user_device/list?ta-component-id=' & $COMPONENT_ID
               }
-            )]^(name)]
+            )]^(title)]
           )
       list:
         title: Карточка спецификации пользовательского устройства
