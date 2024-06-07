@@ -33,7 +33,7 @@ entities:
         source: >
           (
             $."seaf.ia.physical_tables".$spread()[$keys()=$params.id].{
-                  "id": $keys()[0],
+                  "id": $keys(),
                   "title": *.title,
                   "status": *.status,
                   "type": *.type,

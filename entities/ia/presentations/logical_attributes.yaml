@@ -35,7 +35,7 @@ entities:
         source: >
           (
             $."seaf.ia.logical_attributes".$spread()[$keys()=$params.id].{
-                  "id": $keys()[0],
+                  "id": $keys(),
                   "code": *.code,
                   "title": *.title,
                   "status": *.status,

@@ -4,8 +4,6 @@ entities:
       registry:
         type: table
         headers:
-          - value: code
-            text: Код
           - value: title
             text: Наименование
             link: self_link
@@ -17,7 +15,6 @@ entities:
           (
             [$."seaf.ia.logical_entities".$spread().
                 {
-                    "code": *.code,
                     "title": *.title,
                     "self_link": "/entities/seaf.ia.logical_entities/card?id=" & $keys(),
                     "status": *.status,
@@ -32,7 +29,7 @@ entities:
         source: >
           (
             $."seaf.ia.logical_entities".$spread()[$keys()=$params.id].{
-                  "id": $keys()[0],
+                  "id": $keys(),
                   "code": *.code,
                   "title": *.title,
                   "status": *.status,
@@ -49,9 +46,9 @@ entities:
         headers:
           - value: code
             text: Код
-            link: self_link
           - value: title
             text: Наименование
+            link: self_link
           - value: status
             text: Статус
         source: >
@@ -60,8 +57,8 @@ entities:
             $id := $keys(); *[$params.bt_id in business_term].
               {
                     "code": code,
-                    "self_link": "/entities/seaf.ia.logical_entities/card?id=" & $id,
                     "title": title,
+                    "self_link": "/entities/seaf.ia.logical_entities/card?id=" & $id,
                     "status": status
               }
             )]
@@ -72,9 +69,9 @@ entities:
         headers:
           - value: code
             text: Код
-            link: self_link
           - value: title
             text: Наименование
+            link: self_link
           - value: status
             text: Статус
         source: >
@@ -83,7 +80,8 @@ entities:
             $le := [$."seaf.ia.physical_tables".$spread()[$keys()=$pht_id].*.logical_entity];
             [$."seaf.ia.logical_entities".$spread()[$keys() in $le].($id := $keys(); {
                     "code": *.code,
+                    "title": *.title,
                     "self_link": "/entities/seaf.ia.logical_entities/card?id=" & $id,
-                    "title": *.title
+                    "status": status
                 })]
           )
