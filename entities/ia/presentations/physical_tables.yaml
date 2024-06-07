@@ -9,7 +9,7 @@ entities:
             link: self_link
           - value: description
             text: Описание
-          - value: app_name
+          - value: system
             text: Автоматизированная система
             link: as_link
           - value: dbms
@@ -21,8 +21,8 @@ entities:
                     "title": *.title,
                     "self_link": "/entities/seaf.ia.physical_tables/card?id=" & $keys(),
                     "description": *.description,
-                    "app_name": *.app_name,
-                    "as_link": "/entities/components/blank?dh-component-id=" & *.app_name,
+                    "system": *.system,
+                    "as_link": "/entities/components/blank?dh-component-id=" & *.system,
                     "dbms": *.dbms
                 }]
           )
@@ -38,8 +38,8 @@ entities:
                   "status": *.status,
                   "type": *.type,
                   "description": *.description,
-                  "app_name": *.app_name,
-                  "as_link": "/entities/components/blank?dh-component-id=" & *.app_name,
+                  "system": *.system,
+                  "as_link": "/entities/components/blank?dh-component-id=" & *.system,
                   "dbms": *.dbms,
                   "database": *.database,
                   "schema": *.schema,
@@ -61,7 +61,7 @@ entities:
             link: self_link
           - value: description
             text: Описание
-          - value: app_name
+          - value: system
             text: Автоматизированная система
         source: >
           ( 
@@ -72,7 +72,7 @@ entities:
                     "title": title,
                     "self_link": "/entities/seaf.ia.physical_tables/card?id=" & $id,
                     "description": description,
-                    "app_name": app_name
+                    "system": system
               }
             )]
           )
@@ -85,7 +85,7 @@ entities:
             link: self_link
           - value: description
             text: Описание
-          - value: app_name
+          - value: system
             text: Автоматизированная система
           - value: dbms
             text: СУБД
