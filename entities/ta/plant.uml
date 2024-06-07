@@ -1,0 +1,178 @@
+@startuml
+
+   class "seaf.ta.components.server" as server_id #lightblue {
+     *Title: Server
+     *1: availabilityzone_id
+     *2: virtualization_id
+     *3: storage_id
+     *4: dc_id
+   }
+
+
+   class "seaf.ta.components.hw_storage" as hw_storage_id #lightblue {
+        *Title: Hardware Storage
+        *1: dc_id
+        *2: office_id
+        *3: network_connection
+   }
+
+   class "seaf.ta.components.network" as network_appliance_id  #lightblue {
+        *Title: Network Appliance
+        *1: dc_id
+        *2: office_id
+   }
+
+   class "seaf.ta.components.user_device" as user_device_id  #lightblue {
+           *Title: User Device
+           *1: network_connection
+           *2: office_id
+   }
+
+   struct "seaf.ta.services.dc_az"  as availabilityzone_id #lightgreen {
+        *Type: TS
+        *Title: Availability Zone
+        * 1: region_id
+   }
+
+   struct "  seaf.ta.services.dc_region" as region_id #lightgreen {
+           *Title: Region
+   }
+
+
+   struct "  seaf.ta.services.dc" as dc_id #lightgreen {
+              *Title: Datacenter
+              *1: availabilityzone_id
+   }
+
+   struct "seaf.ta.services.office" as office_id #lightgreen {
+                          *Title: Office
+                          *1: network_connection
+      }
+
+   struct "seaf.ta.services.cluster" as cluster_id #lightgreen {
+                             *Title: Cluster
+                             *1: availabilityzone_id
+                             *2: network_connection
+                             *3: server_id
+   }
+
+   struct "seaf.ta.services.compute_service" as compute_id #lightgreen {
+                                *Title: Compute
+                                *1: availabilityzone_id
+                                *2: server_id
+                                *3: network_connection
+   }
+
+   struct "seaf.ta.services.storage" as storage_id #lightgreen {
+                                      *Title: Storage
+                                      *1: availabilityzone_id
+                                      *2: server_id
+                                      *3: network_connection
+   }
+
+   struct "seaf.ta.services.cluster_virtualization" as virtualization_id #lightgreen {
+                       *Title: Описание кластера виртуализации
+                       *1: server_id
+                       *2: availabilityzone_id
+                       *3: network_connection
+   }
+
+   struct "seaf.ta.services.k8s" as kubernetes_id #lightgreen {
+                                         *Title: Compute
+                                         *1: availabilityzone_id
+                                         *2: server_id
+                                         *3: network_connection
+   }
+
+   struct "seaf.ta.services.network" as network_id #lightgreen {
+                    *Title: Network
+                    *1: dc_id
+                    *2: office_id
+                    *3: availabilityzone_id
+                    *4: network_appliance_id
+   }
+
+  struct "seaf.ta.services.network_links" as networklinks_id #lightgreen {
+                      *Title: Network Links
+                      *1: network_appliance_id (OneOff)
+                      *2: network_appliance_id (OneOff)
+
+     }
+
+  struct "seaf.ta.services.backup" as backup_id #lightgreen {
+                        *Title: Backup Service
+                        *1: availabilityzone_id
+                        *2: server_id
+  }
+
+
+  struct "seaf.ta.services.monitoring" as monitoring_id #lightgreen {
+                          *Title: Monitoring Service
+                          *1: availabilityzone_id
+                          *2: server_id
+    }
+
+  struct "seaf.ta.services.software" as software_id #lightgreen{
+                            *Title: Licenses and support
+                            *2: server_id
+  }
+
+  server_id --> availabilityzone_id:[1]
+  server_id --> virtualization_id:[2 virtual server only ]
+  server_id --> hw_storage_id:[3 hw server only]
+  server_id --> dc_id:[4 hw server only]
+
+
+  hw_storage_id -->dc_id:[1]
+  hw_storage_id -->office_id:[2]
+  hw_storage_id -->network_id:[3]
+
+  network_appliance_id -->dc_id:[1]
+  network_appliance_id -->office_id:[2]
+
+  user_device_id --> network_id:[1]
+  user_device_id --> office_id:[2]
+
+  availabilityzone_id --> region_id:[1]
+
+  dc_id --> availabilityzone_id:[1]
+
+  office_id --> network_id:[1]
+
+  cluster_id --> availabilityzone_id:[1]
+  cluster_id --> network_id:[2]
+  cluster_id --> server_id:[3]
+
+  compute_id --> availabilityzone_id:[1]
+  compute_id --> server_id:[2]
+  compute_id --> network_id:[3]
+
+  storage_id --> availabilityzone_id:[1]
+  storage_id -->server_id:[2]
+  storage_id -->network_id:[3]
+
+  virtualization_id --> availabilityzone_id:[1]
+  virtualization_id --> server_id:[2]
+  virtualization_id --> network_id:[3]
+
+  kubernetes_id --> availabilityzone_id:[1]
+  kubernetes_id --> server_id:[2]
+  kubernetes_id --> network_id:[3]
+
+  network_id --> dc_id:[1]
+  network_id --> office_id:[2]
+  network_id --> availabilityzone_id:[3]
+  network_id --> network_appliance_id:[4]
+
+  networklinks_id --> network_id:[1]
+  networklinks_id -->  user_device_id:[2]
+
+  backup_id --> availabilityzone_id:[1]
+  backup_id --> server_id:[2]
+
+  monitoring_id --> availabilityzone_id:[1]
+  monitoring_id --> server_id:[2]
+/'
+  software_id --> server_id:[1]
+'/
+@enduml

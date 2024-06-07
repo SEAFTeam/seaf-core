@@ -1,0 +1,31 @@
+entities:
+  components:
+    presentations:
+      contexts:
+        # Переопределяем source запрос для построения контекстов компонента SEAF
+        # Переопределение учитывает дополнительных тип представления контекста (presentation)
+        source: >
+          (
+              $component_id := $params.component;
+              $append(
+                [
+                  {
+                    "title": "SELF (зависимости)",
+                    "src": "@entity/contexts/plantuml?dh-context-id=SELF&componentId=" & $component_id & "&dh-focus-id=" & $component_id
+                  },
+                  {
+                    "title": "SELF (интеграции)",
+                    "src": "@entity/contexts/integration?dh-context-id=SELF&componentId=" & $component_id & "&dh-focus-id=" & $component_id
+                  }
+                ],
+                [$distinct([contexts.$spread().(
+                    $CONTEXT := $;
+                    $ID := $keys()[0];
+                    $PRESENTATION := $exists($.*.presentation) ? $.*.presentation : $$.entities.contexts.config.defaultPresentation;
+                    *.components[$wcard($component_id, $)].{
+                        "src": "@entity/contexts/" & $PRESENTATION & "?dh-context-id=" & $ID & "&dh-focus-id=" & $component_id,
+                        "title": $CONTEXT.*.title ? $CONTEXT.*.title : $ID
+                    }
+                )])]^(title)
+              )
+          )

@@ -1,0 +1,76 @@
+imports:
+  - icons.yaml
+
+entities:
+
+  seaf.ba.base:
+    title: Метамодель БА
+    description: Сущность для представлений БА
+
+    schema: # Сущность seaf.ba.base содержит только меню и общие презентации для БА и не предполагает, что для нее будут объявлены объекты
+
+    menu: >
+      (
+        $treePaths:= function($nested, $items, $i, $path) {(
+          $path:= $path!="" and $nested[$i] ? $path & "/" & $nested[$i].title : $path="" and $nested[$i] ? $nested[$i].title; 
+          $items:= $nested[$i].link ? $append($items, {"location": $path, "link": $nested[$i].link, "order": $nested[$i].order? $nested[$i].order}): $items;
+          $items:= $count($nested[$i].includes) > 0 ?
+            $append($items, $treePaths($nested[$i].includes, [], 0, $path)): 
+            $items;
+          $i<$count($nested)-1 ? $treePaths($nested, $items, $i+1, $substringBefore($path, "/" & $nested[$i].title)) : $items
+        )}; 
+
+        $menu:= $reduce($map($$."seaf.nav", function($v) {(
+          $distinct($treePaths($v, [], 0, ""))
+        )}), $append);
+      )
+
+
+functions:
+
+  getSymbol:
+    title: Сформировать svg-символы для SmartAnts
+    params:
+      - type: string
+        title: Main title
+        alias: title
+        required: true
+      - type: string
+        title: Entity id
+        alias: entity_id
+        required: true
+      - type: number
+        title: Symbol width in pixels
+        alias: symbol_width
+        required: true
+      - type: object
+        title: Шаблоны иконок
+        alias: seaf_icons
+        required: true
+    code: >
+      (
+        $title:= title; $entity_id:= entity_id; $symbol_width:= symbol_width; $seaf_icons:= seaf_icons;
+        
+        $symbol_title:= $split($entity_id, ".")[-1];
+        $symbol_obj:= $eval("$seaf_icons." & $symbol_title);
+        $symbol_gliph:= $symbol_obj.gliph;
+        $symbol_template:= $symbol_gliph ?
+          $match($symbol_gliph, /^(<svg)[^>]+>/, 1).match &
+          '<rect x="0" y="-960" width={{vbWidth}} height="960" rx="300" fill="' & $symbol_obj.back_color & '"/>' &
+          '<text style="font-size:800px;" x="1200" y="-250" fill="' & $symbol_obj.fore_color & '" font-family="monospace">{{title}}</text>' &
+          $match($symbol_gliph, /(<path)[^>]+>/, 1).match &
+          '</svg>'
+        ;
+        $symbol_template:= $symbol_template
+            ? $symbol_template
+            : $seaf_icons.no_icon;
+        $symbol_svg:= $replace($symbol_template, /\{\{title\}\}/, $title); 
+        $symbol_svg:= $replace($symbol_svg, /\{\{fore_color\}\}/, $symbol_obj.fore_color);
+        $symbol_svg:= $replace($symbol_svg, /\{\{back_color\}\}/, $symbol_obj.back_color);
+        $symbol_svg:= $replace($symbol_svg, /\{\{absWidth\}\}/, $string($symbol_width)); 
+        $symbol_svg:= $replace($symbol_svg, /\{\{vbWidth\}\}/, $string(4000*$symbol_width/100)); 
+
+        {"title": $symbol_title & "_" & $title, "svg": $symbol_svg}
+      )
+    result:
+      type: object

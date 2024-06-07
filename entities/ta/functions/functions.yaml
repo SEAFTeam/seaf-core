@@ -1,39 +1,87 @@
 functions:
-  seaf.ta:
-    get_refs: >
-     (
-      $component := $.c;
-      $context := $lookup($.entities,$component).**."properties";
-      $context.**."$ref".%;
-      $context.$spread().{ 
-      $keys()[0] : ($split($string($.**."$ref".%."$ref"),"/")[2])~>$replace(/^(.*)(\.\w+)$/,"$1") 
-      }~>$merge();
-     )
-    get_titles: >
-     (
-            $component := $.c;
-            $prop := ($lookup($.entities, $component).schema.**."$ref"~>$map(
-                function($v){
-                    $contains($v, "def")?(
-                            $v:= $v~>$replace(/.*\/(.*)/, "$1");
-                            $v = $component?(
-                                 $lookup($.entities, $component).schema.**.properties~>$merge()
-                             ):$lookup($.entities.**, $v).properties
-                    )
-                }))~>$merge();
-            $titles := $merge($prop.$spread().{
-                $keys()[0] : $.*.title ? $.*.title : $keys()[0]
-             });
-             $titles := $merge([$titles, {"type":"Тип", "server_id":"Сервер ID"}]);
-     )
-    get_link: >
-     (
-       $href := $.hr;
-       $v:=$.val;
-       $type($v) = 'string'?
-          $link := '/entities/' & $href & '/list?ta-component-id=' & $v:
-       $type($v) = 'array'? 
-          $count($v) >1?($link:=$v;$log("-+-> " & $link,["MTG"]);):$link :=  $map($v, function($val){'/entities/' & $href & '/list?ta-component-id=' & $val}):
-          $link := $v;
-          /*$log("-*-> "& $link,["MTG"]);*/
-      )
+ seaf.ta:
+  get_refs: >
+   (
+    $component := $.c;
+    $context := $lookup($.entities,$component).**."properties";
+    $context.**."$ref".%;
+    $context.$spread().{ 
+    $keys()[0] : ($split($string($.**."$ref".%."$ref"),"/")[2])~>$replace(/^(.*)(\.\w+)$/,"$1") 
+    }~>$merge();
+   )
+  get_titles: >
+   (
+          $component := $.c;
+          $prop := ($append($lookup($.entities, $component).schema.**."$ref",["#/$defs/"&$component])~>$distinct()~>$map(
+              function($v){
+                  $contains($v, "defs")?(
+                          $v:= $v~>$replace(/.*\/(.*)/, "$1");
+                          $v = $component?(
+                               $lookup($.entities, $component).**.properties~>$merge()
+                           ):$lookup($.entities.**, $v).properties
+                  )
+              }))~>$merge();
+          $titles := $merge($prop.$spread().{
+              $keys()[0] : $.*.title ? $.*.title : $keys()[0]
+           });
+           $titles := $merge([$titles, {"type":"Тип", "server_id":"Сервер ID"}]);
+   )
+  get_link: >
+   (
+     $href := $.hr;
+     $v:=$.val;
+     $type($v) = 'string'?
+        $link := '/entities/' & $href & '/list?ta-component-id=' & $v:
+     $type($v) = 'array'? 
+        $count($v) >1?($link:=$v;$log("-+-> " & $link,["MTG"]);):$link :=  $map($v, function($val){'/entities/' & $href & '/list?ta-component-id=' & $val}):
+        $link := $v;
+        /*$log("-*-> "& $link,["MTG"]);*/
+    )
+  get_item: >
+   (
+       $object := $.o;
+       $item := $.i;
+       ($lookup($.**, $object)~>$lookup($item));
+   )
+  get_parent: >
+   (
+       /* o - объект, r - root поиска */
+       $obj := $.o;
+       $root := $.r?$.r:$.**;
+       $keys($root)~> $single(function ($key) {
+                $lookup($root, $key)~>$keys()~>$single(function($v) { $v =  $obj })
+           });
+   )
+  # Функция получения всех атрибутов ссылающихся на внешние объекты
+  # $.o - объект для разбора
+  get_refs_all: >
+   (
+       $component := $.o?$.o:"seaf.ta.services.storage";
+       $lookup($.entities,$component).**."properties"~>$map(
+           function($v){ $v.$sift(function($v, $k) {$lookup($v.**, "$ref")})
+           })~>$merge()~>$each(function($v, $k) { {$k : $lookup($v.**, "$ref") }})~>$merge();     
+   )
+
+  # Поиск максимального уровня критичности объекта по дероеву АС seaf.ta.app_tree (dataset)
+  find_criticality : >
+   (      
+      $value := $.v; 
+      $context:= $.c;
+   
+          /* типы уровней критичности АС */
+          $b := ["Mission Critical Plus","Mission Critical", "Business Critical", "Business Operational", "Office Productivity"];
+          /* Поиск объекта в дереве АС (seaf.ta.app_tree) */
+          $contain := $each($context, function($val, $key){ 
+
+               $each($val, function($v, $k){
+                   $type($v) = "array"?
+                       $filter($v, function($i){ 
+                           $contains($i, $value)
+                       }):
+
+                   $contains($v, $value)    
+               })?{$key:$val}})~>$merge();
+
+          /* Получение наибольшей критичности */ 
+          $b[($each($contain,function($v){ $map($b, function($val, $i) { $val = $v.'criticality' ? $i})[0] })~>$sort())[0]];
+   )
