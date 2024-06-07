@@ -32,7 +32,7 @@ entities:
             description:   # Описание назначения таблицы в текстовом формате.
               title: Описание
               type: string
-            app_name:      # АС (Компонент прикладной архитектуры), к которой относится таблица
+            system:      # Компонент прикладной архитектуры, к которой относится таблица
               title: Автоматизированная система
               $ref: "#/$rels/components.component"
             dbms:          # СУБД АС, к которой относится таблица
@@ -76,4 +76,4 @@ entities:
           required:
             - title
             - description
-            - app_name
+            - system
