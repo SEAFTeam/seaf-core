@@ -1,0 +1,64 @@
+entities:
+  seaf.ia.logical_attributes:
+    title: Таблица аттрибутов
+    description: Таблица аттрибутов логических сущностей
+    objects:
+      logical_attribute:
+        route: "/"
+        symbol: "la"
+        title: Логический атрибут
+    menu: >
+      (
+        {
+          "location": "Архитектура/Информационная/Логическая модель/Атрибуты",
+          "link": "/entities/seaf.ia.logical_attributes/registry"
+        }
+      )
+    schema:
+      type: object
+      patternProperties:
+        "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$":
+          type: object
+          properties:
+            code:       # Уникальная в рамках модели аббревиатура
+              title: Код
+              type: string
+            name:       # Наименование на русском языке в единственном числе, уникальное в рамках модели
+              title: Наименование
+              type: string
+            # status:
+            #   title: Статус
+            #   enum:
+            #     - Планируется
+            #     - Разрабатывается или модифицируется
+            #     - Используется
+            #     - Выводится из эксплуатации
+            #     - В архиве
+            description: # Описание атрибута с точки зрения бизнеса; сведения о ее назначении, способе использования, и имеющихся ограничениях
+              title: Описание
+              type: string
+            logical_entity:         # Логическая сущность, к которой принадлежит атрибут
+              title: Логическая сущность
+              $ref: "#/$rels/seaf.ia.logical_entities.logical_entity"
+            business_term:         # соответствующие термины Бизнес-глоссария или сущности концептуальной модели данных
+              title: Бизнес термин
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ia.business_terms.business_term"
+            link_attr:         # Ссылка на связанный экземпляр сущности
+              title: Ссылочный атрибут
+              $ref: "#/$rels/seaf.ia.logical_entities.logical_entity"
+            link_type:         # черновик/ используется/ архив
+              title: Тип связи
+              enum:
+               - ассоциация
+               - аггрегация
+               - композиция
+               - обобщение
+               - зависимость
+
+        # Сообщаем, что перечисленные поля обязательны
+          required:
+            - code
+            - title
+            - logical_entity
