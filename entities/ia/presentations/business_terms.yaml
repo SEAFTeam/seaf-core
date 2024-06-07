@@ -4,8 +4,6 @@ entities:
       registry:
         type: table
         headers:
-          - value: id
-            text: Системное имя
           - value: title
             text: Наименование
             link: link
@@ -14,14 +12,17 @@ entities:
           - value: processes
           - value: creation_date
             text: Дата создания
+          - value: status
+            text: Статус
         source: >
           (
             [$."seaf.ia.business_terms".$spread().{
-                  "id": $keys()[0],
+                  "id": $keys(),
                   "title": *.title,
-                  "link": "/entities/seaf.ia.business_terms/card?id=" & $keys()[0],
+                  "link": "/entities/seaf.ia.business_terms/card?id=" & $keys(),
                   "description": *.description,
-                  "creation_date": *.creation_date
+                  "creation_date": *.creation_date,
+                  "status": *.status
                 }]
           )
 
@@ -33,7 +34,7 @@ entities:
             $term_id := $params.id;
             $processes := [$."seaf.ba.processes".$spread()[$term_id in $.*.supported or $term_id in $.*.consumes or $term_id in $.*.produces]];
             $."seaf.ia.business_terms".$spread()[$keys()=$term_id].{
-                    "id": $keys()[0],
+                    "id": $keys(),
                     "title": *.title,
                     "description": *.description,
                     "processes": [$processes.*.title],
