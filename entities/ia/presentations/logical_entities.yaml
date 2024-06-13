@@ -35,6 +35,8 @@ entities:
                   "status": *.status,
                   "description": *.description,
                   "category": *.category,
+                  "pdn_flag": *.pdn_flag,
+                  "cde_flag": *.cde_flag,
                   "business_term": ($id := *.business_term; $$."seaf.ia.business_terms".$spread()[$keys() = $id].*.title),
                   "bt_link": "/entities/seaf.ia.business_terms/card?id=" & *.business_term,
                   "comments": *.comments

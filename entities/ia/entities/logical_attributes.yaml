@@ -37,6 +37,12 @@ entities:
             description: # Описание атрибута с точки зрения бизнеса; сведения о ее назначении, способе использования, и имеющихся ограничениях
               title: Описание
               type: string
+            pdn_flag:      # Флаг наличия персональных данных
+              title: ПДН
+              type: boolean
+            cde_flag:      # Флаг наличия критичных данных
+              title: CDE
+              type: boolean
             logical_entity:         # Логическая сущность, к которой принадлежит атрибут
               title: Логическая сущность
               $ref: "#/$rels/seaf.ia.logical_entities.logical_entity"
