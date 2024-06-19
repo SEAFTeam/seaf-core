@@ -264,7 +264,7 @@ entities:
             - dc_id
       type: object
       patternProperties:
-        "^[a-zA-Z0-9_\\.]*$":
+        "^[a-zA-Z0-9_-]*(\\.[a-zA-Z0-9_-]*)*$":
           $ref: "#/$defs/seaf.ta.components.hw_storage"
 
   seaf.ta.components.network:
@@ -279,7 +279,7 @@ entities:
           type: object
           $ref: "#/$defs/seaf.ta.components.base.entity"
           properties:
-            network_appliance_id:
+            id:
               title: Network Appliance ID
               type: string
             model:
@@ -296,10 +296,7 @@ entities:
             purpose:
               title: Функциональное назначение сетевого аплаенса
               type: string
-            description:
-              title: Описание использования
-              type: string
-            dc_id:
+            dc:
               title: Имя ЦОД/Серверной комнаты
               $ref: "#/$rels/seaf.ta.services.dc.dc"
             address:
@@ -314,7 +311,7 @@ entities:
             - realization_type
       type: object
       patternProperties:
-        "^[a-zA-Z0-9_\\.]*$":
+        "^[a-zA-Z0-9_-]*(\\.[a-zA-Z0-9_-]*)*$":
           $ref: "#/$defs/seaf.ta.components.network"
 
   seaf.ta.components.user_device:
@@ -326,7 +323,7 @@ entities:
     schema: # JSON Schema контролирующая описание объекта сущности
       type: object
       patternProperties:
-        "^[a-zA-Z0-9_\\.]*$":
+        "^[a-zA-Z0-9_-]*(\\.[a-zA-Z0-9_-]*)*$":
           type: object
           $ref: "#/$defs/seaf.ta.components.base.entity"
           properties:
