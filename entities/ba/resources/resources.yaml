@@ -19,7 +19,6 @@ entities:
                   ### new resource entity added into core -- add $ref accordingly
                   ### new resource entity imported within extension -- add $ref accordingly
                   ### resource entity becames/stops to be considerable as resource -- add/remove $ref accordingly
-          - $ref: "#/$rels/components.component"
           - $ref: "#/$rels/seaf.app.integrations.integrations"
           - $ref: "#/$rels/seaf.ia.business_objects.business_objects"
           - $ref: "#/$rels/seaf.ia.data_objects.data_objects"
