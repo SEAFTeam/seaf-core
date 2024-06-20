@@ -473,7 +473,7 @@ entities:
           oneOf:
             - type: object
               properties:
-                network_id:
+                id:
                   title: Network ID
                   type: string
                 type:
@@ -487,7 +487,7 @@ entities:
                 office_id:
                   title: Офис
                   $ref: "#/$rels/seaf.ta.services.office.office"
-                availabilityzone_id:
+                az:
                   title: В какие зоны доступности входит
                   type: array
                   items:
@@ -522,7 +522,7 @@ entities:
               additionalProperties: false
             - type: object
               properties:
-                network_id:
+                id:
                   title: Network ID
                   type: string
                 type:
@@ -536,7 +536,7 @@ entities:
                 office_id:
                   title: Офис
                   $ref: "#/$rels/seaf.ta.services.office.office"
-                availabilityzone_id:
+                az:
                   title: В какие зоны доступности входит
                   type: array
                   items:
@@ -572,7 +572,7 @@ entities:
               additionalProperties: false
       type: object
       patternProperties:
-        "^[a-zA-Z0-9_\\.]*$":
+        "^[a-zA-Z0-9_-]*(\\.[a-zA-Z0-9_-]*)*$":
           $ref: "#/$defs/seaf.ta.services.network"
 
   seaf.ta.services.network_links:

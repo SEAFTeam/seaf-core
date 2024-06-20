@@ -33,20 +33,20 @@ entities:
           oneOf:
             - type: object
               properties:
-                server_id:
+                id:
                   title: Server ID
                   type: string
                 type:
                   type: string
                   enum: [Виртуальный]
-                fqdn_name:
+                fqdn:
                   title: Имя сервера FQDN
                   type: string
                 os:
                   title: Операционная система
                   type: object
                   properties:
-                    name:
+                    type:
                       title: Тип ОС
                       type: string
                       minlength: 1
@@ -66,7 +66,7 @@ entities:
                       title: Частота
                       type: integer
                       minLength: 0
-                ram_qty:
+                ram:
                   title: Количество RAM, GB
                   type: integer
                 disks:
@@ -74,22 +74,27 @@ entities:
                   type: array
                   minItems: 1
                   items:
-                    .*:
-                      type: object
-                      properties:
-                        availabilityzone_id:
-                          title: Зона доступности диска
-                          type: string
-                        size:
-                          title: Размер диска
-                          type: string
-                        type:
-                          title: Тип диска (SAS, SATA, SSD)
-                          type: string
+                    patternProperties:
+                      "^[a-zA-Z0-9_\\.]*$":
+                        type: object
+                        properties:
+                          az:
+                            title: Зона доступности диска
+                            type: string
+                          size:
+                            title: Размер диска
+                            type: string
+                          type:
+                            title: Тип диска (SAS, SATA, SSD)
+                            type: string
+                          device:
+                            title: Точка монтирования
+                            type: string
+                            minLength: 1
                 nic_qty:
                   title: Количество NIC
                   type: integer
-                availabilityzone_id:
+                az:
                   title: В какие зоны доступности входит
                   type: array
                   items:
@@ -97,26 +102,25 @@ entities:
                 virtualization_id:
                   title: ID кластера виртуализации
                   $ref: "#/$rels/seaf.ta.services.cluster_virtualization.cluster_virtualization"
-                network_connection:
-                  title: Перечисление связанных сетей
+                subnets:
+                  title: Подсети
                   type: array
                   items:
                     $ref: "#/$rels/seaf.ta.services.network.network"
               required:
-                - server_id
+                - id
                 - type
-                - fqdn_name
+                - fqdn
                 - os
                 - disks
                 - cpu
-                - ram_qty
+                - ram
                 - nic_qty
-                - availabilityzone_id
                 - virtualization_id
               additionalProperties: false
             - type: object
               properties:
-                server_id:
+                id:
                   title: Server ID
                   type: string
                 type:
@@ -128,14 +132,14 @@ entities:
                 model:
                   title: Модель
                   type: string
-                fqdn_name:
+                fqdn:
                   title: Имя сервера FQDN
                   type: string
                 os:
                   title: Операционная система
                   type: object
                   properties:
-                    name:
+                    type:
                       title: Тип ОС
                       type: string
                       minlength: 1
@@ -155,7 +159,7 @@ entities:
                       title: Частота
                       type: integer
                       minLength: 0
-                ram_qty:
+                ram:
                   title: Количество RAM, GB
                   type: integer
                 disks:
@@ -166,7 +170,7 @@ entities:
                     .*:
                       type: object
                       properties:
-                        availabilityzone_id:
+                        az:
                           title: Зона доступности диска
                           type: string
                         size:
@@ -191,27 +195,27 @@ entities:
                 office_id:
                   title: Офис
                   $ref: "#/$rels/seaf.ta.services.office.office"
-                network_connection:
+                subnets:
                   title: Перечисление связанных сетей
                   type: string
                   items:
                     $ref: "#/$rels/seaf.ta.services.network.network"
               required:
-                - server_id
+                - id
                 - type
                 - vendor
                 - model
-                - fqdn_name
+                - fqdn
                 - os
                 - cpu
                 - disks
-                - ram_qty
+                - ram
                 - nic_qty
                 - dc_id
               additionalProperties: false
       type: object
       patternProperties:
-        "^[a-zA-Z0-9_\\.]*$":
+        "^[a-zA-Z0-9_-]*(\\.[a-zA-Z0-9_-]*)*$":
           $ref: "#/$defs/seaf.ta.components.server"
 
   seaf.ta.components.hw_storage:
@@ -260,7 +264,7 @@ entities:
             - dc_id
       type: object
       patternProperties:
-        "^[a-zA-Z0-9_\\.]*$":
+        "^[a-zA-Z0-9_-]*(\\.[a-zA-Z0-9_-]*)*$":
           $ref: "#/$defs/seaf.ta.components.hw_storage"
 
   seaf.ta.components.network:
@@ -275,7 +279,7 @@ entities:
           type: object
           $ref: "#/$defs/seaf.ta.components.base.entity"
           properties:
-            network_appliance_id:
+            id:
               title: Network Appliance ID
               type: string
             model:
@@ -292,10 +296,7 @@ entities:
             purpose:
               title: Функциональное назначение сетевого аплаенса
               type: string
-            description:
-              title: Описание использования
-              type: string
-            dc_id:
+            dc:
               title: Имя ЦОД/Серверной комнаты
               $ref: "#/$rels/seaf.ta.services.dc.dc"
             address:
@@ -310,7 +311,7 @@ entities:
             - realization_type
       type: object
       patternProperties:
-        "^[a-zA-Z0-9_\\.]*$":
+        "^[a-zA-Z0-9_-]*(\\.[a-zA-Z0-9_-]*)*$":
           $ref: "#/$defs/seaf.ta.components.network"
 
   seaf.ta.components.user_device:
@@ -322,7 +323,7 @@ entities:
     schema: # JSON Schema контролирующая описание объекта сущности
       type: object
       patternProperties:
-        "^[a-zA-Z0-9_\\.]*$":
+        "^[a-zA-Z0-9_-]*(\\.[a-zA-Z0-9_-]*)*$":
           type: object
           $ref: "#/$defs/seaf.ta.components.base.entity"
           properties:
