@@ -513,7 +513,7 @@ entities:
                   items:
                     $ref: "#/$rels/seaf.ta.components.network.network"
               required:
-                - network_id
+                - id
                 - wan_ip
                 - type
                 - provider
@@ -564,7 +564,7 @@ entities:
                   items:
                     $ref: "#/$rels/seaf.ta.components.network.network"
               required:
-                - network_id
+                - id
                 - type
                 - lan_type
                 - ipnetwork
