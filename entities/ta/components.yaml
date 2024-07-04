@@ -175,7 +175,7 @@ entities:
                           type: string
                         size:
                           title: Размер диска
-                          type: string
+                          type: integer
                         type:
                           title: Тип диска (SAS, SATA, SSD)
                           type: string
