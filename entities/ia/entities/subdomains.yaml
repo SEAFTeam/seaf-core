@@ -1,0 +1,37 @@
+entities:
+  seaf.ia.subdomains:
+    title: под домены
+    description: Свойство модели
+    objects:
+      subdomain:
+        route: "/"
+        title: под домен
+        symbol: "sd"
+    schema:
+      type: object
+      patternProperties:
+        "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$":
+          type: object
+          properties:
+            code:
+              title: Код
+              type: string
+            title:
+              title: Наименование
+              type: string
+            description:
+              title: Описание
+              type: string
+            subject_area:
+              title: ПО под домена
+              $ref: "#/$rels/seaf.ia.subject_areas.subject_area"
+            owner:
+              title: Проектировщик (ФИО)
+              type: string
+            comments:      # Комментарий работника, заполнение не обязательно
+              title: Комментарий
+              type: string
+        # Сообщаем, что перечисленные поля обязательны
+          required:
+            - title
+#            - description

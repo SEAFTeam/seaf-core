@@ -7,13 +7,6 @@ entities:
         route: "/"
         title: Бизнес-термин
         symbol: "bt"
-    menu: >
-      (
-        {
-            'location': 'Архитектура/Информационная/Бизнес глоссарий',
-            'link': 'entities/seaf.ia.business_terms/registry'
-        }
-      )
     schema:
       type: object
       patternProperties:
@@ -34,11 +27,6 @@ entities:
           #      - Используется
           #      - Выводится из эксплуатации
           #      - В архиве
-            # processes:  # бизнес термины добаляются в бизнес процессах
-            #   title: Используется в бизнес-процессах
-            #   type: array
-            #   items:
-            #     $ref: "#/$rels/seaf.ba.processes.process"
             creation_date:  # Дата внесения термина в инструмент описания
               title: Дата внесения термина
               type: string

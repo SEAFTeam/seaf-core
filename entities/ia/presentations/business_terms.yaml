@@ -1,5 +1,12 @@
 entities:
   seaf.ia.business_terms:
+    menu: >
+      (
+        {
+            'location': 'Архитектура/Информационная/Бизнес глоссарий',
+            'link': 'entities/seaf.ia.business_terms/registry'
+        }
+      )
     presentations:
       registry:
         type: table
@@ -9,20 +16,23 @@ entities:
             link: link
           - value: description
             text: Описание
-          - value: processes
-          - value: creation_date
+          - value: aggregat
             text: Дата создания
           - value: status
             text: Статус
         source: >
           (
-            [$."seaf.ia.business_terms".$spread().{
-                  "id": $keys(),
-                  "title": *.title,
-                  "link": "/entities/seaf.ia.business_terms/card?id=" & $keys(),
-                  "description": *.description,
-                  "creation_date": *.creation_date,
-                  "status": *.status
+            $ctx:=$params.domain;
+            $terms:= $ctx and $_essentials._jsonata_function
+            ? $context_content_refined($ctx, $).observable[$.*.body.entity_id = "seaf.ia.business_terms"].*.[{$.id: $.body}]
+            :$spread($."seaf.ia.business_terms").[$~>|$.*|{"entity_id": "business_terms"}|];
+            [$terms.$spread().{
+                    "id": $keys(),
+                    "title": *.title,
+                    "link": "/entities/seaf.ia.business_terms/card?id=" & $keys(),
+                    "description": *.description,
+                    "creation_date": *.creation_date,
+                    "status": *.status
                 }]
           )
 

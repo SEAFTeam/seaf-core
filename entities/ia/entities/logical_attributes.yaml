@@ -7,13 +7,6 @@ entities:
         route: "/"
         symbol: "la"
         title: Логический атрибут
-    menu: >
-      (
-        {
-          "location": "Архитектура/Информационная/Логическая модель/Атрибуты",
-          "link": "/entities/seaf.ia.logical_attributes/registry"
-        }
-      )
     schema:
       type: object
       patternProperties:
@@ -62,6 +55,9 @@ entities:
                - композиция
                - обобщение
                - зависимость
+            link_NM:         # черновик/ используется/ архив
+              title: Тип связи
+              type: string
 
         # Сообщаем, что перечисленные поля обязательны
           required:

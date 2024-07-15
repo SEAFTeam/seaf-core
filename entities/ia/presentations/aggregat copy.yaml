@@ -1,0 +1,70 @@
+entities:
+  seaf.ia.aggregat:
+    menu: >
+      (
+        {
+            'location': 'Архитектура/Информационная/Агрегаты',
+            'link': 'entities/seaf.ia.aggregat/registry'
+        }
+      )
+    presentations:
+      registry:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: type
+            text: Уровень аггрегации
+          - value: description
+            text: Описание
+        source: >
+          (
+            [$."seaf.ia.aggregat".$spread().{
+                  "id": $keys(),
+                  "type": *.type,
+                  "title": *.title,
+                  "self_link": "/entities/seaf.ia.aggregat/card?id=" & $keys(),
+                  "description": *.description
+                }]
+          )
+
+      card:
+        type: markdown
+        template: templates/aggregat.md
+        source: >
+          (
+            $."seaf.ia.aggregat".$spread()[$keys()=$params.id].{
+                  "id": $keys(),
+                  "code": *.code,
+                  "title": *.title,
+                  "description": *.description,
+                  "type": *.type,
+                  "owner": *.owner,
+                  "unit": *.unit,
+                  "comments": *.comments,
+                  "content": *.content
+                }
+          )
+
+      registry_by_aggr:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: type
+            text: Уровень аггрегации
+          - value: description
+            text: Описание
+        source: >
+          (
+            $param_id := $params.id;
+            $sa := [$."seaf.ia.aggregat".$spread()[$keys()=$param_id].*.content];
+            [$."seaf.ia.aggregat".$spread()[$keys() in $sa].($id := $keys(); {
+                  "type": *.type,
+                  "title": *.title,
+                  "self_link": "/entities/seaf.ia.aggregat/card?id=" & $id,
+                  "description": *.description
+                })]
+          )
