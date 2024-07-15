@@ -37,6 +37,9 @@ entities:
             description: # Описание сущности с точки зрения бизнес-процессов; сведения о ее назначении, способе использования и имеющихся ограничениях
               title: Описание
               type: string
+            aggregat:
+              title: Агрегат
+              $ref: "#/$rels/seaf.ia.aggregat.aggregat"
             category:
               title: Категория
               enum:

@@ -4,3 +4,4 @@ imports:
   - logical_attributes.yaml
   - physical_tables.yaml
   - physical_attributes.yaml
+  - aggregat.yaml

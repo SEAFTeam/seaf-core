@@ -9,6 +9,8 @@ entities:
             link: self_link
           - value: description
             text: Описание
+          - value: aggregat
+            text: Агрегат
           - value: category
             text: Категория
         source: >
@@ -19,6 +21,7 @@ entities:
                     "self_link": "/entities/seaf.ia.logical_entities/card?id=" & $keys(),
                     "status": *.status,
                     "description": *.description,
+                    "aggregat": *.aggregat,
                     "category": *.category
                 }]
           )
@@ -86,4 +89,27 @@ entities:
                     "self_link": "/entities/seaf.ia.logical_entities/card?id=" & $id,
                     "status": status
                 })]
+          )
+
+      registry_by_aggr:
+        type: table
+        headers:
+          - value: code
+            text: Код
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: status
+            text: Статус
+        source: >
+          (
+            [$."seaf.ia.logical_entities".$spread().(
+            $id := $keys(); *[$params.id in aggregat].
+              {
+                    "code": code,
+                    "title": title,
+                    "self_link": "/entities/seaf.ia.logical_entities/card?id=" & $id,
+                    "status": status
+              }
+            )]
           )

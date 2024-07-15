@@ -1,5 +1,17 @@
 entities:
   seaf.ia.logical_attributes:
+    menu: >
+      ([
+        {
+          "location": "Архитектура/Информационная/Логическая модель/Связи",
+          "link": "/entities/seaf.ia.logical_attributes/registry_links"
+        },
+        {
+          "location": "Архитектура/Информационная/Логическая модель/Атрибуты",
+          "link": "/entities/seaf.ia.logical_attributes/registry"
+        }]
+      )
+
     presentations:
       registry:
         type: table
@@ -75,7 +87,6 @@ entities:
             })]
           )
 
-
       registry_by_LA:
         type: table
         headers:
@@ -94,5 +105,28 @@ entities:
                   "entity_link": "/entities/seaf.ia.logical_entities/card?id=" & logical_entity,
                   "code": code,
                   "title": title
+              }]
+          )
+
+      registry_links:
+        type: table
+        headers:
+          - value: logical_entity
+            text: Логическая сущность
+            link: self_link
+          - value: link_type
+            text: Тип связи
+          - value: linked_entity
+            text: Связанная сущность
+            link: entity_link
+        source: >
+          (
+          [$."seaf.ia.logical_attributes".*[link_attr != {}].
+              {
+                  "logical_entity": ($id := logical_entity; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.title),
+                  "self_link": "/entities/seaf.ia.logical_entities/card?id=" & logical_entity,
+                  "link_type": link_type,
+                  "linked_entity": ($id := link_attr; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.title),
+                  "entity_link": "/entities/seaf.ia.logical_entities/card?id=" & link_attr
               }]
           )
