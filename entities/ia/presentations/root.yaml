@@ -6,8 +6,4 @@ imports:
   - physical_tables.yaml
   - physical_attributes.yaml
   - aggregat.yaml
-<<<<<<< HEAD
   - LE_relations_diagram_Links.yaml
-=======
-  - LE_relations_diagram.yaml
->>>>>>> 35cb811ad4f328d61336f5d2c9e95eb6cd7f6735

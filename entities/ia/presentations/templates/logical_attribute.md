@@ -10,11 +10,6 @@
 Наличие персональных данных | {{pdn_flag}}
 Наличие критических данных | {{cde_flag}}
 Логическая сущность | [{{logical_entity}}]({{le_link}})
-<<<<<<< HEAD
-=======
-Ссылочный атрибут | [{{link_attr}}]({{entity_link}})
-Тип связи | {{link_type}}
->>>>>>> 35cb811ad4f328d61336f5d2c9e95eb6cd7f6735
 
 ## Связанные бизнес термины
 ![Бизнес термины](@entity/seaf.ia.business_terms/registry_by_LA?id={{id}})
