@@ -1,0 +1,25 @@
+docs:
+  LE_relations_smartants:
+    location: ИА Диаграмма связей
+    type: smartants
+    source: >
+      (
+        $."seaf.ia.logical_attributes".$spread().(
+            $id := $keys();*[link_attr != {}].{
+                code:{
+                    "title": title,
+                    "symbol": "system",
+                    "links": {
+                            "from": ($id := logical_entity; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.code),
+                            "to": ($id := link_attr; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.code),
+                            "title": link_type,
+                            "style": "->"
+                            }
+                }
+            }
+        );
+        {
+            "nodes": $nodes,
+            "links": $nodes.links
+        }
+      )
