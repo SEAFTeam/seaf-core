@@ -1,6 +1,6 @@
 docs:
-  LE_relations_smartants:
-    location: ИА Диаграмма связей
+  LE_relations_Links:
+    location: ИА Диаграмма (Связи)
     type: smartants
     source: >
       (
@@ -14,11 +14,11 @@ docs:
             }
           ))
         ~> $merge(),
-            "links": $."seaf.ia.logical_attributes".$spread().*[link_attr != {}].
+            "links": $."seaf.ia.logical_links".$spread().*.
                     {
                       "from": ($id := logical_entity; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.code),
-                      "to": ($id := link_attr; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.code),
-                      "title": link_type,
+                      "to": ($id := linked_entity; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.code),
+                      "title": type & ' ' & plurality,
                       "style": "->"
                     }
         }

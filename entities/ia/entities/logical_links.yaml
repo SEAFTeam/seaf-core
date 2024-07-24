@@ -1,0 +1,68 @@
+entities:
+  seaf.ia.logical_links:
+    title: Таблица связей
+    description: Таблица связей логических сущностей
+    objects:
+      logical_link:
+        route: "/"
+        symbol: "ll"
+        title: Логическая связь
+    schema:
+      type: object
+      patternProperties:
+        "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$":
+          type: object
+          properties:
+            code:       # Уникальная в рамках модели аббревиатура
+              title: Код
+              type: string
+            name:       # Наименование на русском языке в единственном числе, уникальное в рамках модели
+              title: Наименование
+              type: string
+            # status:
+            #   title: Статус
+            #   enum:
+            #     - Планируется
+            #     - Разрабатывается или модифицируется
+            #     - Используется
+            #     - Выводится из эксплуатации
+            #     - В архиве
+            description:
+              title: Описание
+              type: string
+            logical_entity:
+              title: Исходящая сущность
+              description: Логическая сущность, из которой выходит связь
+              $ref: "#/$rels/seaf.ia.logical_entities.logical_entity"
+            linked_entity:         # Ссылка на связанный экземпляр сущности
+              title: Входящая сущность
+              description: Логическая сущность, в которой выходит связь
+              $ref: "#/$rels/seaf.ia.logical_entities.logical_entity"
+            type:
+              title: Тип связи
+              type: string
+              enum:
+              - ассоциация
+              - аггрегация
+              - композиция
+              - обобщение
+              - зависимость
+            plurality: 
+              title: Множественность
+              type: string
+            multiplicityA: 
+              title: Множественность A
+              type: int
+            multiplicityB: 
+              title: Множественность B
+              type: int
+            cardinality:
+              title: кардинальность
+              type: string
+
+        # Сообщаем, что перечисленные поля обязательны
+          required:
+            - code
+            - title
+            - logical_entity
+            - linked_entity

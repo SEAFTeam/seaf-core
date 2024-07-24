@@ -46,7 +46,27 @@ entities:
                 $ref: "#/$rels/seaf.ia.business_terms.business_term"
             link_attr:         # Ссылка на связанный экземпляр сущности
               title: Ссылочный атрибут
+              link_type: Тип связи
+              link_NM: Множественность
               $ref: "#/$rels/seaf.ia.logical_entities.logical_entity"
+            link_attr_comp:
+              title: Ссылочный атрибут
+              type: object
+              properties:
+                linked_entity:
+                  title: Связанная сущность
+                  $ref: "#/$rels/seaf.ia.logical_entities.logical_entity"
+                link_type:
+                  title: Тип связи
+                  enum:
+                  - ассоциация
+                  - аггрегация
+                  - композиция
+                  - обобщение
+                  - зависимость
+                link_NM:
+                  title: Множественность
+                  type: string
             link_type:         # черновик/ используется/ архив
               title: Тип связи
               enum:
