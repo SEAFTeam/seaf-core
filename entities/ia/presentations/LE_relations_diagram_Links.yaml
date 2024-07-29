@@ -16,10 +16,10 @@ docs:
         ~> $merge(),
             "links": $."seaf.ia.logical_links".$spread().*.
                     {
-                      "from": ($id := logical_entity; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.code),
-                      "to": ($id := linked_entity; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.code),
-                      "title": type & ' ' & plurality,
-                      "style": "->"
+                      "from": ($id := entityA; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.code),
+                      "to": ($id := entityB; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.code),
+                      "title": multiplicityA & ' ' & type & ' ' & multiplicityB,
+                      "style": "<->"
                     }
         }
       )

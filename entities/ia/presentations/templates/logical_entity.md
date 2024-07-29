@@ -18,11 +18,8 @@
 ## Атрибуты Логической сущности
 ![Логические аттрибуты](@entity/seaf.ia.logical_attributes/registry_by_LE?id={{id}})
 
-## Исходящие связи ->
-![Связи](@entity/seaf.ia.logical_links/registry_by_OE?id={{id}})
-
-## Входящие связи <-
-![Связи](@entity/seaf.ia.logical_links/registry_by_IE?id={{id}})
+## Логические связи
+![Связи](@entity/seaf.ia.logical_links/registry_by_LE?id={{id}})
 
 ## Физические таблицы
 ![Входящие связи](@entity/seaf.ia.physical_tables/registry_by_LE?id={{id}})

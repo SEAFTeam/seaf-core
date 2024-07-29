@@ -7,10 +7,8 @@
 Наименование | {{title}}
 Статус | {{status}}
 Описание | {{description}}
-Логическая сущность | [{{logical_entity}}]({{le_link}})
-Связанная сущность | [{{linked_entity}}]({{entity_link}})
-Тип связи | {{link_type}}
-Множественность | {{plurality}}
+Сущность А | [{{entityA}}]({{link_leA}})
 Множественность A | {{multiplicityA}}
+Тип связи | {{link_type}}
+Сущность В | [{{entityB}}]({{link_leB}})
 Множественность B | {{multiplicityB}}
-кардинальность | {{cardinality}}
