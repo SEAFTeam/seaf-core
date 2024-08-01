@@ -5,7 +5,7 @@ docs:
     source: >
       (
         {
-          "nodes": $merge($."seaf.ia.logical_entities".$spread().(
+          "nodes": $merge($."seaf.ia.data_objects".$spread().(
             {
                 *.code: {
                     "title": *.title,
@@ -16,8 +16,8 @@ docs:
         ~> $merge(),
             "links": $."seaf.ia.logical_links".$spread().*.
                     {
-                      "from": ($id := entityA; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.code),
-                      "to": ($id := entityB; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.code),
+                      "from": ($id := entityA; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.code),
+                      "to": ($id := entityB; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.code),
                       "title": multiplicityA & ' ' & type & ' ' & multiplicityB,
                       "style": "<->"
                     }

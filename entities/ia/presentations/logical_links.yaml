@@ -33,13 +33,13 @@ entities:
               {
                   "title": $keys(),
                   "self_link": "/entities/seaf.ia.logical_links/card?id=" & $keys(),
-                  "entityA": ($id := *.entityA; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.title),
-                  "link_leA": "/entities/seaf.ia.logical_entities/card?id=" & *.entityA,
+                  "entityA": ($id := *.entityA; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
+                  "link_leA": "/entities/seaf.ia.data_objects/card?id=" & *.entityA,
                   "multiplicityA": *.multiplicityA,
                   "link_type": *.type,
                   "multiplicityB": *.multiplicityB,
-                  "entityB": ($id := *.entityB; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.title),
-                  "link_leB": "/entities/seaf.ia.logical_entities/card?id=" & *.entityB
+                  "entityB": ($id := *.entityB; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
+                  "link_leB": "/entities/seaf.ia.data_objects/card?id=" & *.entityB
               }
             ]
           )
@@ -55,10 +55,10 @@ entities:
               "title": *.title,
               "status": *.status,
               "description": *.description,
-              "entityA": ($id := *.entityA; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.title),
-              "link_leA": "/entities/seaf.ia.logical_entities/card?id=" & *.entityA,
-              "entityB": ($id := *.entityB; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.title),
-              "link_leB": "/entities/seaf.ia.logical_entities/card?id=" & *.entityB,
+              "entityA": ($id := *.entityA; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
+              "link_leA": "/entities/seaf.ia.data_objects/card?id=" & *.entityA,
+              "entityB": ($id := *.entityB; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
+              "link_leB": "/entities/seaf.ia.data_objects/card?id=" & *.entityB,
               "link_type": *.type,
               "multiplicityA": *.multiplicityA,
               "multiplicityB": *.multiplicityB
@@ -90,12 +90,12 @@ entities:
               "title": $keys(),
               "self_link": "/entities/seaf.ia.logical_links/card?id=" & $keys(),
               "multiplicityA": *.multiplicityA,
-              "entityA": ($id := *.entityA; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.title),
-              "link_leA": "/entities/seaf.ia.logical_entities/card?id=" & *.entityA,
+              "entityA": ($id := *.entityA; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
+              "link_leA": "/entities/seaf.ia.data_objects/card?id=" & *.entityA,
               "link_type": *.type,
               "multiplicityB": *.multiplicityB,
-              "entityB": ($id := *.entityB; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.title),
-              "link_leB": "/entities/seaf.ia.logical_entities/card?id=" & *.entityB
+              "entityB": ($id := *.entityB; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
+              "link_leB": "/entities/seaf.ia.data_objects/card?id=" & *.entityB
             })]
           )
 

@@ -21,4 +21,4 @@
 {{/processes}}
 
 ## Связанные Логические сущности
-![Логические сущности](@entity/seaf.ia.logical_entities/registry_by_BT?bt_id={{id}})
+![Логические сущности](@entity/seaf.ia.data_objects/registry_by_BT?bt_id={{id}})

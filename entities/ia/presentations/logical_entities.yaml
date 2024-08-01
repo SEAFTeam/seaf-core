@@ -1,5 +1,5 @@
 entities:
-  seaf.ia.logical_entities:
+  seaf.ia.data_objects:
     presentations:
       registry:
         type: table
@@ -15,10 +15,10 @@ entities:
             text: Категория
         source: >
           (
-            [$."seaf.ia.logical_entities".$spread().
+            [$."seaf.ia.data_objects".$spread().
                 {
                     "title": *.title,
-                    "self_link": "/entities/seaf.ia.logical_entities/card?id=" & $keys(),
+                    "self_link": "/entities/seaf.ia.data_objects/card?id=" & $keys(),
                     "status": *.status,
                     "description": *.description,
                     "aggregat": *.aggregat,
@@ -31,7 +31,7 @@ entities:
         template: templates/logical_entity.md
         source: >
           (
-            $."seaf.ia.logical_entities".$spread()[$keys()=$params.id].{
+            $."seaf.ia.data_objects".$spread()[$keys()=$params.id].{
                   "id": $keys(),
                   "code": *.code,
                   "title": *.title,
@@ -40,8 +40,8 @@ entities:
                   "category": *.category,
                   "pdn_flag": *.pdn_flag,
                   "cde_flag": *.cde_flag,
-                  "business_term": ($id := *.business_term; $$."seaf.ia.business_terms".$spread()[$keys() = $id].*.title),
-                  "bt_link": "/entities/seaf.ia.business_terms/card?id=" & *.business_term,
+                  "business_objects": ($id := *.business_objects; $$."seaf.ia.business_objects".$spread()[$keys() = $id].*.title),
+                  "bt_link": "/entities/seaf.ia.business_objects/card?id=" & *.business_objects,
                   "comments": *.comments
                 }
           )
@@ -58,12 +58,12 @@ entities:
             text: Статус
         source: >
           (
-            [$."seaf.ia.logical_entities".$spread().(
-            $id := $keys(); *[$params.bt_id in business_term].
+            [$."seaf.ia.data_objects".$spread().(
+            $id := $keys(); *[$params.bt_id in business_objects].
               {
                     "code": code,
                     "title": title,
-                    "self_link": "/entities/seaf.ia.logical_entities/card?id=" & $id,
+                    "self_link": "/entities/seaf.ia.data_objects/card?id=" & $id,
                     "status": status
               }
             )]
@@ -82,11 +82,11 @@ entities:
         source: >
           (
             $pht_id := $params.id;
-            $le := [$."seaf.ia.physical_tables".$spread()[$keys()=$pht_id].*.logical_entity];
-            [$."seaf.ia.logical_entities".$spread()[$keys() in $le].($id := $keys(); {
+            $le := [$."seaf.ia.physical_tables".$spread()[$keys()=$pht_id].*.data_object];
+            [$."seaf.ia.data_objects".$spread()[$keys() in $le].($id := $keys(); {
                     "code": *.code,
                     "title": *.title,
-                    "self_link": "/entities/seaf.ia.logical_entities/card?id=" & $id,
+                    "self_link": "/entities/seaf.ia.data_objects/card?id=" & $id,
                     "status": status
                 })]
           )
@@ -103,12 +103,12 @@ entities:
             text: Статус
         source: >
           (
-            [$."seaf.ia.logical_entities".$spread().(
+            [$."seaf.ia.data_objects".$spread().(
             $id := $keys(); *[$params.id in aggregat].
               {
                     "code": code,
                     "title": title,
-                    "self_link": "/entities/seaf.ia.logical_entities/card?id=" & $id,
+                    "self_link": "/entities/seaf.ia.data_objects/card?id=" & $id,
                     "status": status
               }
             )]

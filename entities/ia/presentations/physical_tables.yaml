@@ -48,8 +48,8 @@ entities:
                   "cols_count": *.cols_count,
                   "pdn_flag": *.pdn_flag,
                   "cde_flag": *.cde_flag,
-                  "business_term": *.business_term,
-                  "bt_link": "/entities/seaf.ia.logical_entities/card?id=" & *.business_term
+                  "business_objects": *.business_objects,
+                  "bt_link": "/entities/seaf.ia.data_objects/card?id=" & *.business_objects
                 }
           )
 
@@ -67,7 +67,7 @@ entities:
           ( 
             $param_id := $params.id;
             [$."seaf.ia.physical_tables".$spread().(
-            $id := $keys(); *[$param_id in logical_entity].
+            $id := $keys(); *[$param_id in data_object].
               {
                     "title": title,
                     "self_link": "/entities/seaf.ia.physical_tables/card?id=" & $id,

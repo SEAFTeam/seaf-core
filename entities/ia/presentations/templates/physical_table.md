@@ -18,10 +18,10 @@
 Наличие критических данных | {{cde_flag}}
 
 ## Связанные бизнес термины
-![Бизнес термины](@entity/seaf.ia.business_terms/registry_by_PhT?id={{id}})
+![Бизнес термины](@entity/seaf.ia.business_objects/registry_by_PhT?id={{id}})
 
 ## Связанные логические сущности
-![Логические сущности](@entity/seaf.ia.logical_entities/registry_by_PhT?id={{id}})
+![Логические сущности](@entity/seaf.ia.data_objects/registry_by_PhT?id={{id}})
 
 ## Атрибуты Физической таблицы
 ![Мета аттрибуты](@entity/seaf.ia.physical_attributes/registry_by_PhT?id={{id}})

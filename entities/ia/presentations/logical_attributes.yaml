@@ -19,7 +19,7 @@ entities:
             link: self_link
           - value: description
             text: Описание
-          - value: logical_entity
+          - value: data_object
             text: Логическая сущность
             link: le_link
         source: >
@@ -30,8 +30,8 @@ entities:
                     "title": *.title,
                     "self_link": "/entities/seaf.ia.logical_attributes/card?id=" & $keys(),
                     "description": *.description,
-                    "logical_entity": ($id := *.logical_entity; $$."seaf.ia.logical_entities".$spread()[$keys() = $id].*.title),
-                    "le_link": "/entities/seaf.ia.logical_entities/card?id=" & *.logical_entity
+                    "data_object": ($id := *.data_object; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
+                    "le_link": "/entities/seaf.ia.data_objects/card?id=" & *.data_object
                 }]
           )
 
@@ -48,10 +48,10 @@ entities:
                   "description": *.description,
                   "pdn_flag": *.pdn_flag,
                   "cde_flag": *.cde_flag,
-                  "logical_entity": *.logical_entity,
-                  "le_link": "/entities/seaf.ia.logical_entities/card?id=" & *.logical_entity,
-                  "business_term": *.business_term,
-                  "bt_link": "/entities/seaf.ia.logical_entities/card?id=" & *.business_term
+                  "data_object": *.data_object,
+                  "le_link": "/entities/seaf.ia.data_objects/card?id=" & *.data_object,
+                  "business_objects": *.business_objects,
+                  "bt_link": "/entities/seaf.ia.data_objects/card?id=" & *.business_objects
                 }
           )
 
@@ -68,7 +68,7 @@ entities:
         source: >
           (
             $param_id := $params.id;
-            [$."seaf.ia.logical_attributes".$spread()[*.logical_entity = $param_id].({
+            [$."seaf.ia.logical_attributes".$spread()[*.data_object = $param_id].({
               "code": *.code,
               "title": *.title,
               "self_link": "/entities/seaf.ia.logical_attributes/card?id=" & $keys(),

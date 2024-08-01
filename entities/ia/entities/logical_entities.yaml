@@ -1,17 +1,17 @@
 entities:
-  seaf.ia.logical_entities:
-    title: Таблица сущностей
+  seaf.ia.data_objects:
+    title: Объекты данных
     description: Таблица логических сущностей
     objects:
-      logical_entity:
+      data_object:
         route: "/"
-        symbol: "le"
-        title: Логическая сущность
+        title: Объект данных
+        symbol: "do"
     menu: >
       (
         {
           "location": "Архитектура/Информационная/Логическая модель/Сущности",
-          "link": "/entities/seaf.ia.logical_entities/registry"
+          "link": "/entities/seaf.ia.data_objects/registry"
         }
        )
     schema:
@@ -54,11 +54,11 @@ entities:
             cde_flag:      # Флаг наличия критичных данных
               title: CDE
               type: boolean
-            business_term:         # Ссылка на термины Бизнес-глоссария или сущности концептуальной модели данных
+            business_objects:         # Ссылка на термины Бизнес-глоссария или сущности концептуальной модели данных
               title: Бизнес термин
               type: array
               items:
-                $ref: "#/$rels/seaf.ia.business_terms.business_term"
+                $ref: "#/$rels/seaf.ia.business_objects.business_objects"
             master_system:
               title: АС, являющаяся мастер системой для объекта данных
               $ref: "#/$rels/components.component"

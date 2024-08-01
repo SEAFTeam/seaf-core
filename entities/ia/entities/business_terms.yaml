@@ -1,12 +1,12 @@
 entities:
-  seaf.ia.business_terms:
-    title: Бизнес-глоссарий
+  seaf.ia.business_objects:
+    title: Бизнес-объекты
     description: Таблица бизнес терминов
     objects:
-      business_term:
+      business_objects:
         route: "/"
-        title: Бизнес-термин
-        symbol: "bt"
+        title: Бизнес-объект
+        symbol: "busobj"
     schema:
       type: object
       patternProperties:

@@ -14,4 +14,4 @@
 ![Суб агрегаты](@entity/seaf.ia.aggregat/registry_by_aggr?id={{id}})
 
 ## Сущности
-![Логические сущности](@entity/seaf.ia.logical_entities/registry_by_aggr?id={{id}})
+![Логические сущности](@entity/seaf.ia.data_objects/registry_by_aggr?id={{id}})

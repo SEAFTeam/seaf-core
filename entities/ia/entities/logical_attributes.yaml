@@ -36,17 +36,17 @@ entities:
             cde_flag:      # Флаг наличия критичных данных
               title: CDE
               type: boolean
-            logical_entity:         # Логическая сущность, к которой принадлежит атрибут
+            data_object:         # Логическая сущность, к которой принадлежит атрибут
               title: Логическая сущность
-              $ref: "#/$rels/seaf.ia.logical_entities.logical_entity"
-            business_term:         # соответствующие термины Бизнес-глоссария или сущности концептуальной модели данных
+              $ref: "#/$rels/seaf.ia.data_objects.data_object"
+            business_objects:         # соответствующие термины Бизнес-глоссария или сущности концептуальной модели данных
               title: Бизнес термин
               type: array
               items:
-                $ref: "#/$rels/seaf.ia.business_terms.business_term"
+                $ref: "#/$rels/seaf.ia.business_objects.business_objects"
 
         # Сообщаем, что перечисленные поля обязательны
           required:
             - code
             - title
-            - logical_entity
+            - data_object

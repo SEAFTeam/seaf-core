@@ -52,8 +52,8 @@ entities:
                   "lt_link": "/entities/seaf.ia.physical_tables/card?id=" & *.linked_table,
                   "linked_key": *.linked_key,
                   "lk_link": "/entities/seaf.ia.physical_attributes/card?id=" & *.linked_key,
-                  "business_term": *.business_term,
-                  "bt_link": "/entities/seaf.ia.logical_entities/card?id=" & *.business_term
+                  "business_objects": *.business_objects,
+                  "bt_link": "/entities/seaf.ia.data_objects/card?id=" & *.business_objects
                 }
           )
 

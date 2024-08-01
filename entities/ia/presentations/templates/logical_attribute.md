@@ -9,7 +9,7 @@
 Описание | {{description}}
 Наличие персональных данных | {{pdn_flag}}
 Наличие критических данных | {{cde_flag}}
-Логическая сущность | [{{logical_entity}}]({{le_link}})
+Логическая сущность | [{{data_object}}]({{le_link}})
 
 ## Связанные бизнес термины
-![Бизнес термины](@entity/seaf.ia.business_terms/registry_by_LA?id={{id}})
+![Бизнес термины](@entity/seaf.ia.business_objects/registry_by_LA?id={{id}})

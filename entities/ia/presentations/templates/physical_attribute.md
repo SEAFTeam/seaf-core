@@ -17,4 +17,4 @@
 Ключ в связанной таблице | [{{linked_key}}]({{lk_link}})
 
 ## Связанные бизнес термины
-![Бизнес термины](@entity/seaf.ia.business_terms/registry_by_PhA?id={{id}})
+![Бизнес термины](@entity/seaf.ia.business_objects/registry_by_PhA?id={{id}})
