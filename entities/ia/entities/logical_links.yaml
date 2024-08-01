@@ -32,11 +32,11 @@ entities:
               type: string
             entityA:
               title: Сущность А
-              description: Логическая сущность, из которой выходит связь
+              description: Связанная логическая сущность А
               $ref: "#/$rels/seaf.ia.logical_entities.logical_entity"
             entityB:         # Ссылка на связанный экземпляр сущности
               title: Сущность В
-              description: Логическая сущность, в которой выходит связь
+              description: Связанная логическая сущность В
               $ref: "#/$rels/seaf.ia.logical_entities.logical_entity"
             type:
               title: Тип связи
@@ -51,9 +51,6 @@ entities:
             multiplicityB: 
               title: Множественность B
               type: int
-            cardinality:
-              title: кардинальность
-              type: string
 
         # Сообщаем, что перечисленные поля обязательны
           required:

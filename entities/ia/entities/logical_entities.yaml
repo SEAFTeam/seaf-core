@@ -59,6 +59,9 @@ entities:
               type: array
               items:
                 $ref: "#/$rels/seaf.ia.business_terms.business_term"
+            master_system:
+              title: АС, являющаяся мастер системой для объекта данных
+              $ref: "#/$rels/components.component"
             comments:
               title: Комментарии, риски, проблемы
               type: array
