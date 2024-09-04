@@ -114,7 +114,9 @@ entities:
               type: string
             availabilityzone_id:
               title: В какие зоны доступности входит DC
-              $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
           required:
             - dc_id
             - dc_ownership
