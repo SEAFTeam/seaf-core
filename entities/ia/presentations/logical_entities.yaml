@@ -11,6 +11,9 @@ entities:
             text: Описание
           - value: aggregat
             text: Агрегат
+          - value: master_system
+            text: Мастер система
+            link: as_link
           - value: category
             text: Категория
         source: >
@@ -22,6 +25,8 @@ entities:
                     "status": *.status,
                     "description": *.description,
                     "aggregat": *.aggregat,
+                    "master_system": *.master_system,
+                    "as_link": "/entities/components/blank?dh-component-id=" & *.master_system,
                     "category": *.category
                 }]
           )
@@ -40,6 +45,8 @@ entities:
                   "category": *.category,
                   "pdn_flag": *.pdn_flag,
                   "cde_flag": *.cde_flag,
+                  "master_system": *.master_system,
+                  "as_link": "/entities/components/blank?dh-component-id=" & *.master_system,
                   "business_objects": ($id := *.business_objects; $$."seaf.ia.business_objects".$spread()[$keys() = $id].*.title),
                   "bt_link": "/entities/seaf.ia.business_objects/card?id=" & *.business_objects,
                   "comments": *.comments

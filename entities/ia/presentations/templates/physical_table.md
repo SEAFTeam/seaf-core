@@ -17,9 +17,6 @@
 Наличие персональных данных | {{pdn_flag}}
 Наличие критических данных | {{cde_flag}}
 
-## Связанные бизнес термины
-![Бизнес термины](@entity/seaf.ia.business_objects/registry_by_PhT?id={{id}})
-
 ## Связанные логические сущности
 ![Логические сущности](@entity/seaf.ia.data_objects/registry_by_PhT?id={{id}})
 

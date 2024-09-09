@@ -15,6 +15,3 @@
 Физическая таблица | [{{physical_table}}]({{pht_link}})
 Связанная таблица | [{{linked_table}}]({{lt_link}})
 Ключ в связанной таблице | [{{linked_key}}]({{lk_link}})
-
-## Связанные бизнес термины
-![Бизнес термины](@entity/seaf.ia.business_objects/registry_by_PhA?id={{id}})
