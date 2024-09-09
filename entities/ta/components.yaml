@@ -289,10 +289,15 @@ entities:
               title: Тип исполнения
               type: string
               enum: [Виртуальный, Физический]
+            network_connection:
+              title: Перечисление связанных сетей
+              type: string
+              items:
+                $ref: "#/$rels/seaf.ta.services.network.network"
             placement_type:
               title: Место размещения в контуре инфраструктуры
               type: string
-              enum: [Периметр, Сеть ЦОД, Совмещенный периметр - ЦОД]
+              enum: [DMZ, Internal DC Network, Inet-Edge, Ext-WAN-Edge, Int-WAN-Edge, Protected DC Network]
             purpose:
               title: Функциональное назначение сетевого аплаенса
               type: string
