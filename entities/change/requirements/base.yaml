@@ -1,5 +1,5 @@
-# Требования прикладной архитектуры SEAF
 entities:
+  #CORE свойства требований
   seaf.change.requirements:
     title: Требования
     objects:
@@ -7,10 +7,11 @@ entities:
         route: "/"
         title: Требование
     schema:
-      type: object
-      patternProperties:
-        "^[a-z0-9_\\$][a-z0-9_\\$]*(\\.[a-z0-9_\\$][a-z0-9_\\$]*)*$":
+      $defs:
+        seaf.change.requirements.def:
           type: object
+          #          patternProperties:
+          #            "^[a-zA-Z][a-zA-Z0-9_-]*(\\.[a-zA-Z0-9][a-zA-Z0-9_-]*)*$": # предыдущий вариант "^[a-z0-9_\\$][a-z0-9_\\$]*(\\.[a-z0-9_\\$][a-z0-9_\\$]*)*$":
           properties:
             title:
               title: Название требования
@@ -21,6 +22,9 @@ entities:
                 - business
                 - functional
                 - non-functional
+            statement:
+              title: Формулировка (содержание) требования
+              type: string
             functionality:
               title: Функции обеспечивающие требование
               type: array
@@ -28,6 +32,27 @@ entities:
                 $ref: "#/$rels/aspects.aspect"
             description:
               title: Подробное описание требования
+              type: string
+            drivers: #массив строк и необязательное свойство
+              title: Драйвер требования
+              type: array
+              items:
+                type: string
+            exceptions_acceptance_level:
+              title: Уровень согласования отклонений
+              type: string
+            stakeholders:
+              title: Заказчики требования
+              type: array
+              items:
+                type: string
+            tags:
+              title: Тег требования
+              type: array
+              items:
+                type: string
+            comments:
+              title: Комментарии, пояснения
               type: string
             verifications:
               title: Критерии выполнения
@@ -48,8 +73,12 @@ entities:
           required:
             - title
             - type
-            - description
+            #           - description
             - verifications
+      patternProperties:
+        "^[a-zA-Z][a-zA-Z0-9_-]*(\\.[a-zA-Z0-9][a-zA-Z0-9_-]*)*$": # предыдущий вариант"^[a-z0-9_\\$][a-z0-9_\\$]*(\\.[a-z0-9_\\$][a-z0-9_\\$]*)*$": # Как управлять ЖЦ требований. Одно требование в двух версиях стандарта - должны быть разные требования с различными идентификаторами
+          type: object
+          $ref: "#/$defs/seaf.change.requirements.def"
     menu: >
       (
         $append(
