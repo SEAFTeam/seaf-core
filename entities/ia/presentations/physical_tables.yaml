@@ -42,7 +42,7 @@ entities:
                   "as_link": "/entities/components/blank?dh-component-id=" & *.system,
                   "dbms": *.dbms,
                   "database": *.database,
-                  "schema": *.schema,
+                  "schema_name": *.schema_name,
                   "loc_attr": *.loc_attr,
                   "rows_count": *.rows_count,
                   "cols_count": *.cols_count,

@@ -10,15 +10,15 @@
 Автоматизированная система | [{{system}}]({{as_link}})
 СУБД | {{dbms}}
 База данных | {{database}}
-Схема | {{schema}}
-локационные атрибуты | {{loc_attr}}
+Схема | {{schema_name}}
+Локационные атрибуты | {{loc_attr}}
 Количество строк | {{rows_count}}
 Количество столбцов | {{cols_count}}
 Наличие персональных данных | {{pdn_flag}}
 Наличие критических данных | {{cde_flag}}
 
-## Связанные логические сущности
-![Логические сущности](@entity/seaf.ia.data_objects/registry_by_PhT?id={{id}})
-
 ## Атрибуты Физической таблицы
 ![Мета аттрибуты](@entity/seaf.ia.physical_attributes/registry_by_PhT?id={{id}})
+
+## Связанные логические сущности
+![Логические сущности](@entity/seaf.ia.data_objects/registry_by_PhT?id={{id}})

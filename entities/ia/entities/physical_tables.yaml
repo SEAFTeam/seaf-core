@@ -21,7 +21,7 @@ entities:
         "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$":
           type: object
           properties:
-            title:          # Имя таблицы (должно соответствовать правилам наименования принятым в компании)
+            title:         # Имя таблицы (должно соответствовать правилам наименования принятым в компании)
               title: Наименование
               type: string
             status:        # Статус (enum: EXISTS)
@@ -33,7 +33,7 @@ entities:
             description:   # Описание назначения таблицы в текстовом формате.
               title: Описание
               type: string
-            system:      # Компонент прикладной архитектуры, к которой относится таблица
+            system:        # Компонент прикладной архитектуры, к которой относится таблица
               title: Автоматизированная система
               $ref: "#/$rels/components.component"
             dbms:          # СУБД АС, к которой относится таблица
@@ -42,7 +42,7 @@ entities:
             database:      # БазаДанных, в которой находится таблица
               title: БД
               type: string
-            schema:        # Схема в конкретной БД
+            schema_name:   # Схема в конкретной БД
               title: Схема
               type: string
             loc_attr:      # дополнительные атрибуты для конкретизации физического нахождения таблиц: контур, хост и т.п.
@@ -58,7 +58,7 @@ entities:
               title: Количество столбцов
               type: int
             pdn_flag:      # Флаг наличия персональных данных
-              title: ПДН
+              title: ПДн
               type: boolean
             cde_flag:      # Флаг наличия критичных данных
               title: CDE
@@ -68,12 +68,12 @@ entities:
             #   type: array
             #   items:
             #     $ref: "#/$rels/seaf.ia.business_objects.business_objects"
-            data_object: # Ссылка на сущности логической модели
+            data_object:   # Ссылка на сущности логической модели
               title: Логическая сущность
               type: array
               items:
                 $ref: "#/$rels/seaf.ia.data_objects.data_object"
-        # Обязательные поля
+          # Обязательные поля
           required:
             - title
             - description

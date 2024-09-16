@@ -15,7 +15,7 @@ entities:
           - value: pdn_flag
             text: Персональные данные
           - value: cde_flag
-            text: Критичные данных
+            text: Критичные данные
         source: >
           (
             [$."seaf.ia.physical_attributes".$spread().
