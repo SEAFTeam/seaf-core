@@ -2,24 +2,24 @@
 # Файл содержит информацию об участниках сообщества, сделавших ключевой вклад в развитие SEAF
 
 ## Перечень контрибьюторов, имеющих username GitHub 
-* [rpiontik](https://github.com/rpiontik)
-* [apoddubny](https://github.com/apoddubny)
-* [altershaman](https://github.com/altershaman)
-* [talifan](https://github.com/talifan)
-* [mtrhnv](https://github.com/mtrhnv)
-* [scicommunity](https://github.com/Scicommunity)
-* [dimatrium](https://github.com/dimatrium)
-* [clayzenx](https://github.com/clayzenx)
-* [vlad-markin](https://github.com/vlad-markin)
-* [visorbnv](https://github.com/visorbnv)
-* [mxmlr](https://github.com/mxmlr)
+* [rpiontik]
+* [apoddubny]
+* [altershaman]
+* [talifan]
+* [mtrhnv]
+* [scicommunity]
+* [dimatrium]
+* [clayzenx]
+* [vlad-markin]
+* [visorbnv]
+* [mxmlr]
 
 
 ## Перечень контрибьюторов, не имеющих username GitHub.
 
 Данные вкладчика определены HASH суммой Md5(ФамилияИмя) в кодировке UTF-8.
 
-Для проверки участия воспользуйтесь сайтом https://www.md5hashgenerator.com/. В поле ввода введите
+Для проверки участия воспользуйтесь любым сайтом с сервисом Md5. В поле ввода введите
 фамилию и имя без пробелов. Проверьте наличие сгенерированного MD5 Hash в списке.
 
 Например: "ПионтикРоман" MD5 Hash "908e7ddcd254fa86308c4f4f9ee865de". 
