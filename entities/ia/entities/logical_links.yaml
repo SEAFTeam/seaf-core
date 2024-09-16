@@ -47,10 +47,10 @@ entities:
               - зависимость
             multiplicityA: 
               title: Множественность A
-              type: int
+              type: string
             multiplicityB: 
               title: Множественность B
-              type: int
+              type: string
 
         # Сообщаем, что перечисленные поля обязательны
           required:
