@@ -16,7 +16,7 @@ entities:
             link: link
           - value: description
             text: Описание
-          - value: aggregat
+          - value: creation_date
             text: Дата создания
           - value: status
             text: Статус
