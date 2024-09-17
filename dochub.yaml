@@ -1,17 +1,17 @@
 # Метаданные пакета
-$package:
-  seaf-core: # Идентификатор пакета
-    # Краткое название пакета
-    name: SEAF
-    # Поставщик
-    vendor: Sber
-    # Описание
-    description: Sber Enterprise Architect Framework
-    # Версия
-    version: 1.2.8
-    # Зависимости от других пакетов
-    dependencies:
-      dochub: ">=3.9.0"
+# $package:
+#   seaf-core: # Идентификатор пакета
+#     # Краткое название пакета
+#     name: SEAF
+#     # Поставщик
+#     vendor: Sber
+#     # Описание
+#     description: Sber Enterprise Architect Framework
+#     # Версия
+#     version: 1.2.8
+#     # Зависимости от других пакетов
+#     dependencies:
+#       dochub: ">=3.9.0"
 
 imports:
   - functions/root.yaml

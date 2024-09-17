@@ -39,8 +39,10 @@ entities:
                 $ref: "#/$rels/seaf.app.integration_specifications.specification"
             data-objects:
               title: Объекты данных
+              description: Объекты логической и физической модели информационной архитектуры
               type: array
               items:
+                # $ref: "#/$rels/seaf.ia.physical_tables.physical_table"
                 $ref: "#/$rels/seaf.ia.data_objects.data_object"
           required:
             - title

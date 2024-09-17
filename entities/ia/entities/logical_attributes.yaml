@@ -1,0 +1,50 @@
+entities:
+  seaf.ia.logical_attributes:
+    title: Таблица аттрибутов
+    description: Таблица аттрибутов логических сущностей
+    objects:
+      logical_attribute:
+        route: "/"
+        symbol: "la"
+        title: Логический атрибут
+    schema:
+      type: object
+      patternProperties:
+        "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$":
+          type: object
+          properties:
+            code:       # Уникальная в рамках модели аббревиатура
+              title: Код
+              type: string
+            name:       # Наименование на русском языке в единственном числе, уникальное в рамках модели
+              title: Наименование
+              type: string
+            # status:
+            #   title: Статус
+            #   enum:
+            #     - Планируется
+            #     - Разрабатывается или модифицируется
+            #     - Используется
+            #     - Выводится из эксплуатации
+            #     - В архиве
+            description: # Описание атрибута с точки зрения бизнеса; сведения о ее назначении, способе использования, и имеющихся ограничениях
+              title: Описание
+              type: string
+            pdn_flag:      # Флаг наличия персональных данных
+              title: ПДН
+              type: boolean
+            cde_flag:      # Флаг наличия критичных данных
+              title: CDE
+              type: boolean
+            data_object:         # Логическая сущность, к которой принадлежит атрибут
+              title: Логическая сущность
+              $ref: "#/$rels/seaf.ia.data_objects.data_object"
+            business_objects:         # соответствующие термины Бизнес-глоссария или сущности концептуальной модели данных
+              title: Бизнес термин
+              $ref: "#/$rels/seaf.ia.business_objects.business_objects"
+
+        # Сообщаем, что перечисленные поля обязательны
+          required:
+            - code
+            - title
+            - data_object

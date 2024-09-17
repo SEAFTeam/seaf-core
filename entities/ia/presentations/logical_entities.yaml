@@ -1,0 +1,122 @@
+entities:
+  seaf.ia.data_objects:
+    presentations:
+      registry:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: description
+            text: Описание
+          - value: aggregat
+            text: Агрегат
+          - value: master_system
+            text: Мастер система
+            link: as_link
+          - value: category
+            text: Категория
+        source: >
+          (
+            [$."seaf.ia.data_objects".$spread().
+                {
+                    "title": *.title,
+                    "self_link": "/entities/seaf.ia.data_objects/card?id=" & $keys(),
+                    "status": *.status,
+                    "description": *.description,
+                    "aggregat": *.aggregat,
+                    "master_system": *.master_system,
+                    "as_link": "/entities/components/blank?dh-component-id=" & *.master_system,
+                    "category": *.category
+                }]
+          )
+
+      card:
+        type: markdown
+        template: templates/logical_entity.md
+        source: >
+          (
+            $."seaf.ia.data_objects".$spread()[$keys()=$params.id].{
+                  "id": $keys(),
+                  "code": *.code,
+                  "title": *.title,
+                  "status": *.status,
+                  "description": *.description,
+                  "category": *.category,
+                  "pdn_flag": *.pdn_flag,
+                  "cde_flag": *.cde_flag,
+                  "master_system": *.master_system,
+                  "as_link": "/entities/components/blank?dh-component-id=" & *.master_system,
+                  "business_objects": ($id := *.business_objects; $$."seaf.ia.business_objects".$spread()[$keys() = $id].*.title),
+                  "bt_link": "/entities/seaf.ia.business_objects/card?id=" & *.business_objects,
+                  "comments": *.comments
+                }
+          )
+
+      registry_by_BT:
+        type: table
+        headers:
+          - value: code
+            text: Код
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: status
+            text: Статус
+        source: >
+          (
+            [$."seaf.ia.data_objects".$spread().(
+            $id := $keys(); *[$params.bt_id in business_objects].
+              {
+                    "code": code,
+                    "title": title,
+                    "self_link": "/entities/seaf.ia.data_objects/card?id=" & $id,
+                    "status": status
+              }
+            )]
+          )
+
+      registry_by_PhT:
+        type: table
+        headers:
+          - value: code
+            text: Код
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: status
+            text: Статус
+        source: >
+          (
+            $pht_id := $params.id;
+            $le := [$."seaf.ia.physical_tables".$spread()[$keys()=$pht_id].*.data_object];
+            [$."seaf.ia.data_objects".$spread()[$keys() in $le].($id := $keys(); {
+                    "code": *.code,
+                    "title": *.title,
+                    "self_link": "/entities/seaf.ia.data_objects/card?id=" & $id,
+                    "status": status
+                })]
+          )
+
+      registry_by_aggr:
+        type: table
+        headers:
+          - value: code
+            text: Код
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: status
+            text: Статус
+        source: >
+          (
+            [$."seaf.ia.data_objects".$spread().(
+            $id := $keys(); *[$params.id in aggregat].
+              {
+                    "code": code,
+                    "title": title,
+                    "self_link": "/entities/seaf.ia.data_objects/card?id=" & $id,
+                    "status": status
+              }
+            )]
+          )
