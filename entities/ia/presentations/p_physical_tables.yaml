@@ -32,7 +32,7 @@ entities:
                       $link := "/entities/components/blank?dh-component-id=" & *.system; 
                       $sys_code := *.system; 
                       $system_component_title := $$.components.$spread()[$keys()=$sys_code].*.title; 
-                      $system_component_title ? $link : None
+                      $system_component_title ? $link : null
                     ),
                     "dbms": *.dbms
                 }]
@@ -60,7 +60,7 @@ entities:
                   $link := "/entities/components/blank?dh-component-id=" & *.system;
                   $sys_code := *.system;
                   $system_component_title := $$.components.$spread()[$keys()=$sys_code].*.title;
-                  $system_component_title ? $link : None
+                  $system_component_title ? $link : null
                   ),
                   "dbms": *.dbms,
                   "database": *.database,

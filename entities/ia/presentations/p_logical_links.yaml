@@ -12,7 +12,7 @@ entities:
             link: entity_a_link
           - value: multiplicity_a
             text: Множественность A
-          - value: link_type
+          - value: type
             text: Тип связи
           - value: multiplicity_b
             text: Множественность B
@@ -23,12 +23,13 @@ entities:
           (
           [$."seaf.ia.logical_links".$spread().
               {
-                  "title": *.title,
+                  /* формируем прочерк в `title` вместо null при непереданном Наименовании для кликабельности сссылки */
+                  "title": $not($exists(*.title)) or *.title = null or *.title = {} ? "---" : *.title,
                   "self_link": "/entities/seaf.ia.logical_links/card?id=" & $keys(),
                   "entity_a": ($id := *.entity_a; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
                   "entity_a_link": "/entities/seaf.ia.data_objects/card?id=" & *.entity_a,
                   "multiplicity_a": *.multiplicity_a,
-                  "link_type": *.type,
+                  "type": *.type,
                   "multiplicity_b": *.multiplicity_b,
                   "entity_b": ($id := *.entity_b; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
                   "entity_b_link": "/entities/seaf.ia.data_objects/card?id=" & *.entity_b
@@ -79,7 +80,8 @@ entities:
           (
             $param_id := $params.id;
             [$."seaf.ia.logical_links".$spread()[*.entity_a = $param_id or *.entity_b = $param_id].({
-              "title": *.title,
+              /* формируем прочерк в `title` вместо null при непереданном Наименовании для кликабельности сссылки */
+              "title": $not($exists(*.title)) or *.title = null or *.title = {} ? "---" : *.title,
               "self_link": "/entities/seaf.ia.logical_links/card?id=" & $keys(),
               "multiplicity_a": *.multiplicity_a,
               "entity_a": ($id := *.entity_a; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
