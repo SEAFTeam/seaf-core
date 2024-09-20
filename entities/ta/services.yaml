@@ -483,7 +483,7 @@ entities:
                   enum: [WAN]
                 dc:
                   title: Имя ЦОД/Серверной комнаты
-                  type: arrayi
+                  type: array
                   items:
                     $ref: "#/$rels/seaf.ta.services.dc.dc"
                 office:
