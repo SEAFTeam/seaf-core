@@ -1,0 +1,37 @@
+# меню Информационной архитектуры, отдельно с иерархией и очерёдностью
+# формируется парсингом `$$."seaf.nav"`
+# функцией из БА: `\seaf-core\entities\ba\base\base.yaml`
+
+seaf.nav:
+  - title: Архитектура/Информационная
+    includes:
+      - title: Бизнес-глоссарий
+        link: "/entities/seaf.ia.business_objects/registry"
+        order: 200
+      - title: Логическая модель
+        includes:
+         - title: Сущности
+           link: "/entities/seaf.ia.data_objects/registry"
+           order: 210
+         - title: Атрибуты
+           link: "/entities/seaf.ia.logical_attributes/registry"
+           order: 211
+         - title: Связи
+           includes:
+             - title: Таблица
+               link: "/entities/seaf.ia.logical_links/registry"
+               order: 213
+             - title: Диаграмма
+               link: "/entities/seaf.ia.logical_links_diagram/diagram_smartants"
+               order: 214
+      - title: Физическая модель
+        includes:
+          - title: Таблицы
+            link: "/entities/seaf.ia.physical_tables/registry"
+            order: 220
+          - title: Колонки
+            link: "/entities/seaf.ia.physical_attributes/registry"
+            order: 221
+      - title: Агрегаты
+        link: "entities/seaf.ia.aggregat/registry"
+        order: 230

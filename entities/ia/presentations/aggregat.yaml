@@ -1,12 +1,5 @@
 entities:
   seaf.ia.aggregat:
-    menu: >
-      (
-        {
-            'location': 'Архитектура/Информационная/Агрегаты',
-            'link': 'entities/seaf.ia.aggregat/registry'
-        }
-      )
     presentations:
       registry:
         type: table

@@ -7,14 +7,6 @@ entities:
         route: "/"
         symbol: "pht"
         title: Физическая таблица
-    menu: >
-      ( [
-          {
-            "location": "Архитектура/Информационная/Физическая модель/Таблицы",
-            "link": "/entities/seaf.ia.physical_tables/registry"
-          }
-        ]
-      )
     schema:
       type: object
       patternProperties:

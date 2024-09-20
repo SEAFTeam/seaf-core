@@ -7,13 +7,6 @@ entities:
         route: "/"
         symbol: "pha"
         title: Колонка физической таблицы
-    menu: >
-      (
-        {
-          "location": "Архитектура/Информационная/Физическая модель/Колонки",
-          "link": "/entities/seaf.ia.physical_attributes/registry"
-        }
-      )
     schema:
       type: object
       patternProperties:

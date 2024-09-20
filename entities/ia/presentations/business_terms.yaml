@@ -1,12 +1,5 @@
 entities:
   seaf.ia.business_objects:
-    menu: >
-      (
-        {
-            'location': 'Архитектура/Информационная/Бизнес глоссарий',
-            'link': 'entities/seaf.ia.business_objects/registry'
-        }
-      )
     presentations:
       registry:
         type: table

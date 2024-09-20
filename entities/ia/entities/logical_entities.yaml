@@ -7,13 +7,6 @@ entities:
         route: "/"
         title: Объект данных
         symbol: "do"
-    menu: >
-      (
-        {
-          "location": "Архитектура/Информационная/Логическая модель/Сущности",
-          "link": "/entities/seaf.ia.data_objects/registry"
-        }
-       )
     schema:
       type: object
       patternProperties:

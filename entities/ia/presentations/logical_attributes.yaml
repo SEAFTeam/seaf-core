@@ -1,13 +1,5 @@
 entities:
   seaf.ia.logical_attributes:
-    menu: >
-      (
-        {
-          "location": "Архитектура/Информационная/Логическая модель/Атрибуты",
-          "link": "/entities/seaf.ia.logical_attributes/registry"
-        }
-      )
-
     presentations:
       registry:
         type: table

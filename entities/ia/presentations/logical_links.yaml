@@ -1,13 +1,5 @@
 entities:
   seaf.ia.logical_links:
-    menu: >
-      (
-        {
-          "location": "Архитектура/Информационная/Логическая модель/Связи",
-          "link": "/entities/seaf.ia.logical_links/registry"
-        }
-      )
-
     presentations:
       registry:
         type: table

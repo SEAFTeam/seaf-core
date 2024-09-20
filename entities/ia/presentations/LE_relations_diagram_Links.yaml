@@ -1,13 +1,5 @@
 entities:
-  seaf.ia.logical_model_diagram:
-    menu: >
-      (
-        {
-          "location": "Архитектура/Информационная/Логическая модель/Диаграмма связей",
-          "link": "/entities/seaf.ia.logical_model_diagram/diagram_smartants"
-        }
-      )
-
+  seaf.ia.logical_links_diagram:
     presentations:
       diagram_smartants:
         type: smartants
