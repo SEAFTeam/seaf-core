@@ -1,8 +1,0 @@
-imports:
-  - business_terms.yaml
-  - logical_entities.yaml
-  - logical_attributes.yaml
-  - logical_links.yaml
-  - physical_tables.yaml
-  - physical_attributes.yaml
-  - aggregat.yaml

@@ -40,7 +40,7 @@ entities:
 
       card:
         type: markdown
-        template: templates/physical_table.md
+        template: templates/t_physical_table.md
         source: >
           (
             $."seaf.ia.physical_tables".$spread()[$keys()=$params.id].{

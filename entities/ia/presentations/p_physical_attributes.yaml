@@ -32,7 +32,7 @@ entities:
 
       card:
         type: markdown
-        template: templates/physical_attribute.md
+        template: templates/t_physical_attribute.md
         source: >
           (
             $."seaf.ia.physical_attributes".$spread()[$keys()=$params.id].{

@@ -31,7 +31,7 @@ entities:
 
       card:
         type: markdown
-        template: templates/business_term.md
+        template: templates/t_business_term.md
         source: >
           (
             $term_id := $params.id;

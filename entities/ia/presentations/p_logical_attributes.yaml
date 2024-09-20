@@ -27,7 +27,7 @@ entities:
 
       card:
         type: markdown
-        template: templates/logical_attribute.md
+        template: templates/t_logical_attribute.md
         source: >
           (
             $."seaf.ia.logical_attributes".$spread()[$keys()=$params.id].{

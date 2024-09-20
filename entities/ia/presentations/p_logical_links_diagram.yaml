@@ -26,11 +26,3 @@ entities:
                         }
             }
           )
-
-
-# TODO: вынести формирование меню отдельно, с иерархией
-#seaf.nav:
-#   - title: Архитектура/Информационная/Логическая модель/Диаграмма связей
-#     link: "/entities/seaf.ia.logical_model_diagram/diagram_smartants"
-#     order: 100
-#     #  includes:

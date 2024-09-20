@@ -25,7 +25,7 @@ entities:
 
       card:
         type: markdown
-        template: templates/aggregat.md
+        template: templates/t_aggregat.md
         source: >
           (
             $."seaf.ia.aggregat".$spread()[$keys()=$params.id].{

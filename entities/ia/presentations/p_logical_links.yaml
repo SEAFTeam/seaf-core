@@ -38,7 +38,7 @@ entities:
 
       card:
         type: markdown
-        template: templates/logical_link.md
+        template: templates/t_logical_link.md
         source: >
           (
             $."seaf.ia.logical_links".$spread()[$keys()=$params.id].{
