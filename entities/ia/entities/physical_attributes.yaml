@@ -18,53 +18,69 @@ entities:
       type: object
       patternProperties:
         "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$":
-          type: object 
+          type: object
           properties:
-            title:              # Имя атрибута (должно соответствовать правилам наименования принятым в компании)
+            title:
               title: Наименование
               type: string
-            status:             # Статус (enum: EXISTS)
+              description: атрибута (должно соответствовать правилам наименования принятым в компании)
+            status: # планируется общая модель статуса
               title: Статус
               type: string
-            type:               # Типа атрибута.
+              description: |
+                Статус таблицы в текстовом формате
+                enum:
+                  - EXISTS
+                  - DELETED
+            type:
               title: Тип
               type: string
-            description:        # Описание назначения атрибута в текстовом формате
+            description:
               title: Описание
               type: string
-            constraints:        # Перечень ограничений для данного атрибута
+              description: Описание назначения атрибута в текстовом формате
+            constraints:
               title: Ограничения
               type: array
-              minItems: 0       # Минимальное количество значений
+              description: Перечень ограничений для данного атрибута
+              minItems: 0
               items:
                 type: string
-            pdn_flag:           # Флаг наличия персональных данных (ПДн)
+            pdn_flag:
               title: ПДн
               type: boolean
-            cde_flag:           # Флаг наличия критичных данных (CDE)
+              description: Флаг наличия персональных данных (ПДн)
+            cde_flag:
               title: CDE
               type: boolean
-            pk_flag:            # Флаг PRIMARY KEY
+              description: Флаг наличия критичных данных (CDE)
+            pk_flag:
               title: PRIMARY KEY
               type: boolean
-            fk_flag:            # Флаг FOREIGN KEY
+              description: Флаг PRIMARY KEY
+            fk_flag:
               title: FOREIGN KEY
               type: boolean
-            physical_table:     # Имя физической таблицы, к которой принадлежит атрибут
+              description: Флаг FOREIGN KEY
+            physical_table:
               title: Физическая таблица
+              description: Наименование физической таблицы, к которой принадлежит атрибут
               $ref: "#/$rels/seaf.ia.physical_tables.physical_table"
-            linked_table:       # Ссылка на связанную таблицу (в случае если атрибут ссылочный)
+            linked_table:
               title: Связанная таблица
+              description: Ссылка на связанную таблицу (в случае если атрибут ссылочный)
               $ref: "#/$rels/seaf.ia.physical_tables.physical_table"
-            linked_key:         # Имя атрибута в связанной таблице (в случае если атрибут ссылочный)
+            linked_key:
               title: Ключ в связанной таблице
+              description: Имя атрибута в связанной таблице (в случае если атрибут ссылочный)
               $ref: "#/$rels/seaf.ia.physical_attributes.physical_attribute"
-            # business_objects:      # Ссылка на соответствующие термины Бизнес-глоссария или сущности концептуальной модели данных
+            # business_objects:
             #   title: Бизнес термин
             #   type: array
+            #   description: Ссылка на соответствующие термины Бизнес-глоссария или сущности концептуальной модели данных
             #   items:
             #     $ref: "#/$rels/seaf.ia.business_objects.business_objects"
-        # Обязательные поля
+          # Обязательные поля
           required:
             - title
             - description

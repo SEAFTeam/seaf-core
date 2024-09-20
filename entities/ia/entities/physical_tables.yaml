@@ -21,56 +21,75 @@ entities:
         "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$":
           type: object
           properties:
-            title:         # Имя таблицы (должно соответствовать правилам наименования принятым в компании)
+            title:
               title: Наименование
               type: string
-            status:        # Статус (enum: EXISTS)
+              description: Имя таблицы (должно соответствовать правилам наименования принятым в компании)
+            status: # планируется общая модель статуса
               title: Статус
               type: string
-            type:          # тип (enum: VIEW)
+              description: |
+                Статус таблицы в текстовом формате
+                enum:
+                  - EXISTS
+                  - DELETED
+            type:
               title: Тип представления
               type: string
-            description:   # Описание назначения таблицы в текстовом формате.
+              description: |
+                Тип представления таблицы в текстовом формате
+                enum:
+                  - TABLE
+                  - VIEW
+            description:
               title: Описание
               type: string
-            system:        # Компонент прикладной архитектуры, к которой относится таблица
+              description: Описание назначения таблицы в текстовом формате
+            system:
               title: Автоматизированная система
+              description: Компонент прикладной архитектуры, к которой относится таблица
               $ref: "#/$rels/components.component"
-            dbms:          # СУБД АС, к которой относится таблица
+            dbms:
               title: СУБД
               type: string
-            database:      # БазаДанных, в которой находится таблица
+            database:
               title: БД
               type: string
-            schema_name:   # Схема в конкретной БД
+            schema_name:
               title: Схема
               type: string
-            loc_attr:      # дополнительные атрибуты для конкретизации физического нахождения таблиц: контур, хост и т.п.
+            loc_attr:
               title: локационные атрибуты
               type: array
-              minItems: 0  # Минимальное количество значений
+              description: |
+                дополнительные атрибуты для конкретизации физического нахождения таблиц: контур, хост и т.п.
+              minItems: 0
               items:
                 type: string
-            rows_count:    # Количество записей в таблице
+            rows_count:
               title: Количество строк
-              type: int
-            cols_count:    # Количество столбцов в таблице
+              type: integer
+            cols_count:
               title: Количество столбцов
-              type: int
-            pdn_flag:      # Флаг наличия персональных данных
+              type: integer
+            pdn_flag:
               title: ПДн
               type: boolean
-            cde_flag:      # Флаг наличия критичных данных
+              description: Флаг наличия персональных данных (ПДн)
+            cde_flag:
               title: CDE
               type: boolean
-            # business_objects: # Ссылка на термины Бизнес-глоссария или сущности концептуальной модели данных
+              description: Флаг наличия критичных данных (CDE)
+            # business_objects:
             #   title: Бизнес термин
             #   type: array
+            #   description: Ссылка на термины Бизнес-глоссария или сущности концептуальной модели данных
             #   items:
             #     $ref: "#/$rels/seaf.ia.business_objects.business_objects"
-            data_object:   # Ссылка на сущности логической модели
+            data_object:
               title: Логическая сущность
               type: array
+              description: Ссылка на сущности логической модели
               items:
                 $ref: "#/$rels/seaf.ia.data_objects.data_object"
           # Обязательные поля

@@ -15,31 +15,31 @@ entities:
           - value: title
             text: Наименование
             link: self_link
-          - value: entityA
-            text: Cущность A
-            link: link_leA
-          - value: multiplicityA
+          - value: entity_a
+            text: Сущность A
+            link: entity_a_link
+          - value: multiplicity_a
             text: Множественность A
           - value: link_type
             text: Тип связи
-          - value: multiplicityB
+          - value: multiplicity_b
             text: Множественность B
-          - value: entityB
+          - value: entity_b
             text: Сущность B
-            link: link_leB
+            link: entity_b_link
         source: >
           (
           [$."seaf.ia.logical_links".$spread().
               {
-                  "title": $keys(),
+                  "title": *.title,
                   "self_link": "/entities/seaf.ia.logical_links/card?id=" & $keys(),
-                  "entityA": ($id := *.entityA; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
-                  "link_leA": "/entities/seaf.ia.data_objects/card?id=" & *.entityA,
-                  "multiplicityA": *.multiplicityA,
+                  "entity_a": ($id := *.entity_a; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
+                  "entity_a_link": "/entities/seaf.ia.data_objects/card?id=" & *.entity_a,
+                  "multiplicity_a": *.multiplicity_a,
                   "link_type": *.type,
-                  "multiplicityB": *.multiplicityB,
-                  "entityB": ($id := *.entityB; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
-                  "link_leB": "/entities/seaf.ia.data_objects/card?id=" & *.entityB
+                  "multiplicity_b": *.multiplicity_b,
+                  "entity_b": ($id := *.entity_b; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
+                  "entity_b_link": "/entities/seaf.ia.data_objects/card?id=" & *.entity_b
               }
             ]
           )
@@ -55,47 +55,46 @@ entities:
               "title": *.title,
               "status": *.status,
               "description": *.description,
-              "entityA": ($id := *.entityA; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
-              "link_leA": "/entities/seaf.ia.data_objects/card?id=" & *.entityA,
-              "entityB": ($id := *.entityB; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
-              "link_leB": "/entities/seaf.ia.data_objects/card?id=" & *.entityB,
+              "entity_a": ($id := *.entity_a; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
+              "entity_a_link": "/entities/seaf.ia.data_objects/card?id=" & *.entity_a,
+              "entity_b": ($id := *.entity_b; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
+              "entity_b_link": "/entities/seaf.ia.data_objects/card?id=" & *.entity_b,
               "link_type": *.type,
-              "multiplicityA": *.multiplicityA,
-              "multiplicityB": *.multiplicityB
+              "multiplicity_a": *.multiplicity_a,
+              "multiplicity_b": *.multiplicity_b
             }
           )
 
-      registry_by_LE:
+      registry_by_data_objects:
         type: table
         headers:
           - value: title
             text: Наименование
             link: self_link
-          - value: entityA
-            text: Cущность A
-            link: link_leA
-          - value: multiplicityA
+          - value: entity_a
+            text: Сущность A
+            link: entity_a_link
+          - value: multiplicity_a
             text: Множественность A
           - value: link_type
             text: Тип связи
-          - value: multiplicityB
+          - value: multiplicity_b
             text: Множественность B
-          - value: entityB
+          - value: entity_b
             text: Сущность B
-            link: link_leB
+            link: entity_b_link
         source: >
           (
             $param_id := $params.id;
-            [$."seaf.ia.logical_links".$spread()[*.entityA = $param_id or *.entityB= $param_id].({
-              "title": $keys(),
+            [$."seaf.ia.logical_links".$spread()[*.entity_a = $param_id or *.entity_b = $param_id].({
+              "title": *.title,
               "self_link": "/entities/seaf.ia.logical_links/card?id=" & $keys(),
-              "multiplicityA": *.multiplicityA,
-              "entityA": ($id := *.entityA; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
-              "link_leA": "/entities/seaf.ia.data_objects/card?id=" & *.entityA,
+              "multiplicity_a": *.multiplicity_a,
+              "entity_a": ($id := *.entity_a; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
+              "entity_a_link": "/entities/seaf.ia.data_objects/card?id=" & *.entity_a,
               "link_type": *.type,
-              "multiplicityB": *.multiplicityB,
-              "entityB": ($id := *.entityB; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
-              "link_leB": "/entities/seaf.ia.data_objects/card?id=" & *.entityB
+              "multiplicity_b": *.multiplicity_b,
+              "entity_b": ($id := *.entity_b; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
+              "entity_b_link": "/entities/seaf.ia.data_objects/card?id=" & *.entity_b
             })]
           )
-

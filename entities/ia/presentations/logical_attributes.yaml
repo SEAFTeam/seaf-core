@@ -12,16 +12,14 @@ entities:
       registry:
         type: table
         headers:
-          - value: code
-            text: Код
           - value: title
             text: Наименование
             link: self_link
           - value: description
             text: Описание
-          - value: data_object
+          - value: data_object_name
             text: Логическая сущность
-            link: le_link
+            link: data_object_link
         source: >
           (
             [$."seaf.ia.logical_attributes".$spread().
@@ -30,8 +28,8 @@ entities:
                     "title": *.title,
                     "self_link": "/entities/seaf.ia.logical_attributes/card?id=" & $keys(),
                     "description": *.description,
-                    "data_object": ($id := *.data_object; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
-                    "le_link": "/entities/seaf.ia.data_objects/card?id=" & *.data_object
+                    "data_object_name": ($id := *.data_object; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
+                    "data_object_link": "/entities/seaf.ia.data_objects/card?id=" & *.data_object
                 }]
           )
 
@@ -48,14 +46,12 @@ entities:
                   "description": *.description,
                   "pdn_flag": *.pdn_flag,
                   "cde_flag": *.cde_flag,
-                  "data_object": *.data_object,
-                  "le_link": "/entities/seaf.ia.data_objects/card?id=" & *.data_object,
-                  "business_objects": *.business_objects,
-                  "bt_link": "/entities/seaf.ia.data_objects/card?id=" & *.business_objects
+                  "data_object_name": ($id := *.data_object; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
+                  "data_object_link": "/entities/seaf.ia.data_objects/card?id=" & *.data_object
                 }
           )
 
-      registry_by_LE:
+      registry_by_data_objects:
         type: table
         headers:
           - value: code

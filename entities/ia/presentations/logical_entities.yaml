@@ -9,13 +9,12 @@ entities:
             link: self_link
           - value: description
             text: Описание
-          - value: aggregat
+          - value: aggregat_name
             text: Агрегат
+            link: aggregat_link
           - value: master_system
-            text: Мастер система
-            link: as_link
-          - value: category
-            text: Категория
+            text: Мастер-система
+            link: master_system_link
         source: >
           (
             [$."seaf.ia.data_objects".$spread().
@@ -24,9 +23,10 @@ entities:
                     "self_link": "/entities/seaf.ia.data_objects/card?id=" & $keys(),
                     "status": *.status,
                     "description": *.description,
-                    "aggregat": *.aggregat,
+                    "aggregat_name": ($id := *.aggregat; $$."seaf.ia.aggregat".$spread()[$keys() = $id].*.title),
+                    "aggregat_link": "/entities/seaf.ia.aggregat/card?id=" & *.aggregat,
                     "master_system": *.master_system,
-                    "as_link": "/entities/components/blank?dh-component-id=" & *.master_system,
+                    "master_system_link": "/entities/components/blank?dh-component-id=" & *.master_system,
                     "category": *.category
                 }]
           )
@@ -40,20 +40,22 @@ entities:
                   "id": $keys(),
                   "code": *.code,
                   "title": *.title,
+                  "aggregat_name": ($id := *.aggregat; $$."seaf.ia.aggregat".$spread()[$keys() = $id].*.title),
+                  "aggregat_link": "/entities/seaf.ia.aggregat/card?id=" & *.aggregat,
                   "status": *.status,
                   "description": *.description,
                   "category": *.category,
                   "pdn_flag": *.pdn_flag,
                   "cde_flag": *.cde_flag,
                   "master_system": *.master_system,
-                  "as_link": "/entities/components/blank?dh-component-id=" & *.master_system,
+                  "master_system_link": "/entities/components/blank?dh-component-id=" & *.master_system,
                   "business_objects": ($id := *.business_objects; $$."seaf.ia.business_objects".$spread()[$keys() = $id].*.title),
-                  "bt_link": "/entities/seaf.ia.business_objects/card?id=" & *.business_objects,
+                  "business_objects_link": "/entities/seaf.ia.business_objects/card?id=" & *.business_objects,
                   "comments": *.comments
                 }
           )
 
-      registry_by_BT:
+      registry_by_business_object:
         type: table
         headers:
           - value: code
@@ -66,17 +68,18 @@ entities:
         source: >
           (
             [$."seaf.ia.data_objects".$spread().(
-            $id := $keys(); *[$params.bt_id in business_objects].
-              {
-                    "code": code,
-                    "title": title,
-                    "self_link": "/entities/seaf.ia.data_objects/card?id=" & $id,
-                    "status": status
-              }
+              $id := $keys(); 
+              *[$params.bt_id in business_objects].
+                {
+                      "code": code,
+                      "title": title,
+                      "self_link": "/entities/seaf.ia.data_objects/card?id=" & $id,
+                      "status": status
+                }
             )]
           )
 
-      registry_by_PhT:
+      registry_by_physical_tables:
         type: table
         headers:
           - value: code
@@ -88,9 +91,9 @@ entities:
             text: Статус
         source: >
           (
-            $pht_id := $params.id;
-            $le := [$."seaf.ia.physical_tables".$spread()[$keys()=$pht_id].*.data_object];
-            [$."seaf.ia.data_objects".$spread()[$keys() in $le].($id := $keys(); {
+            $physical_table := $params.id;
+            $data_objects := [$."seaf.ia.physical_tables".$spread()[$keys() = $physical_table].*.data_object];
+            [$."seaf.ia.data_objects".$spread()[$keys() in $data_objects].($id := $keys(); {
                     "code": *.code,
                     "title": *.title,
                     "self_link": "/entities/seaf.ia.data_objects/card?id=" & $id,
@@ -98,7 +101,7 @@ entities:
                 })]
           )
 
-      registry_by_aggr:
+      registry_by_aggregates:
         type: table
         headers:
           - value: code
@@ -111,7 +114,8 @@ entities:
         source: >
           (
             [$."seaf.ia.data_objects".$spread().(
-            $id := $keys(); *[$params.id in aggregat].
+            $id := $keys(); 
+            *[$params.id in aggregat].
               {
                     "code": code,
                     "title": title,

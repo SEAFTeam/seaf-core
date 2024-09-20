@@ -13,13 +13,13 @@ entities:
         "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$":
           type: object
           properties:
-            code:       # нужен ли данный атрибут ???
+            code:
               title: Код
               type: string
-            title:       # нужен ли данный атрибут ???
+            title:
               title: Наименование
               type: string
-            # status:
+            # status:  # планируется общая модель статуса
             #   title: Статус
             #   enum:
             #     - Планируется
@@ -30,11 +30,11 @@ entities:
             description:
               title: Описание
               type: string
-            entityA:
+            entity_a:
               title: Сущность А
               description: Связанная логическая сущность А
               $ref: "#/$rels/seaf.ia.data_objects.data_object"
-            entityB:         # Ссылка на связанный экземпляр сущности
+            entity_b:
               title: Сущность В
               description: Связанная логическая сущность В
               $ref: "#/$rels/seaf.ia.data_objects.data_object"
@@ -45,16 +45,16 @@ entities:
               - ассоциация
               - наследование
               - зависимость
-            multiplicityA: 
+            multiplicity_a:
               title: Множественность A
               type: string
-            multiplicityB: 
+              description: Множественность (кардинальность) связи со стороны сущности "A"
+            multiplicity_b:
               title: Множественность B
               type: string
-
-        # Сообщаем, что перечисленные поля обязательны
+              description: Множественность (кардинальность) связи со стороны сущности "B"
+          # Сообщаем, что перечисленные поля обязательны
           required:
-            - code
-            - title
-            - entityB
-            - entityB
+            - title | type
+            - entity_a
+            - entity_b

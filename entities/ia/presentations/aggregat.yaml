@@ -48,7 +48,7 @@ entities:
                 }
           )
 
-      registry_by_aggr:
+      registry_by_aggregates:
         type: table
         headers:
           - value: title
