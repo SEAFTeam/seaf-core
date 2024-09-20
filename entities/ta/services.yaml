@@ -481,12 +481,12 @@ entities:
                 type:
                   type: string
                   enum: [WAN]
-                dc_id:
+                dc:
                   title: Имя ЦОД/Серверной комнаты
                   type: array
                   items:
                     $ref: "#/$rels/seaf.ta.services.dc.dc"
-                office_id:
+                office:
                   title: Офис
                   $ref: "#/$rels/seaf.ta.services.office.office"
                 az:
@@ -509,7 +509,7 @@ entities:
                 description:
                   title: Описание канала связи
                   type: string
-                network_appliance_id:
+                network_appliance:
                   title: ID оборудования коммутации сети
                   type: array
                   items:
@@ -520,7 +520,7 @@ entities:
                 - type
                 - provider
                 - bandwidth
-                - network_appliance_id
+                - network_appliance
               additionalProperties: false
             - type: object
               properties:
@@ -530,12 +530,12 @@ entities:
                 type:
                   type: string
                   enum: [LAN]
-                dc_id:
+                dc:
                   title: Имя ЦОД/Серверной комнаты
                   type: array
                   items:
                     $ref: "#/$rels/seaf.ta.services.dc.dc"
-                office_id:
+                office:
                   title: Офис
                   $ref: "#/$rels/seaf.ta.services.office.office"
                 az:
@@ -548,9 +548,8 @@ entities:
                   type: string
                   enum: [Проводная, Беспроводная]
                 segment:
-                  title: Сегмент сети
-                  type: string
-                  enum: [Буферный (DMZ), Сегмент обработки данных, Сервисный, Клиентский]
+                  title: Вхождение в сетевые сегменты сети
+                  $ref: "#/$rels/seaf.ta.components.network_segment.network_segment"
                 vlan:
                   title: Имя виртуальной сети (VLAN)
                   type: integer
@@ -560,7 +559,7 @@ entities:
                 purpose:
                   title: Назначение
                   type: string
-                network_appliance_id:
+                network_appliance:
                   title: ID оборудования коммутации сети
                   type: array
                   items:
@@ -570,7 +569,7 @@ entities:
                 - type
                 - lan_type
                 - ipnetwork
-                - network_appliance_id
+                - network_appliance
               additionalProperties: false
       type: object
       patternProperties:
