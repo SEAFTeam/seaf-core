@@ -1,17 +1,20 @@
 # Логическая сущность
 ## Системное имя: {{id}}
 
+[//]: # (отображаем агрегаты как ссылки только для описанных в `$$.seaf.ia.aggregat`, для неописанных - текст)
+[//]: # (отображаем Мастер-систему как ссылку только для АС, описанных в `$$.components`, для неописанных - текст)
+
 Мета атрибуты               | Значения
 :------------               | :------------
 Код                         | {{code}}
 Наименование                | {{title}}
-Агрегат                     | [{{aggregat_name}}]({{aggregat_link}})
+Агрегат                     | {{#aggregat_link}}[{{aggregat_name}}]({{aggregat_link}}){{/aggregat_link}}{{^aggregat_link}}{{aggregat_name}}{{/aggregat_link}}
 Статус                      | {{status}}
 Описание                    | {{description}}
 Категория                   | {{category}}
 Наличие персональных данных | {{pdn_flag}}
 Наличие критических данных  | {{cde_flag}}
-Мастер-система              | [{{master_system}}]({{master_system_link}})
+Мастер-система              | {{#master_system_link}}[{{master_system}}]({{master_system_link}}){{/master_system_link}}{{^master_system_link}}{{master_system}}{{/master_system_link}}
 Комментарии                 | {{comments}}
 
 ## Атрибуты Логической сущности
