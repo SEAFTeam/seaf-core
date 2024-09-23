@@ -1,0 +1,77 @@
+entities:
+  seaf.ia.logical_attributes:
+    menu: >
+      (
+        {
+          "location": "Архитектура/Информационная/Логическая модель/Атрибуты",
+          "link": "/entities/seaf.ia.logical_attributes/registry"
+        }
+      )
+
+    presentations:
+      registry:
+        type: table
+        headers:
+          - value: code
+            text: Код
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: description
+            text: Описание
+          - value: data_object
+            text: Логическая сущность
+            link: le_link
+        source: >
+          (
+            [$."seaf.ia.logical_attributes".$spread().
+                {
+                    "code": *.code,
+                    "title": *.title,
+                    "self_link": "/entities/seaf.ia.logical_attributes/card?id=" & $keys(),
+                    "description": *.description,
+                    "data_object": ($id := *.data_object; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
+                    "le_link": "/entities/seaf.ia.data_objects/card?id=" & *.data_object
+                }]
+          )
+
+      card:
+        type: markdown
+        template: templates/logical_attribute.md
+        source: >
+          (
+            $."seaf.ia.logical_attributes".$spread()[$keys()=$params.id].{
+                  "id": $keys(),
+                  "code": *.code,
+                  "title": *.title,
+                  "status": *.status,
+                  "description": *.description,
+                  "pdn_flag": *.pdn_flag,
+                  "cde_flag": *.cde_flag,
+                  "data_object": *.data_object,
+                  "le_link": "/entities/seaf.ia.data_objects/card?id=" & *.data_object,
+                  "business_objects": *.business_objects,
+                  "bt_link": "/entities/seaf.ia.data_objects/card?id=" & *.business_objects
+                }
+          )
+
+      registry_by_LE:
+        type: table
+        headers:
+          - value: code
+            text: Код
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: description
+            text: Описание
+        source: >
+          (
+            $param_id := $params.id;
+            [$."seaf.ia.logical_attributes".$spread()[*.data_object = $param_id].({
+              "code": *.code,
+              "title": *.title,
+              "self_link": "/entities/seaf.ia.logical_attributes/card?id=" & $keys(),
+              "description": *.description
+            })]
+          )

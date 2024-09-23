@@ -1,0 +1,60 @@
+entities:
+  seaf.ia.logical_links:
+    title: Таблица связей
+    description: Таблица связей логических сущностей
+    objects:
+      logical_link:
+        route: "/"
+        symbol: "ll"
+        title: Логическая связь
+    schema:
+      type: object
+      patternProperties:
+        "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$":
+          type: object
+          properties:
+            code:       # нужен ли данный атрибут ???
+              title: Код
+              type: string
+            title:       # нужен ли данный атрибут ???
+              title: Наименование
+              type: string
+            # status:
+            #   title: Статус
+            #   enum:
+            #     - Планируется
+            #     - Разрабатывается или модифицируется
+            #     - Используется
+            #     - Выводится из эксплуатации
+            #     - В архиве
+            description:
+              title: Описание
+              type: string
+            entityA:
+              title: Сущность А
+              description: Связанная логическая сущность А
+              $ref: "#/$rels/seaf.ia.data_objects.data_object"
+            entityB:         # Ссылка на связанный экземпляр сущности
+              title: Сущность В
+              description: Связанная логическая сущность В
+              $ref: "#/$rels/seaf.ia.data_objects.data_object"
+            type:
+              title: Тип связи
+              type: string
+              enum:
+              - ассоциация
+              - наследование
+              - зависимость
+            multiplicityA: 
+              title: Множественность A
+              type: string
+            multiplicityB: 
+              title: Множественность B
+              type: string
+
+        # Сообщаем, что перечисленные поля обязательны
+          required:
+            - code
+            - title
+            - entityB
+            - entityB

@@ -1,0 +1,72 @@
+entities:
+  seaf.ia.physical_attributes:
+    title: Физические аттрибуты
+    description: Таблица атрибутов физических таблиц
+    objects:
+      physical_attribute:
+        route: "/"
+        symbol: "pha"
+        title: Колонка физической таблицы
+    menu: >
+      (
+        {
+          "location": "Архитектура/Информационная/Физическая модель/Колонки",
+          "link": "/entities/seaf.ia.physical_attributes/registry"
+        }
+      )
+    schema:
+      type: object
+      patternProperties:
+        "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$":
+          type: object 
+          properties:
+            title:               # Имя атрибута (должно соответствовать правилам наименования принятым в компании)
+              title: Наименование
+              type: string
+            # status:             # Статус (enum: EXISTS)
+            #   title: Статус
+            #   type: string
+            type:               # Типа атрибута.
+              title: Тип
+              type: string
+            description:        # Описание назначения атрибута в текстовом формате.
+              title: Описание
+              type: string
+            constraints:        # Перечень ограничений для данного атрибута.
+              title: Ограничения
+              type: array
+              minItems: 0       # Минимальное количество значений
+              items:
+                type: string
+            pdn_flag:           # Флаг наличия персональных данных
+              title: ПДН
+              type: boolean
+            cde_flag:           # Флаг наличия критичных данных
+              title: CDE
+              type: boolean
+            PK_flag:           # Флаг PRIMARY KEY
+              title: PRIMARY KEY
+              type: boolean
+            FK_flag:           # Флаг FOREIGN KEY
+              title: FOREIGN KEY
+              type: boolean
+            physical_table:     # Имя физической таблицы, к которой принадлежит атрибут.
+              title: Физическая таблица
+              $ref: "#/$rels/seaf.ia.physical_tables.physical_table"
+            linked_table:       # Ссылка на связанную таблицу (в случае, если атрибут ссылочный).
+              title: Связанная таблица
+              $ref: "#/$rels/seaf.ia.physical_tables.physical_table"
+            linked_key:         # Имя атрибута в связанной таблице (в случае, если атрибут ссылочный).
+              title: Ключ в связанной таблице
+              $ref: "#/$rels/seaf.ia.physical_attributes.physical_attribute"
+            # business_objects:      # Ссылка на соответствующие термины Бизнес-глоссария или сущности концептуальной модели данных
+            #   title: Бизнес термин
+            #   type: array
+            #   items:
+            #     $ref: "#/$rels/seaf.ia.business_objects.business_objects"
+        # Обязательные поля
+          required:
+            - title
+            - description
+            - type
+            - phys_table

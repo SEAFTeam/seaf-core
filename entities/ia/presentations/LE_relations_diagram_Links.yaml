@@ -1,0 +1,29 @@
+docs:
+  LE_relations_Links:
+    location: ИА Диаграмма (Связи)
+    type: smartants
+    source: >
+      (
+        {
+          "nodes": $merge($."seaf.ia.data_objects".$spread().(
+            {
+                *.code: {
+                    "title": *.title,
+                    "symbol": "system"
+                }
+            }
+          ))
+        ~> $merge(),
+            "links": $."seaf.ia.logical_links".$spread().*.
+                    {
+                      "from": ($id := entityA; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.code),
+                      "to": ($id := entityB; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.code),
+                      "title": multiplicityA & ' ' & type & ' ' & multiplicityB,
+                      "style": "<->"
+                    }
+        }
+      )
+
+# seaf.nav:
+#   - title: Архитектура/Информационная/Логическая модель/Диаграмма связей
+#     link: "docs/LE_relations_smartants"

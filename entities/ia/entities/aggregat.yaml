@@ -1,0 +1,52 @@
+entities:
+  seaf.ia.aggregat:
+    title: Агрегат
+    description: универсальная сущность для выделения ПО, поддоменов
+    objects:
+      aggregat:
+        route: "/"
+        title: Агрегат
+        symbol: "aggr"
+    schema:
+      type: object
+      patternProperties:
+        "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$":
+          type: object
+          properties:
+            code:
+              title: Код
+              type: string
+            title:
+              title: Наименование
+              type: string
+            description:
+              title: Описание
+              type: string
+            type:         # будет заменено на общую модель статуса
+              title: Уровень аггрегации
+              enum:
+                - Проект
+                - Пакет
+                - Предметная область
+                - Домен
+                - Под-домен
+                - Модель
+                - Файл
+            content:         # Ссылка на термины Бизнес-глоссария или сущности концептуальной модели данных
+              title: Содержимое
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ia.aggregat.aggregat"
+            owner:
+              title: Проектировщик (ФИО)
+              type: string
+            unit:
+              title: Владелец (Функциональный блок)
+              type: string
+            comments:      # Комментарий работника, заполнение не обязательно
+              title: Комментарий
+              type: string
+        # Сообщаем, что перечисленные поля обязательны
+          required:
+            - title
+#            - description
