@@ -47,8 +47,8 @@ entities:
               title: Логическая сущность
               description: Логическая сущность, к которой принадлежит атрибут
               $ref: "#/$rels/seaf.ia.data_objects.data_object"
-            business_objects:
-              title: Бизнес термин
+            business_object:
+              title: Бизнес-термин
               description: Соответствующий термин Бизнес-глоссария или сущности концептуальной модели данных
               $ref: "#/$rels/seaf.ia.business_objects.business_objects"
 

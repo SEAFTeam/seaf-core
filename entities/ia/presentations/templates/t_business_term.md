@@ -1,4 +1,4 @@
-# Бизнес термин
+# Бизнес-термин
 ## Системное имя: {{id}}
 
 Мета атрибуты                 |Значения
@@ -7,7 +7,7 @@
 Описание                      | {{description}}
 Дата внесения термина         | {{creation_date}}
 Дата изменения термина        | {{modify_date}}
-Ответственный (ФИО)           |{{owner}}
+Ответственный (ФИО)           | {{owner}}
 Комментарий                   | {{comments}}
 Нормативный/правовой документ | {{legal_doc}}
 
@@ -21,4 +21,7 @@
 {{/processes}}
 
 ## Связанные Логические сущности
-![Логические сущности](@entity/seaf.ia.data_objects/registry_by_business_object?bt_id={{id}})
+![Логические сущности](@entity/seaf.ia.data_objects/registry_by_business_object?id={{id}})
+
+## Связанные Логические атрибуты
+![Логические сущности](@entity/seaf.ia.logical_attributes/registry_by_business_object?id={{id}})

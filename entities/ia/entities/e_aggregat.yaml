@@ -35,7 +35,7 @@ entities:
             content:
               title: Содержимое
               type: array
-              description: Ссылка на термины Бизнес-глоссария или сущности концептуальной модели данных
+              description: Ссылка на дочерние аргегаты иерархии
               items:
                 $ref: "#/$rels/seaf.ia.aggregat.aggregat"
             owner:

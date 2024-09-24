@@ -11,8 +11,8 @@ entities:
             text: Описание
           - value: creation_date
             text: Дата создания
-          - value: status
-            text: Статус
+#          - value: status  # планируется общая модель статуса
+#            text: Статус
         source: >
           (
             $ctx:=$params.domain;
@@ -57,8 +57,8 @@ entities:
             link: self_link
           - value: description
             text: Описание
-          - value: status
-            text: Статус
+#          - value: status  # планируется общая модель статуса
+#            text: Статус
         source: >
           (
             $pht_id := $params.id;
@@ -78,8 +78,8 @@ entities:
             link: self_link
           - value: description
             text: Описание
-          - value: status
-            text: Статус
+#          - value: status  # планируется общая модель статуса
+#            text: Статус
         source: >
           (
             $pha_id := $params.id;
@@ -99,8 +99,8 @@ entities:
             link: self_link
           - value: description
             text: Описание
-          - value: status
-            text: Статус
+#          - value: status  # планируется общая модель статуса
+#            text: Статус
         source: >
           (
             $param_id := $params.id;
@@ -120,8 +120,8 @@ entities:
             link: self_link
           - value: description
             text: Описание
-          - value: status
-            text: Статус
+#          - value: status  # планируется общая модель статуса
+#            text: Статус
         source: >
           (
             $param_id := $params.id;

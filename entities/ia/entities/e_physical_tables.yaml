@@ -73,7 +73,7 @@ entities:
               type: boolean
               description: Флаг наличия критичных данных (CDE)
             # business_objects:
-            #   title: Бизнес термин
+            #   title: Бизнес-термин
             #   type: array
             #   description: Ссылка на термины Бизнес-глоссария или сущности концептуальной модели данных
             #   items:

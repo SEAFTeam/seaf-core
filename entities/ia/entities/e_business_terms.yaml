@@ -1,7 +1,7 @@
 entities:
   seaf.ia.business_objects:
     title: Бизнес-объекты
-    description: Таблица бизнес терминов
+    description: Таблица бизнес-терминов
     objects:
       business_objects:
         route: "/"

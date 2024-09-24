@@ -68,7 +68,7 @@ entities:
               description: Имя атрибута в связанной таблице (в случае если атрибут ссылочный)
               $ref: "#/$rels/seaf.ia.physical_attributes.physical_attribute"
             # business_objects:
-            #   title: Бизнес термин
+            #   title: Бизнес-термин
             #   type: array
             #   description: Ссылка на соответствующие термины Бизнес-глоссария или сущности концептуальной модели данных
             #   items:

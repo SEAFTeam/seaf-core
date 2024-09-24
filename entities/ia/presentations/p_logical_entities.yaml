@@ -107,13 +107,13 @@ entities:
           - value: title
             text: Наименование
             link: self_link
-          - value: status
-            text: Статус
+#          - value: status    # планируется общая модель статуса
+#            text: Статус
         source: >
           (
             [$."seaf.ia.data_objects".$spread().(
               $id := $keys(); 
-              *[$params.bt_id in business_objects].
+              *[$params.id in business_objects].
                 {
                       "code": code,
                       "title": title,

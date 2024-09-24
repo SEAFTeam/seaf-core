@@ -39,7 +39,9 @@ entities:
                   "pdn_flag": *.pdn_flag,
                   "cde_flag": *.cde_flag,
                   "data_object_name": ($id := *.data_object; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
-                  "data_object_link": "/entities/seaf.ia.data_objects/card?id=" & *.data_object
+                  "data_object_link": "/entities/seaf.ia.data_objects/card?id=" & *.data_object,
+                  "business_object_name": ($id := *.business_object; $$."seaf.ia.business_objects".$spread()[$keys() = $id].*.title),
+                  "business_object_link": "/entities/seaf.ia.business_objects/card?id=" & *.business_object
                 }
           )
 
@@ -61,5 +63,31 @@ entities:
               "title": *.title,
               "self_link": "/entities/seaf.ia.logical_attributes/card?id=" & $keys(),
               "description": *.description
+            })]
+          )
+
+      registry_by_business_object:
+        type: table
+        headers:
+          - value: code
+            text: Код
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: data_object_name
+            text: Логическая сущность
+            link: data_object_link
+        #          - value: status    # планируется общая модель статуса
+        #            text: Статус
+        source: >
+          (
+            $param_id := "sbf_sample_farm.obj-1";
+            [$."seaf.ia.logical_attributes".$spread()[*.business_object = $param_id].({
+              "code": *.code,
+              "title": *.title,
+              "self_link": "/entities/seaf.ia.logical_attributes/card?id=" & $keys(),
+              "description": *.description,
+              "data_object_name": ($id := *.data_object; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
+              "data_object_link": "/entities/seaf.ia.data_objects/card?id=" & *.data_object
             })]
           )

@@ -8,7 +8,10 @@ seaf.nav:
       - title: Бизнес-глоссарий
         link: "/entities/seaf.ia.business_objects/registry"
         order: 200
-      - title: Логическая модель
+      - title: Агрегат
+        link: "entities/seaf.ia.aggregat/registry"
+        order: 205
+      - title: Логическая модель данных
         includes:
          - title: Сущности
            link: "/entities/seaf.ia.data_objects/registry"
@@ -18,13 +21,13 @@ seaf.nav:
            order: 211
          - title: Связи
            includes:
-             - title: Таблица
+             - title: Реестр
                link: "/entities/seaf.ia.logical_links/registry"
                order: 213
              - title: Диаграмма
                link: "/entities/seaf.ia.logical_links_diagram/diagram_smartants"
                order: 214
-      - title: Физическая модель
+      - title: Физическая модель данных
         includes:
           - title: Таблицы
             link: "/entities/seaf.ia.physical_tables/registry"
@@ -32,6 +35,3 @@ seaf.nav:
           - title: Колонки
             link: "/entities/seaf.ia.physical_attributes/registry"
             order: 221
-      - title: Агрегаты
-        link: "entities/seaf.ia.aggregat/registry"
-        order: 230

@@ -22,5 +22,5 @@
 ## Атрибуты Физической таблицы
 ![Мета аттрибуты](@entity/seaf.ia.physical_attributes/registry_by_physical_tables?id={{id}})
 
-## Связанные логические сущности
+## Связанные Логические сущности
 ![Логические сущности](@entity/seaf.ia.data_objects/registry_by_physical_tables?id={{id}})

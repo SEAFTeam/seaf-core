@@ -55,10 +55,32 @@ entities:
           (
             $param_id := $params.id;
             $sa := [$."seaf.ia.aggregat".$spread()[$keys()=$param_id].*.content];
-            [$."seaf.ia.aggregat".$spread()[$keys() in $sa].($id := $keys(); {
+            [$."seaf.ia.aggregat".$spread()[$keys() in $sa].($id := $keys(); 
+             {
                   "type": *.type,
                   "title": *.title,
                   "self_link": "/entities/seaf.ia.aggregat/card?id=" & $id,
                   "description": *.description
                 })]
+          )
+
+      registry_by_parent_aggregat:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: type
+            text: Уровень аггрегации
+          - value: description
+            text: Описание
+        source: >
+          (
+            $param_id := $params.id;
+            [$."seaf.ia.aggregat".$spread()[$param_id in $.*.content].{
+              "type": *.type,
+              "title": *.title,
+              "self_link": "/entities/seaf.ia.aggregat/card?id=" & $keys(),
+              "description": *.description
+            }]
           )
