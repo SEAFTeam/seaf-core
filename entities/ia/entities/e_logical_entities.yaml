@@ -43,6 +43,7 @@ entities:
               $ref: "#/$rels/seaf.ia.aggregat.aggregat"
             category:
               title: Категория
+              type: string
               enum:
                 - Перс данные
                 - Медицинские данные
