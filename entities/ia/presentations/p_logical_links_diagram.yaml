@@ -1,0 +1,41 @@
+entities:
+  seaf.ia.logical_links_diagram:
+    presentations:
+      diagram_smartants:
+        type: smartants
+        source: >
+          (
+            $nodes := $merge(
+              $$."seaf.ia.data_objects".$spread().(
+                {
+                  *.code: {
+                      "title": *.title,
+                      "symbol": "system"
+                  }
+                }
+              )
+            );
+            $links :=  $$."seaf.ia.logical_links".$spread().*.
+                {
+                  "from": (
+                      $id := entity_a; 
+                      $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.code
+                  ),
+                  "to": (
+                      $id := entity_b; 
+                      $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.code
+                  ),
+                  "title": (
+                      $mul_a := $not($exists(multiplicity_a)) or multiplicity_a = null or multiplicity_a = {} ? "": '"' & multiplicity_a & '" '; 
+                      $mul_b := $not($exists(multiplicity_b)) or multiplicity_b = null or multiplicity_b = {} ? "": ' "' & multiplicity_b & '"'; 
+                      $title := $not($exists(title)) or title = null or title = {} ? "" : title;
+                      $type := $not($exists(type)) or type = null or type = {} ? "" : '<' & type & '> ';
+                      $mul_a & $type & $title & $mul_b
+                  ),
+                  "style": visual_style ? visual_style : "-"
+                };
+            {
+              "nodes": $nodes,
+              "links": $links
+            }
+          )

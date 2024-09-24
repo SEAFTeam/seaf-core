@@ -1,0 +1,170 @@
+entities:
+  seaf.ia.data_objects:
+    presentations:
+      registry:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: description
+            text: Описание
+          - value: aggregat_name
+            text: Агрегат
+            link: aggregat_link
+          - value: master_system
+            text: Мастер-система
+            link: master_system_link
+        source: >
+          (
+            [$."seaf.ia.data_objects".$spread().
+                {
+                    "title": *.title,
+                    "self_link": "/entities/seaf.ia.data_objects/card?id=" & $keys(),
+                    "status": *.status,
+                    "description": *.description,
+                    /* отображаем `aggregat.title` только для описанных в `$$.seaf.ia.aggregat`, а для отсутствующих - переданный код */
+                    "aggregat_name": (
+                      $id := *.aggregat;
+                      $aggregat_title := $$."seaf.ia.aggregat".$spread()[$keys() = $id].*.title;
+                      $aggregat_title ? $aggregat_title : $id
+                    ),
+                    /* формируем ссылки только для описанных в `$$.seaf.ia.aggregat` */          
+                    "aggregat_link": (
+                      $id := *.aggregat;
+                      $link := "/entities/seaf.ia.aggregat/card?id=" & *.aggregat;
+                      $aggregat_title := $$."seaf.ia.aggregat".$spread()[$keys() = $id].*.title;
+                      $aggregat_title ? $link : null
+                    ),
+                    /* отображаем `.title` только для АС, описанных в `$$.components`, а для отсутствующих - переданный код АС */
+                    "master_system": (
+                      $sys_code := *.master_system; 
+                      $system_component_title := $$.components.$spread()[$keys()=$sys_code].*.title; 
+                      $system_component_title ? $system_component_title : *.master_system
+                    ),
+                    /* формируем ссылки только для АС, описанных в `$$.components` */          
+                    "master_system_link": (
+                      $link := "/entities/components/blank?dh-component-id=" & *.master_system; 
+                      $sys_code := *.master_system; 
+                      $system_component_title := $$.components.$spread()[$keys()=$sys_code].*.title; 
+                      $system_component_title ? $link : null
+                    ),
+                    "category": *.category
+                }]
+          )
+
+      card:
+        type: markdown
+        template: templates/t_logical_entity.md
+        source: >
+          (
+            $."seaf.ia.data_objects".$spread()[$keys()=$params.id].{
+                  "id": $keys(),
+                  "code": *.code,
+                  "title": *.title,
+                  /* отображаем `aggregat.title` только для описанных в `$$.seaf.ia.aggregat`, а для отсутствующих - переданный код */
+                  "aggregat_name": (
+                    $id := *.aggregat;
+                    $aggregat_title := $$."seaf.ia.aggregat".$spread()[$keys() = $id].*.title;
+                    $aggregat_title ? $aggregat_title : $id
+                  ),
+                  /* формируем ссылки только для описанных в `$$.seaf.ia.aggregat` */          
+                  "aggregat_link": (
+                    $id := *.aggregat;
+                    $link := "/entities/seaf.ia.aggregat/card?id=" & *.aggregat;
+                    $aggregat_title := $$."seaf.ia.aggregat".$spread()[$keys() = $id].*.title;
+                    $aggregat_title ? $link : null
+                  ),
+                  "status": *.status,
+                  "description": *.description,
+                  "category": *.category,
+                  "pdn_flag": *.pdn_flag,
+                  "cde_flag": *.cde_flag,
+                  /* отображаем `.title` только для АС, описанных в `$$.components`, а для отсутствующих - переданный код АС */
+                  "master_system": (
+                    $sys_code := *.master_system; 
+                    $system_component_title := $$.components.$spread()[$keys()=$sys_code].*.title; 
+                    $system_component_title ? $system_component_title : *.master_system
+                  ),
+                  /* формируем ссылки только для АС, описанных в `$$.components` */          
+                  "master_system_link": (
+                    $link := "/entities/components/blank?dh-component-id=" & *.master_system; 
+                    $sys_code := *.master_system; 
+                    $system_component_title := $$.components.$spread()[$keys()=$sys_code].*.title; 
+                    $system_component_title ? $link : null
+                  ),
+                  "business_objects": ($id := *.business_objects; $$."seaf.ia.business_objects".$spread()[$keys() = $id].*.title),
+                  "business_objects_link": "/entities/seaf.ia.business_objects/card?id=" & *.business_objects,
+                  "comments": *.comments
+                }
+          )
+
+      registry_by_business_object:
+        type: table
+        headers:
+          - value: code
+            text: Код
+          - value: title
+            text: Наименование
+            link: self_link
+#          - value: status    # планируется общая модель статуса
+#            text: Статус
+        source: >
+          (
+            [$."seaf.ia.data_objects".$spread().(
+              $id := $keys(); 
+              *[$params.id in business_objects].
+                {
+                      "code": code,
+                      "title": title,
+                      "self_link": "/entities/seaf.ia.data_objects/card?id=" & $id,
+                      "status": status
+                }
+            )]
+          )
+
+      registry_by_physical_tables:
+        type: table
+        headers:
+          - value: code
+            text: Код
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: status
+            text: Статус
+        source: >
+          (
+            $physical_table := $params.id;
+            $data_objects := [$."seaf.ia.physical_tables".$spread()[$keys() = $physical_table].*.data_object];
+            [$."seaf.ia.data_objects".$spread()[$keys() in $data_objects].($id := $keys(); {
+                    "code": *.code,
+                    "title": *.title,
+                    "self_link": "/entities/seaf.ia.data_objects/card?id=" & $id,
+                    "status": status
+                })]
+          )
+
+      registry_by_aggregates:
+        type: table
+        headers:
+          - value: code
+            text: Код
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: status
+            text: Статус
+        source: >
+          (
+            [$."seaf.ia.data_objects".$spread().(
+            $id := $keys(); 
+            *[$params.id in aggregat].
+              {
+                    "code": code,
+                    "title": title,
+                    "self_link": "/entities/seaf.ia.data_objects/card?id=" & $id,
+                    "status": status
+              }
+            )]
+          )

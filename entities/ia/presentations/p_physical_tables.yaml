@@ -11,7 +11,7 @@ entities:
             text: Описание
           - value: system
             text: Автоматизированная система
-            link: as_link
+            link: system_link
           - value: dbms
             text: СУБД
         source: >
@@ -21,15 +21,26 @@ entities:
                     "title": *.title,
                     "self_link": "/entities/seaf.ia.physical_tables/card?id=" & $keys(),
                     "description": *.description,
-                    "system": *.system,
-                    "as_link": "/entities/components/blank?dh-component-id=" & *.system,
+                    /* отображаем `.title` только для АС, описанных в `$$.components`, а для отсутствующих - переданный код АС */
+                    "system": (
+                      $sys_code := *.system; 
+                      $system_component_title := $$.components.$spread()[$keys()=$sys_code].*.title; 
+                      $system_component_title ? $system_component_title : *.system
+                    ),
+                    /* формируем ссылки только для АС, описанных в `$$.components` */          
+                    "system_link": (
+                      $link := "/entities/components/blank?dh-component-id=" & *.system; 
+                      $sys_code := *.system; 
+                      $system_component_title := $$.components.$spread()[$keys()=$sys_code].*.title; 
+                      $system_component_title ? $link : null
+                    ),
                     "dbms": *.dbms
                 }]
           )
 
       card:
         type: markdown
-        template: templates/physical_table.md
+        template: templates/t_physical_table.md
         source: >
           (
             $."seaf.ia.physical_tables".$spread()[$keys()=$params.id].{
@@ -38,22 +49,33 @@ entities:
                   "status": *.status,
                   "type": *.type,
                   "description": *.description,
-                  "system": *.system,
-                  "as_link": "/entities/components/blank?dh-component-id=" & *.system,
+                  /* отображаем `.title` только для АС, описанных в `$$.components`, а для отсутствующих - переданный код АС */
+                  "system": (
+                    $sys_code := *.system; 
+                    $system_component_title := $$.components.$spread()[$keys()=$sys_code].*.title; 
+                    $system_component_title ? $system_component_title : *.system
+                  ),
+                  /* формируем ссылки только для АС, описанных в `$$.components` */          
+                "system_link": (
+                  $link := "/entities/components/blank?dh-component-id=" & *.system;
+                  $sys_code := *.system;
+                  $system_component_title := $$.components.$spread()[$keys()=$sys_code].*.title;
+                  $system_component_title ? $link : null
+                  ),
                   "dbms": *.dbms,
                   "database": *.database,
-                  "schema": *.schema,
+                  "schema_name": *.schema_name,
                   "loc_attr": *.loc_attr,
                   "rows_count": *.rows_count,
                   "cols_count": *.cols_count,
                   "pdn_flag": *.pdn_flag,
                   "cde_flag": *.cde_flag,
                   "business_objects": *.business_objects,
-                  "bt_link": "/entities/seaf.ia.data_objects/card?id=" & *.business_objects
+                  "business_objects_link": "/entities/seaf.ia.data_objects/card?id=" & *.business_objects
                 }
           )
 
-      registry_by_LE:
+      registry_by_data_objects:
         type: table
         headers:
           - value: title
@@ -67,7 +89,8 @@ entities:
           ( 
             $param_id := $params.id;
             [$."seaf.ia.physical_tables".$spread().(
-            $id := $keys(); *[$param_id in data_object].
+            $id := $keys(); 
+            *[$param_id in data_object].
               {
                     "title": title,
                     "self_link": "/entities/seaf.ia.physical_tables/card?id=" & $id,
@@ -77,7 +100,7 @@ entities:
             )]
           )
 
-      registry_by_AS:
+      registry_by_system:  # где используется?
         type: table
         headers:
           - value: title
@@ -92,7 +115,8 @@ entities:
         source: >
           (
             [$."seaf.ia.physical_tables".$spread().(
-            $id := $keys(); *[as=$params.id].
+            $id := $keys(); 
+            *[as=$params.id].
               {
                     "title": title,
                     "self_link": "/entities/seaf.ia.physical_tables/card?id=" & $id,
