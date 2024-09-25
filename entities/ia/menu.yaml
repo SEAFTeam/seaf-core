@@ -20,13 +20,12 @@ seaf.nav:
            link: "/entities/seaf.ia.logical_attributes/registry"
            order: 211
          - title: Связи
+           link: "/entities/seaf.ia.logical_links/registry"
+           order: 212
            includes:
-             - title: Реестр
-               link: "/entities/seaf.ia.logical_links/registry"
-               order: 213
              - title: Диаграмма
                link: "/entities/seaf.ia.logical_links_diagram/diagram_smartants"
-               order: 214
+               order: 213
       - title: Физическая модель данных
         includes:
           - title: Таблицы
