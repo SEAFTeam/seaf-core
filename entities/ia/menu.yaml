@@ -31,6 +31,6 @@ seaf.nav:
           - title: Таблицы
             link: "/entities/seaf.ia.physical_tables/registry"
             order: 220
-          - title: Колонки
+          - title: Атрибуты
             link: "/entities/seaf.ia.physical_attributes/registry"
             order: 221
