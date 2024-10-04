@@ -107,6 +107,9 @@ entities:
           - value: title
             text: Наименование
             link: self_link
+          - value: aggregat_name
+            text: Агрегат
+            link: aggregat_link
 #          - value: status    # планируется общая модель статуса
 #            text: Статус
         source: >
@@ -118,7 +121,19 @@ entities:
                       "code": code,
                       "title": title,
                       "self_link": "/entities/seaf.ia.data_objects/card?id=" & $id,
-                      "status": status
+                      /* отображаем `aggregat.title` только для описанных в `$$.seaf.ia.aggregat`, а для отсутствующих - переданный код */
+                      "aggregat_name": (
+                        $id := aggregat;
+                        $aggregat_title := $$."seaf.ia.aggregat".$spread()[$keys() = $id].*.title;
+                        $aggregat_title ? $aggregat_title : $id
+                      ),
+                      /* формируем ссылки только для описанных в `$$.seaf.ia.aggregat` */          
+                      "aggregat_link": (
+                        $id := aggregat;
+                        $link := "/entities/seaf.ia.aggregat/card?id=" & aggregat;
+                        $aggregat_title := $$."seaf.ia.aggregat".$spread()[$keys() = $id].*.title;
+                        $aggregat_title ? $link : null
+                      )
                 }
             )]
           )
@@ -131,8 +146,14 @@ entities:
           - value: title
             text: Наименование
             link: self_link
-          - value: status
-            text: Статус
+          - value: aggregat_name
+            text: Агрегат
+            link: aggregat_link
+          - value: master_system
+            text: Мастер-система
+            link: master_system_link
+#          - value: status  # планируется общая модель статуса
+#            text: Статус
         source: >
           (
             $physical_table := $params.id;
@@ -141,7 +162,32 @@ entities:
                     "code": *.code,
                     "title": *.title,
                     "self_link": "/entities/seaf.ia.data_objects/card?id=" & $id,
-                    "status": status
+                    /* отображаем `aggregat.title` только для описанных в `$$.seaf.ia.aggregat`, а для отсутствующих - переданный код */
+                    "aggregat_name": (
+                      $id := *.aggregat;
+                      $aggregat_title := $$."seaf.ia.aggregat".$spread()[$keys() = $id].*.title;
+                      $aggregat_title ? $aggregat_title : $id
+                    ),
+                    /* формируем ссылки только для описанных в `$$.seaf.ia.aggregat` */          
+                    "aggregat_link": (
+                      $id := *.aggregat;
+                      $link := "/entities/seaf.ia.aggregat/card?id=" & *.aggregat;
+                      $aggregat_title := $$."seaf.ia.aggregat".$spread()[$keys() = $id].*.title;
+                      $aggregat_title ? $link : null
+                    ),
+                    /* отображаем `.title` только для АС, описанных в `$$.components`, а для отсутствующих - переданный код АС */
+                    "master_system": (
+                      $sys_code := *.master_system; 
+                      $system_component_title := $$.components.$spread()[$keys()=$sys_code].*.title; 
+                      $system_component_title ? $system_component_title : *.master_system
+                    ),
+                    /* формируем ссылки только для АС, описанных в `$$.components` */          
+                    "master_system_link": (
+                      $link := "/entities/components/blank?dh-component-id=" & *.master_system; 
+                      $sys_code := *.master_system; 
+                      $system_component_title := $$.components.$spread()[$keys()=$sys_code].*.title; 
+                      $system_component_title ? $link : null
+                    )
                 })]
           )
 
