@@ -55,12 +55,12 @@ entities:
                     $system_component_title := $$.components.$spread()[$keys()=$sys_code].*.title; 
                     $system_component_title ? $system_component_title : *.system
                   ),
-                  /* формируем ссылки только для АС, описанных в `$$.components` */          
-                "system_link": (
-                  $link := "/entities/components/blank?dh-component-id=" & *.system;
-                  $sys_code := *.system;
-                  $system_component_title := $$.components.$spread()[$keys()=$sys_code].*.title;
-                  $system_component_title ? $link : null
+                  /* формируем ссылки только для АС, описанных в `$$.components` */
+                  "system_link": (
+                    $link := "/entities/components/blank?dh-component-id=" & *.system;
+                    $sys_code := *.system;
+                    $system_component_title := $$.components.$spread()[$keys()=$sys_code].*.title;
+                    $system_component_title ? $link : null
                   ),
                   "dbms": *.dbms,
                   "database": *.database,
@@ -85,6 +85,7 @@ entities:
             text: Описание
           - value: system
             text: Автоматизированная система
+            link: system_link
         source: >
           ( 
             $param_id := $params.id;
@@ -92,10 +93,22 @@ entities:
             $id := $keys(); 
             *[$param_id in data_object].
               {
-                    "title": title,
-                    "self_link": "/entities/seaf.ia.physical_tables/card?id=" & $id,
-                    "description": description,
-                    "system": system
+                "title": title,
+                "self_link": "/entities/seaf.ia.physical_tables/card?id=" & $id,
+                "description": description,
+                /* отображаем `.title` только для АС, описанных в `$$.components`, а для отсутствующих - переданный код АС */
+                "system": (
+                  $sys_code := system; 
+                  $system_component_title := $$.components.$spread()[$keys()=$sys_code].*.title;
+                  $system_component_title ? $system_component_title : *.system
+                ),
+                /* формируем ссылки только для АС, описанных в `$$.components` */          
+                "system_link": (
+                  $link := "/entities/components/blank?dh-component-id=" & system; 
+                  $sys_code := system;
+                  $system_component_title := $$.components.$spread()[$keys()=$sys_code].*.title; 
+                  $system_component_title ? $link : null
+                )
               }
             )]
           )

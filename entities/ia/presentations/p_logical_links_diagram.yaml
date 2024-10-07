@@ -15,7 +15,8 @@ entities:
                 }
               )
             );
-            $links :=  $$."seaf.ia.logical_links".$spread().*.
+            $links := [
+              $$."seaf.ia.logical_links".$spread().*.
                 {
                   "from": (
                       $id := entity_a; 
@@ -33,7 +34,8 @@ entities:
                       $mul_a & $type & $title & $mul_b
                   ),
                   "style": visual_style ? visual_style : "-"
-                };
+                }
+            ];
             {
               "nodes": $nodes,
               "links": $links
