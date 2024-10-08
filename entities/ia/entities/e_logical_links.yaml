@@ -13,13 +13,13 @@ entities:
         "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$":
           type: object
           properties:
-            code:       # нужен ли данный атрибут ???
+            code:
               title: Код
               type: string
-            title:       # нужен ли данный атрибут ???
+            title:
               title: Наименование
               type: string
-            # status:
+            # status:  # планируется общая модель статуса
             #   title: Статус
             #   enum:
             #     - Планируется
@@ -30,11 +30,11 @@ entities:
             description:
               title: Описание
               type: string
-            entityA:
+            entity_a:
               title: Сущность А
               description: Связанная логическая сущность А
               $ref: "#/$rels/seaf.ia.data_objects.data_object"
-            entityB:         # Ссылка на связанный экземпляр сущности
+            entity_b:
               title: Сущность В
               description: Связанная логическая сущность В
               $ref: "#/$rels/seaf.ia.data_objects.data_object"
@@ -45,16 +45,39 @@ entities:
               - ассоциация
               - наследование
               - зависимость
-            multiplicityA: 
+            multiplicity_a:
               title: Множественность A
               type: string
-            multiplicityB: 
+              description: |
+                Определяет сколько объектов А, могут быть связаны с одним объектом В.
+                Записывается в виде N:M
+            multiplicity_b:
               title: Множественность B
               type: string
-
-        # Сообщаем, что перечисленные поля обязательны
+              description: |
+                Определяет сколько объектов В, могут быть связаны с одним объектом А.
+                Записывается в виде N:M
+            visual_style:
+              title: Направления связи
+              type: string
+              enum:
+                - "-"
+                - "<->"
+                - "->"
+                - "<-"
+              default: "-"
+              description: |
+                Стиль отображения направления связи на диаграмме:
+                - "-"   : ненаправленная
+                - "<->" : двунаправленная
+                - "->"  : направленная от Сущности A к Сущности B
+                - "<-"  : направленная от Сущности B к Сущности A
+          # Сообщаем, что перечисленные поля обязательны
           required:
-            - code
-            - title
-            - entityB
-            - entityB
+            - entity_a
+            - entity_b
+          anyOf:  # обязательны к заполнению как минимум одно из полей: `title`, `type`
+            - required:
+                - title
+            - required:
+                - type

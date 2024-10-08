@@ -1,0 +1,91 @@
+entities:
+  seaf.ia.physical_tables:
+    title: Физические таблицы
+    description: Реестр физических таблиц. Одна строка соответствует одной таблице
+    objects:
+      physical_table:
+        route: "/"
+        symbol: "pht"
+        title: Физическая таблица
+    schema:
+      type: object
+      patternProperties:
+        "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$":
+          type: object
+          properties:
+            title:
+              title: Наименование
+              type: string
+              description: Имя таблицы (должно соответствовать правилам наименования принятым в компании)
+            status: # планируется общая модель статуса
+              title: Статус
+              type: string
+              description: |
+                Статус таблицы в текстовом формате
+                enum:
+                  - EXISTS
+                  - DELETED
+            type:
+              title: Тип представления
+              type: string
+              description: |
+                Тип представления таблицы в текстовом формате
+                enum:
+                  - TABLE
+                  - VIEW
+            description:
+              title: Описание
+              type: string
+              description: Описание назначения таблицы в текстовом формате
+            system:
+              title: Автоматизированная система
+              description: Компонент прикладной архитектуры, к которой относится таблица
+              $ref: "#/$rels/components.component"
+            dbms:
+              title: СУБД
+              type: string
+            database:
+              title: БД
+              type: string
+            schema_name:
+              title: Схема
+              type: string
+            loc_attr:
+              title: Локационные атрибуты
+              type: array
+              description: |
+                дополнительные атрибуты для конкретизации физического нахождения таблиц: контур, хост и т.п.
+              minItems: 0
+              items:
+                type: string
+            rows_count:
+              title: Количество строк
+              type: integer
+            cols_count:
+              title: Количество столбцов
+              type: integer
+            pdn_flag:
+              title: ПДн
+              type: boolean
+              description: Флаг наличия персональных данных (ПДн)
+            cde_flag:
+              title: CDE
+              type: boolean
+              description: Флаг наличия критичных данных (CDE)
+            # business_objects:
+            #   title: Бизнес-термин
+            #   type: array
+            #   description: Ссылка на термины Бизнес-глоссария или сущности концептуальной модели данных
+            #   items:
+            #     $ref: "#/$rels/seaf.ia.business_objects.business_objects"
+            data_object:
+              title: Логическая сущность
+              type: array
+              description: Ссылка на сущности логической модели
+              items:
+                $ref: "#/$rels/seaf.ia.data_objects.data_object"
+          # Обязательные поля
+          required:
+            - title
+            - description
+            - system

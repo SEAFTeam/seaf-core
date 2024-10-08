@@ -1,12 +1,5 @@
 entities:
   seaf.ia.aggregat:
-    menu: >
-      (
-        {
-            'location': 'Архитектура/Информационная/Агрегаты',
-            'link': 'entities/seaf.ia.aggregat/registry'
-        }
-      )
     presentations:
       registry:
         type: table
@@ -32,7 +25,7 @@ entities:
 
       card:
         type: markdown
-        template: templates/aggregat.md
+        template: templates/t_aggregat.md
         source: >
           (
             $."seaf.ia.aggregat".$spread()[$keys()=$params.id].{
@@ -48,7 +41,7 @@ entities:
                 }
           )
 
-      registry_by_aggr:
+      registry_by_aggregates:
         type: table
         headers:
           - value: title
@@ -62,10 +55,32 @@ entities:
           (
             $param_id := $params.id;
             $sa := [$."seaf.ia.aggregat".$spread()[$keys()=$param_id].*.content];
-            [$."seaf.ia.aggregat".$spread()[$keys() in $sa].($id := $keys(); {
+            [$."seaf.ia.aggregat".$spread()[$keys() in $sa].($id := $keys(); 
+             {
                   "type": *.type,
                   "title": *.title,
                   "self_link": "/entities/seaf.ia.aggregat/card?id=" & $id,
                   "description": *.description
                 })]
+          )
+
+      registry_by_parent_aggregat:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: type
+            text: Уровень аггрегации
+          - value: description
+            text: Описание
+        source: >
+          (
+            $param_id := $params.id;
+            [$."seaf.ia.aggregat".$spread()[$param_id in $.*.content].{
+              "type": *.type,
+              "title": *.title,
+              "self_link": "/entities/seaf.ia.aggregat/card?id=" & $keys(),
+              "description": *.description
+            }]
           )

@@ -1,0 +1,59 @@
+entities:
+  seaf.ia.logical_attributes:
+    title: Таблица аттрибутов
+    description: Таблица аттрибутов логических сущностей
+    objects:
+      logical_attribute:
+        route: "/"
+        symbol: "la"
+        title: Логический атрибут
+    schema:
+      type: object
+      patternProperties:
+        "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$":
+          type: object
+          properties:
+            code:
+              title: Код
+              type: string
+              description: Уникальная в рамках модели аббревиатура
+            title:
+              title: Наименование
+              type: string
+              description: Наименование на русском языке в единственном числе
+            # status:  # планируется общая модель статуса
+            #   title: Статус
+            #   enum:
+            #     - Планируется
+            #     - Разрабатывается или модифицируется
+            #     - Используется
+            #     - Выводится из эксплуатации
+            #     - В архиве
+            description:
+              title: Описание
+              type: string
+              description: |
+                Описание атрибута с точки зрения бизнеса; 
+                сведения о ее назначении, способе использования, и имеющихся ограничениях
+            pdn_flag:
+              title: ПДн
+              type: boolean
+              description: Флаг наличия персональных данных (ПДн)
+            cde_flag:
+              title: CDE
+              type: boolean
+              description: Флаг наличия критичных данных (CDE)
+            data_object:
+              title: Логическая сущность
+              description: Логическая сущность, к которой принадлежит атрибут
+              $ref: "#/$rels/seaf.ia.data_objects.data_object"
+            business_object:
+              title: Бизнес-термин
+              description: Соответствующий термин Бизнес-глоссария или сущности концептуальной модели данных
+              $ref: "#/$rels/seaf.ia.business_objects.business_objects"
+
+          # Сообщаем, что перечисленные поля обязательны
+          required:
+            - code
+            - title
+            - data_object

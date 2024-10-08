@@ -1,3 +1,4 @@
 imports:
   - entities/root.yaml
   - presentations/root.yaml
+  - menu.yaml
