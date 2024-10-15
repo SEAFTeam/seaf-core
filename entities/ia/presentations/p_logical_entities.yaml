@@ -157,7 +157,7 @@ entities:
         source: >
           (
             $physical_table := $params.id;
-            $data_objects := [$."seaf.ia.physical_tables".$spread()[$keys() = $physical_table].*.data_object];
+            $data_objects := [$."seaf.ia.physical_tables".$spread()[$keys() = $physical_table].*.data_objects];
             [$."seaf.ia.data_objects".$spread()[$keys() in $data_objects].($id := $keys(); {
                     "code": *.code,
                     "title": *.title,

@@ -81,7 +81,7 @@ entities:
         #            text: Статус
         source: >
           (
-            $param_id := "sbf_sample_farm.obj-1";
+            $param_id := $params.id;
             [$."seaf.ia.logical_attributes".$spread()[*.business_object = $param_id].({
               "code": *.code,
               "title": *.title,

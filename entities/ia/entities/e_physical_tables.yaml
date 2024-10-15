@@ -72,13 +72,7 @@ entities:
               title: CDE
               type: boolean
               description: Флаг наличия критичных данных (CDE)
-            # business_objects:
-            #   title: Бизнес-термин
-            #   type: array
-            #   description: Ссылка на термины Бизнес-глоссария или сущности концептуальной модели данных
-            #   items:
-            #     $ref: "#/$rels/seaf.ia.business_objects.business_objects"
-            data_object:
+            data_objects:
               title: Логическая сущность
               type: array
               description: Ссылка на сущности логической модели
