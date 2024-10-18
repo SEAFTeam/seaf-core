@@ -1,0 +1,25 @@
+entities:
+  components:
+    presentations:
+      seaf.app.services.registry:
+        type: table
+        headers:
+          - value: id
+            text: Идентификатор
+            link: link
+          - value: title
+            text: Наименование
+            align: left
+            link: link
+          - value: description
+            text: Описание
+            align: left
+        source: >
+          (
+             [$.components.$spread()[*.type="service"].{
+                  "id": $keys()[0],
+                  "link": "/entities/components/blank?dh-component-id=" & $keys()[0],
+                  "title": *.title,
+                  "description": *.description
+              }]
+          )
