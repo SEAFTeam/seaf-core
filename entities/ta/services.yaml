@@ -114,7 +114,9 @@ entities:
               type: string
             availabilityzone_id:
               title: В какие зоны доступности входит DC
-              $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
           required:
             - dc_id
             - dc_ownership
@@ -473,21 +475,21 @@ entities:
           oneOf:
             - type: object
               properties:
-                network_id:
+                id:
                   title: Network ID
                   type: string
                 type:
                   type: string
                   enum: [WAN]
-                dc_id:
+                dc:
                   title: Имя ЦОД/Серверной комнаты
                   type: array
                   items:
                     $ref: "#/$rels/seaf.ta.services.dc.dc"
-                office_id:
+                office:
                   title: Офис
                   $ref: "#/$rels/seaf.ta.services.office.office"
-                availabilityzone_id:
+                az:
                   title: В какие зоны доступности входит
                   type: array
                   items:
@@ -507,36 +509,36 @@ entities:
                 description:
                   title: Описание канала связи
                   type: string
-                network_appliance_id:
+                network_appliance:
                   title: ID оборудования коммутации сети
                   type: array
                   items:
                     $ref: "#/$rels/seaf.ta.components.network.network"
               required:
-                - network_id
+                - id
                 - wan_ip
                 - type
                 - provider
                 - bandwidth
-                - network_appliance_id
+                - network_appliance
               additionalProperties: false
             - type: object
               properties:
-                network_id:
+                id:
                   title: Network ID
                   type: string
                 type:
                   type: string
                   enum: [LAN]
-                dc_id:
+                dc:
                   title: Имя ЦОД/Серверной комнаты
                   type: array
                   items:
                     $ref: "#/$rels/seaf.ta.services.dc.dc"
-                office_id:
+                office:
                   title: Офис
                   $ref: "#/$rels/seaf.ta.services.office.office"
-                availabilityzone_id:
+                az:
                   title: В какие зоны доступности входит
                   type: array
                   items:
@@ -546,9 +548,8 @@ entities:
                   type: string
                   enum: [Проводная, Беспроводная]
                 segment:
-                  title: Сегмент сети
-                  type: string
-                  enum: [Буферный (DMZ), Сегмент обработки данных, Сервисный, Клиентский]
+                  title: Вхождение в сетевые сегменты сети
+                  $ref: "#/$rels/seaf.ta.components.network_segment.network_segment"
                 vlan:
                   title: Имя виртуальной сети (VLAN)
                   type: integer
@@ -558,21 +559,21 @@ entities:
                 purpose:
                   title: Назначение
                   type: string
-                network_appliance_id:
+                network_appliance:
                   title: ID оборудования коммутации сети
                   type: array
                   items:
                     $ref: "#/$rels/seaf.ta.components.network.network"
               required:
-                - network_id
+                - id
                 - type
                 - lan_type
                 - ipnetwork
-                - network_appliance_id
+                - network_appliance
               additionalProperties: false
       type: object
       patternProperties:
-        "^[a-zA-Z0-9_\\.]*$":
+        "^[a-zA-Z0-9_-]*(\\.[a-zA-Z0-9_-]*)*$":
           $ref: "#/$defs/seaf.ta.services.network"
 
   seaf.ta.services.network_links:
