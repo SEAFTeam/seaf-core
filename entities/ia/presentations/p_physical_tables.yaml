@@ -91,7 +91,7 @@ entities:
             $param_id := $params.id;
             [$."seaf.ia.physical_tables".$spread().(
             $id := $keys(); 
-            *[$param_id in data_object].
+            *[$param_id in data_objects].
               {
                 "title": title,
                 "self_link": "/entities/seaf.ia.physical_tables/card?id=" & $id,
