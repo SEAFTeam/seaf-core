@@ -22,7 +22,7 @@ entities:
             description:
               title: Описание
               type: string
-            type:         # будет заменено на общую модель статуса
+            type:
               title: Уровень аггрегации
               enum:
                 - Проект
@@ -32,9 +32,10 @@ entities:
                 - Под-домен
                 - Модель
                 - Файл
-            content:         # Ссылка на термины Бизнес-глоссария или сущности концептуальной модели данных
+            content:
               title: Содержимое
               type: array
+              description: Ссылка на дочерние аргегаты иерархии
               items:
                 $ref: "#/$rels/seaf.ia.aggregat.aggregat"
             owner:
@@ -43,10 +44,9 @@ entities:
             unit:
               title: Владелец (Функциональный блок)
               type: string
-            comments:      # Комментарий работника, заполнение не обязательно
+            comments:
               title: Комментарий
               type: string
-        # Сообщаем, что перечисленные поля обязательны
+          # Сообщаем, что перечисленные поля обязательны
           required:
             - title
-#            - description

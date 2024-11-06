@@ -1,12 +1,5 @@
 entities:
   seaf.ia.business_objects:
-    menu: >
-      (
-        {
-            'location': 'Архитектура/Информационная/Бизнес глоссарий',
-            'link': 'entities/seaf.ia.business_objects/registry'
-        }
-      )
     presentations:
       registry:
         type: table
@@ -16,10 +9,10 @@ entities:
             link: link
           - value: description
             text: Описание
-          - value: aggregat
+          - value: creation_date
             text: Дата создания
-          - value: status
-            text: Статус
+#          - value: status  # планируется общая модель статуса
+#            text: Статус
         source: >
           (
             $ctx:=$params.domain;
@@ -38,7 +31,7 @@ entities:
 
       card:
         type: markdown
-        template: templates/business_term.md
+        template: templates/t_business_term.md
         source: >
           (
             $term_id := $params.id;
@@ -56,7 +49,7 @@ entities:
                 }
           )
 
-      registry_by_PhT:
+      registry_by_physical_tables:
         type: table
         headers:
           - value: title
@@ -64,8 +57,8 @@ entities:
             link: self_link
           - value: description
             text: Описание
-          - value: status
-            text: Статус
+#          - value: status  # планируется общая модель статуса
+#            text: Статус
         source: >
           (
             $pht_id := $params.id;
@@ -77,7 +70,7 @@ entities:
                 })]
           )
 
-      registry_by_PhA:
+      registry_by_physical_attributes:  # где используется?
         type: table
         headers:
           - value: title
@@ -85,8 +78,8 @@ entities:
             link: self_link
           - value: description
             text: Описание
-          - value: status
-            text: Статус
+#          - value: status  # планируется общая модель статуса
+#            text: Статус
         source: >
           (
             $pha_id := $params.id;
@@ -98,7 +91,7 @@ entities:
                 })]
           )
 
-      registry_by_LE:
+      registry_by_data_objects:
         type: table
         headers:
           - value: title
@@ -106,8 +99,8 @@ entities:
             link: self_link
           - value: description
             text: Описание
-          - value: status
-            text: Статус
+#          - value: status  # планируется общая модель статуса
+#            text: Статус
         source: >
           (
             $param_id := $params.id;
@@ -119,7 +112,7 @@ entities:
                 })]
           )
 
-      registry_by_LA:
+      registry_by_logical_attributes:
         type: table
         headers:
           - value: title
@@ -127,8 +120,8 @@ entities:
             link: self_link
           - value: description
             text: Описание
-          - value: status
-            text: Статус
+#          - value: status  # планируется общая модель статуса
+#            text: Статус
         source: >
           (
             $param_id := $params.id;

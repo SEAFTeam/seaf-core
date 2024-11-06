@@ -1,3 +1,4 @@
 imports:
   - components.yaml
   - contexts.yaml
+  - service_registry.yaml
