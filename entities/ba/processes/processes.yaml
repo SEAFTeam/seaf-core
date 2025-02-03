@@ -192,7 +192,7 @@ entities:
             $nodes:= $merge($pre_nodes.nodes);
 
             {"config": {
-              "distance": 10,
+              "distance": 150,
               "trackWidth": 24,
               "hideLeafTitles": true
               },
@@ -249,7 +249,7 @@ entities:
             $nodes:= $merge($pre_nodes.nodes);
 
             {"config": {
-              "distance": 10,
+              "distance": 150,
               "trackWidth": 24,
               "hideLeafTitles": true
               },
@@ -325,7 +325,7 @@ entities:
             $nodes:= $merge($pre_nodes.nodes);
 
             {"config": {
-              "distance": 10,
+              "distance": 150,
               "trackWidth": 24,
               "hideLeafTitles": true
               },
