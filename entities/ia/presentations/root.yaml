@@ -1,0 +1,9 @@
+imports:
+  - p_business_terms.yaml
+  - p_logical_entities.yaml
+  - p_logical_links.yaml
+  - p_logical_links_diagram.yaml
+  - p_logical_attributes.yaml
+  - p_physical_tables.yaml
+  - p_physical_attributes.yaml
+  - p_aggregat.yaml

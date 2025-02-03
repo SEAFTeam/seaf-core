@@ -1,7 +1,7 @@
 entities:
-  seaf.ia.business_objects:
+  components:
     presentations:
-      registry:
+      seaf.app.services.registry:
         type: table
         headers:
           - value: id
@@ -11,15 +11,15 @@ entities:
             text: Наименование
             align: left
             link: link
-          - value: processes
-            text: Используется в бизнес-процессах
+          - value: description
+            text: Описание
             align: left
         source: >
           (
-              ["seaf.ia.business_objects".$spread().{
+             [$.components.$spread()[*.type="service"].{
                   "id": $keys()[0],
-                  "link": "/entities/seaf.ia.business_objects/blank?seaf-business-object-id=" & $keys()[0],
+                  "link": "/entities/components/blank?dh-component-id=" & $keys()[0],
                   "title": *.title,
-                  "processes": *.processes
+                  "description": *.description
               }]
           )

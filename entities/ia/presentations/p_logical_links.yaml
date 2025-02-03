@@ -1,0 +1,94 @@
+entities:
+  seaf.ia.logical_links:
+    presentations:
+      registry:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: entity_a
+            text: Сущность A
+            link: entity_a_link
+          - value: multiplicity_a
+            text: Множественность A
+          - value: type
+            text: Тип связи
+          - value: multiplicity_b
+            text: Множественность B
+          - value: entity_b
+            text: Сущность B
+            link: entity_b_link
+        source: >
+          (
+          [$."seaf.ia.logical_links".$spread().
+              {
+                  /* формируем прочерк в `title` вместо null при непереданном Наименовании для кликабельности сссылки */
+                  "title": $not($exists(*.title)) or *.title = null or *.title = {} ? "---" : *.title,
+                  "self_link": "/entities/seaf.ia.logical_links/card?id=" & $keys(),
+                  "entity_a": ($id := *.entity_a; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
+                  "entity_a_link": "/entities/seaf.ia.data_objects/card?id=" & *.entity_a,
+                  "multiplicity_a": *.multiplicity_a,
+                  "type": *.type,
+                  "multiplicity_b": *.multiplicity_b,
+                  "entity_b": ($id := *.entity_b; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
+                  "entity_b_link": "/entities/seaf.ia.data_objects/card?id=" & *.entity_b
+              }
+            ]
+          )
+
+      card:
+        type: markdown
+        template: templates/t_logical_link.md
+        source: >
+          (
+            $."seaf.ia.logical_links".$spread()[$keys()=$params.id].{
+              "id": $keys(),
+              "code": *.code,
+              "title": *.title,
+              "status": *.status,
+              "description": *.description,
+              "entity_a": ($id := *.entity_a; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
+              "entity_a_link": "/entities/seaf.ia.data_objects/card?id=" & *.entity_a,
+              "entity_b": ($id := *.entity_b; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
+              "entity_b_link": "/entities/seaf.ia.data_objects/card?id=" & *.entity_b,
+              "link_type": *.type,
+              "multiplicity_a": *.multiplicity_a,
+              "multiplicity_b": *.multiplicity_b
+            }
+          )
+
+      registry_by_data_objects:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: entity_a
+            text: Сущность A
+            link: entity_a_link
+          - value: multiplicity_a
+            text: Множественность A
+          - value: link_type
+            text: Тип связи
+          - value: multiplicity_b
+            text: Множественность B
+          - value: entity_b
+            text: Сущность B
+            link: entity_b_link
+        source: >
+          (
+            $param_id := $params.id;
+            [$."seaf.ia.logical_links".$spread()[*.entity_a = $param_id or *.entity_b = $param_id].({
+              /* формируем прочерк в `title` вместо null при непереданном Наименовании для кликабельности сссылки */
+              "title": $not($exists(*.title)) or *.title = null or *.title = {} ? "---" : *.title,
+              "self_link": "/entities/seaf.ia.logical_links/card?id=" & $keys(),
+              "multiplicity_a": *.multiplicity_a,
+              "entity_a": ($id := *.entity_a; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
+              "entity_a_link": "/entities/seaf.ia.data_objects/card?id=" & *.entity_a,
+              "link_type": *.type,
+              "multiplicity_b": *.multiplicity_b,
+              "entity_b": ($id := *.entity_b; $$."seaf.ia.data_objects".$spread()[$keys() = $id].*.title),
+              "entity_b_link": "/entities/seaf.ia.data_objects/card?id=" & *.entity_b
+            })]
+          )

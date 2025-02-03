@@ -1,0 +1,140 @@
+entities:
+  seaf.ia.physical_tables:
+    presentations:
+      registry:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: description
+            text: Описание
+          - value: system
+            text: Автоматизированная система
+            link: system_link
+          - value: dbms
+            text: СУБД
+        source: >
+          (
+            [$."seaf.ia.physical_tables".$spread().
+                {
+                    "title": *.title,
+                    "self_link": "/entities/seaf.ia.physical_tables/card?id=" & $keys(),
+                    "description": *.description,
+                    /* отображаем `.title` только для АС, описанных в `$$.components`, а для отсутствующих - переданный код АС */
+                    "system": (
+                      $sys_code := *.system; 
+                      $system_component_title := $$.components.$spread()[$keys()=$sys_code].*.title; 
+                      $system_component_title ? $system_component_title : *.system
+                    ),
+                    /* формируем ссылки только для АС, описанных в `$$.components` */          
+                    "system_link": (
+                      $link := "/entities/components/blank?dh-component-id=" & *.system; 
+                      $sys_code := *.system; 
+                      $system_component_title := $$.components.$spread()[$keys()=$sys_code].*.title; 
+                      $system_component_title ? $link : null
+                    ),
+                    "dbms": *.dbms
+                }]
+          )
+
+      card:
+        type: markdown
+        template: templates/t_physical_table.md
+        source: >
+          (
+            $."seaf.ia.physical_tables".$spread()[$keys()=$params.id].{
+                  "id": $keys(),
+                  "title": *.title,
+                  "status": *.status,
+                  "type": *.type,
+                  "description": *.description,
+                  /* отображаем `.title` только для АС, описанных в `$$.components`, а для отсутствующих - переданный код АС */
+                  "system": (
+                    $sys_code := *.system; 
+                    $system_component_title := $$.components.$spread()[$keys()=$sys_code].*.title; 
+                    $system_component_title ? $system_component_title : *.system
+                  ),
+                  /* формируем ссылки только для АС, описанных в `$$.components` */
+                  "system_link": (
+                    $link := "/entities/components/blank?dh-component-id=" & *.system;
+                    $sys_code := *.system;
+                    $system_component_title := $$.components.$spread()[$keys()=$sys_code].*.title;
+                    $system_component_title ? $link : null
+                  ),
+                  "dbms": *.dbms,
+                  "database": *.database,
+                  "schema_name": *.schema_name,
+                  "loc_attr": *.loc_attr,
+                  "rows_count": *.rows_count,
+                  "cols_count": *.cols_count,
+                  "pdn_flag": *.pdn_flag,
+                  "cde_flag": *.cde_flag,
+                  "business_objects": *.business_objects,
+                  "business_objects_link": "/entities/seaf.ia.data_objects/card?id=" & *.business_objects
+                }
+          )
+
+      registry_by_data_objects:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: description
+            text: Описание
+          - value: system
+            text: Автоматизированная система
+            link: system_link
+        source: >
+          ( 
+            $param_id := $params.id;
+            [$."seaf.ia.physical_tables".$spread().(
+            $id := $keys(); 
+            *[$param_id in data_objects].
+              {
+                "title": title,
+                "self_link": "/entities/seaf.ia.physical_tables/card?id=" & $id,
+                "description": description,
+                /* отображаем `.title` только для АС, описанных в `$$.components`, а для отсутствующих - переданный код АС */
+                "system": (
+                  $sys_code := system; 
+                  $system_component_title := $$.components.$spread()[$keys()=$sys_code].*.title;
+                  $system_component_title ? $system_component_title : *.system
+                ),
+                /* формируем ссылки только для АС, описанных в `$$.components` */          
+                "system_link": (
+                  $link := "/entities/components/blank?dh-component-id=" & system; 
+                  $sys_code := system;
+                  $system_component_title := $$.components.$spread()[$keys()=$sys_code].*.title; 
+                  $system_component_title ? $link : null
+                )
+              }
+            )]
+          )
+
+      registry_by_system:  # где используется?
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: description
+            text: Описание
+          - value: system
+            text: Автоматизированная система
+          - value: dbms
+            text: СУБД
+        source: >
+          (
+            [$."seaf.ia.physical_tables".$spread().(
+            $id := $keys(); 
+            *[as=$params.id].
+              {
+                    "title": title,
+                    "self_link": "/entities/seaf.ia.physical_tables/card?id=" & $id,
+                    "description": description,
+                    "dbms": dbms
+              }
+            )]
+          )

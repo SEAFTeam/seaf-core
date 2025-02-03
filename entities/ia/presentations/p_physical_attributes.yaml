@@ -1,0 +1,89 @@
+entities:
+  seaf.ia.physical_attributes:
+    presentations:
+      registry:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: type
+            text: Тип
+          - value: physical_table
+            text: Физическая таблица
+            link: physical_table_link
+          - value: pdn_flag
+            text: Персональные данные
+          - value: cde_flag
+            text: Критичные данные
+        source: >
+          (
+            [$."seaf.ia.physical_attributes".$spread().
+                {
+                    "title": *.title,
+                    "self_link": "/entities/seaf.ia.physical_attributes/card?id=" & $keys(),
+                    "type": *.type,
+                    "physical_table":  ($id := *.physical_table; $$."seaf.ia.physical_tables".$spread()[$keys() = $id].*.title),
+                    "physical_table_link": "/entities/seaf.ia.physical_tables/card?id=" & *.physical_table,
+                    "pdn_flag": *.pdn_flag,
+                    "cde_flag": *.cde_flag
+                }]
+          )
+
+      card:
+        type: markdown
+        template: templates/t_physical_attribute.md
+        source: >
+          (
+            $."seaf.ia.physical_attributes".$spread()[$keys()=$params.id].{
+                  "id": $keys(),
+                  "title": *.title,
+                  "status": *.status,
+                  "type": *.type,
+                  "description": *.description,
+                  "constraints": *.constraints,
+                  "pdn_flag": *.pdn_flag,
+                  "cde_flag": *.cde_flag,
+                  "pk_flag": *.pk_flag,
+                  "fk_flag": *.fk_flag,
+                  "physical_table": ($id := *.physical_table; $$."seaf.ia.physical_tables".$spread()[$keys() = $id].*.title),
+                  "physical_table_link": "/entities/seaf.ia.physical_tables/card?id=" & *.physical_table,
+                  "linked_table": ($id := *.linked_table; $$."seaf.ia.physical_tables".$spread()[$keys() = $id].*.title),
+                  "linked_table_link": "/entities/seaf.ia.physical_tables/card?id=" & *.linked_table,
+                  "linked_key": *.linked_key,
+                  "linked_key_link": "/entities/seaf.ia.physical_attributes/card?id=" & *.linked_key,
+                  "business_objects": *.business_objects,
+                  "business_objects_link": "/entities/seaf.ia.data_objects/card?id=" & *.business_objects
+                }
+          )
+
+      registry_by_physical_tables:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: type
+            text: Тип
+          - value: linked_table
+            text: Связанная таблица
+            link: linked_table_link
+          - value: linked_key
+            text: Ключ в связанной таблице
+            link: linked_key_link
+        source: >
+          (
+            [$."seaf.ia.physical_attributes".$spread().(
+            $id := $keys();
+            *[physical_table=$params.id].
+              {
+                    "title": title,
+                    "self_link": "/entities/seaf.ia.physical_attributes/card?id=" & $id,
+                    "type": type,
+                    "linked_table":  ($id := linked_table; $$."seaf.ia.physical_tables".$spread()[$keys() = $id].*.title),
+                    "linked_table_link": "/entities/seaf.ia.physical_tables/card?id=" & linked_table,
+                    "linked_key": linked_key,
+                    "linked_key_link": "/entities/seaf.ia.physical_attributes/card?id=" & linked_key
+              }
+            )]
+          )

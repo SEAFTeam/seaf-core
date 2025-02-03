@@ -22,6 +22,12 @@ entities:
               type: array
               items:
                 $ref: "#/$rels/seaf.ba.processes.process"
+            systems:
+              title: поддерживает
+              description: Системы поддерживающие выполнение процесса
+              type: array
+              items:
+                $ref: "#/$rels/components.component"
             supported:
               title: поддерживает
               description: Ресурсы - используются, но не трансформируются, реализуют выполнение чего?-> Процесса

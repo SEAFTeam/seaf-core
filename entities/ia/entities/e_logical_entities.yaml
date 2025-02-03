@@ -1,0 +1,79 @@
+entities:
+  seaf.ia.data_objects:
+    title: Объекты данных
+    description: Таблица логических сущностей
+    objects:
+      data_object:
+        route: "/"
+        title: Объект данных
+        symbol: "do"
+    schema:
+      type: object
+      patternProperties:
+        "[a-zA-Z0-9_]*(\\.[a-zA-Z0-9_]*)*$":
+          type: object
+          properties:
+            code:
+              title: Код
+              type: string
+              description: Уникальная в рамках модели аббревиатура
+            title:
+              title: Наименование
+              type: string
+              description: |
+                Существительное в единственном числе 
+                или словосочетание на его основе (составной термин), 
+                уникальное в рамках модели
+            # status:  # планируется общая модель статуса
+            #   title: Статус
+            #   enum:
+            #     - Планируется
+            #     - Разрабатывается или модифицируется
+            #     - Используется
+            #     - Выводится из эксплуатации
+            #     - В архиве
+            description:
+              title: Описание
+              type: string
+              description: |
+                Описание сущности с точки зрения бизнес-процессов; 
+                сведения о ее назначении, способе использования и имеющихся ограничениях
+            aggregat:
+              title: Агрегат
+              $ref: "#/$rels/seaf.ia.aggregat.aggregat"
+            category:
+              title: Категория
+              type: string
+              enum:
+                - Перс данные
+                - Медицинские данные
+                - Платежные данные (карты)
+                - Коммерческая тайна
+                - Прочее
+            pdn_flag:
+              title: ПДн
+              type: boolean
+              description: Флаг наличия персональных данных
+            cde_flag:
+              title: CDE
+              type: boolean
+              description: Флаг наличия критичных данных
+            business_objects:
+              title: Бизнес-термин
+              type: array
+              description: Ссылка на термины Бизнес-глоссария или сущности концептуальной модели данных
+              items:
+                $ref: "#/$rels/seaf.ia.business_objects.business_objects"
+            master_system:
+              title: Мастер-система
+              description: АС, являющаяся мастер-системой для объекта данных
+              $ref: "#/$rels/components.component"
+            comments:
+              title: Комментарии, риски, проблемы
+              type: array
+              items:
+                type: string
+          # Обязательные поля
+          required:
+            - code
+            - title

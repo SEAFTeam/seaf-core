@@ -1,0 +1,134 @@
+entities:
+  seaf.ia.business_objects:
+    presentations:
+      registry:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            link: link
+          - value: description
+            text: Описание
+          - value: creation_date
+            text: Дата создания
+#          - value: status  # планируется общая модель статуса
+#            text: Статус
+        source: >
+          (
+            $ctx:=$params.domain;
+            $terms:= $ctx and $_essentials._jsonata_function
+            ? $context_content_refined($ctx, $).observable[$.*.body.entity_id = "seaf.ia.business_objects"].*.[{$.id: $.body}]
+            :$spread($."seaf.ia.business_objects").[$~>|$.*|{"entity_id": "business_objects"}|];
+            [$terms.$spread().{
+                    "id": $keys(),
+                    "title": *.title,
+                    "link": "/entities/seaf.ia.business_objects/card?id=" & $keys(),
+                    "description": *.description,
+                    "creation_date": *.creation_date,
+                    "status": *.status
+                }]
+          )
+
+      card:
+        type: markdown
+        template: templates/t_business_term.md
+        source: >
+          (
+            $term_id := $params.id;
+            $processes := [$."seaf.ba.processes".$spread()[$term_id in $.*.supported or $term_id in $.*.consumes or $term_id in $.*.produces]];
+            $."seaf.ia.business_objects".$spread()[$keys()=$term_id].{
+                    "id": $keys(),
+                    "title": *.title,
+                    "description": *.description,
+                    "processes": [$processes.*.title],
+                    "creation_date": *.creation_date,
+                    "modify_date": *.modify_date,
+                    "owner": *.owner,
+                    "comments": *.comments,
+                    "legal_doc": *.legal_doc
+                }
+          )
+
+      registry_by_physical_tables:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: description
+            text: Описание
+#          - value: status  # планируется общая модель статуса
+#            text: Статус
+        source: >
+          (
+            $pht_id := $params.id;
+            $bt := [$."seaf.ia.physical_tables".$spread()[$keys()=$pht_id].*.business_objects];
+            [$."seaf.ia.business_objects".$spread()[$keys() in $bt].($id := $keys(); {
+                    "title": *.title,
+                    "self_link": "/entities/seaf.ia.business_objects/card?id=" & $id,
+                    "description": *.description
+                })]
+          )
+
+      registry_by_physical_attributes:  # где используется?
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: description
+            text: Описание
+#          - value: status  # планируется общая модель статуса
+#            text: Статус
+        source: >
+          (
+            $pha_id := $params.id;
+            $bt := [$."seaf.ia.physical_attributes".$spread()[$keys()=$pha_id].*.business_objects];
+            [$."seaf.ia.business_objects".$spread()[$keys() in $bt].($id := $keys(); {
+                    "title": *.title,
+                    "self_link": "/entities/seaf.ia.business_objects/card?id=" & $id,
+                    "description": *.description
+                })]
+          )
+
+      registry_by_data_objects:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: description
+            text: Описание
+#          - value: status  # планируется общая модель статуса
+#            text: Статус
+        source: >
+          (
+            $param_id := $params.id;
+            $bt := [$."seaf.ia.data_objects".$spread()[$keys()=$param_id].*.business_objects];
+            [$."seaf.ia.business_objects".$spread()[$keys() in $bt].($id := $keys(); {
+                    "title": *.title,
+                    "self_link": "/entities/seaf.ia.business_objects/card?id=" & $id,
+                    "description": *.description
+                })]
+          )
+
+      registry_by_logical_attributes:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: description
+            text: Описание
+#          - value: status  # планируется общая модель статуса
+#            text: Статус
+        source: >
+          (
+            $param_id := $params.id;
+            $bt := [$."seaf.ia.logical_attributes".$spread()[$keys()=$param_id].*.business_objects];
+            [$."seaf.ia.business_objects".$spread()[$keys() in $bt].($id := $keys(); {
+                    "title": *.title,
+                    "self_link": "/entities/seaf.ia.business_objects/card?id=" & $id,
+                    "description": *.description
+                })]
+          )

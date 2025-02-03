@@ -3,4 +3,4 @@ docs:
     description: SEAF Информационная архитектура
     type: markdown
     location: SEAF/Информационная архитектура
-    source: ../../entities/ia/README.md
+    source: IA_description.md

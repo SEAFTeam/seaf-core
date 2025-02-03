@@ -1,0 +1,86 @@
+entities:
+  seaf.ia.aggregat:
+    presentations:
+      registry:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: type
+            text: Уровень аггрегации
+          - value: description
+            text: Описание
+        source: >
+          (
+            $dcs:= [$."seaf.ia.aggregat".$spread().*.content];
+            [$."seaf.ia.aggregat".$spread()[$not($keys() in $dcs)].{
+                    "id": $keys(),
+                    "type": *.type,
+                    "title": *.title,
+                    "self_link": "/entities/seaf.ia.aggregat/card?id=" & $keys(),
+                    "description": *.description
+                }]          
+          )
+
+      card:
+        type: markdown
+        template: templates/t_aggregat.md
+        source: >
+          (
+            $."seaf.ia.aggregat".$spread()[$keys()=$params.id].{
+                  "id": $keys(),
+                  "code": *.code,
+                  "title": *.title,
+                  "description": *.description,
+                  "type": *.type,
+                  "owner": *.owner,
+                  "unit": *.unit,
+                  "comments": *.comments,
+                  "content": *.content
+                }
+          )
+
+      registry_by_aggregates:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: type
+            text: Уровень аггрегации
+          - value: description
+            text: Описание
+        source: >
+          (
+            $param_id := $params.id;
+            $sa := [$."seaf.ia.aggregat".$spread()[$keys()=$param_id].*.content];
+            [$."seaf.ia.aggregat".$spread()[$keys() in $sa].($id := $keys(); 
+             {
+                  "type": *.type,
+                  "title": *.title,
+                  "self_link": "/entities/seaf.ia.aggregat/card?id=" & $id,
+                  "description": *.description
+                })]
+          )
+
+      registry_by_parent_aggregat:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            link: self_link
+          - value: type
+            text: Уровень аггрегации
+          - value: description
+            text: Описание
+        source: >
+          (
+            $param_id := $params.id;
+            [$."seaf.ia.aggregat".$spread()[$param_id in $.*.content].{
+              "type": *.type,
+              "title": *.title,
+              "self_link": "/entities/seaf.ia.aggregat/card?id=" & $keys(),
+              "description": *.description
+            }]
+          )
