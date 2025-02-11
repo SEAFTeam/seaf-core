@@ -71,13 +71,13 @@ entities:
             az_vendor:
               title: Поставщик
               type: string
-            region_id:
+            region:
               title: В какой регион входит зона доступности
               $ref: "#/$rels/seaf.ta.services.dc_region.dc_region"
           required:
             - availabilityzone_id
             - az_vendor
-            - region_id
+            - region
 
   seaf.ta.services.dc:
     title: Datacenter
@@ -112,7 +112,7 @@ entities:
             dc_tier:
               title: Уровень сертификации ЦОД
               type: string
-            availabilityzone_id:
+            availabilityzone:
               title: В какие зоны доступности входит DC
               type: array
               items:
@@ -125,7 +125,7 @@ entities:
             - dc_address
             - dc_rack_qty
             - dc_tier
-            - availabilityzone_id
+            - availabilityzone
 
   seaf.ta.services.office:
     title: Офис или иное место присутствия
@@ -146,12 +146,7 @@ entities:
             address:
               title: Адрес офиса или местоположения
               type: string
-            network_connection:
-              title: Перечисление связанных сетей
-              type: array
-              items:
-                $ref: "#/$rels/seaf.ta.services.network.network"
-            region_id:
+            region:
               title: В какой регион входит офис
               $ref: "#/$rels/seaf.ta.services.dc_region.dc_region"
           required:
@@ -172,7 +167,7 @@ entities:
             cluster_id:
               title: Cluster ID
               type: string
-            availabilityzone_id:
+            availabilityzone:
               title: В какие зоны доступности входит
               type: array
               items:
@@ -188,15 +183,10 @@ entities:
               type: array
               items:
                 $ref: "#/$rels/seaf.ta.services.network.network"
-            server_id:
-              title: Список серверов реализующих кластер
-              type: array
-              items:
-                $ref: "#/$rels/seaf.ta.components.server.server"
           required:
             - cluster_id
-            - availabilityzone_id
-            - server_id
+            - availabilityzone
+
       type: object
       patternProperties:
         "^[a-zA-Z0-9_\\.]*$":
@@ -216,16 +206,11 @@ entities:
             compute_id:
               title: Compute Service ID
               type: string
-            availabilityzone_id:
+            availabilityzone:
               title: В какие зоны доступности входит
               type: array
               items:
                 $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
-            server_id:
-              title: Список серверов реализующих кластер
-              type: array
-              items:
-                $ref: "#/$rels/seaf.ta.components.server.server"
             network_connection:
               title: Перечисление связанных сетей
               type: array
@@ -233,8 +218,7 @@ entities:
                 $ref: "#/$rels/seaf.ta.services.network.network"
           required:
             - compute_id
-            - availabilityzone_id
-            - server_id
+            - availabilityzone
       type: object
       patternProperties:
         "^[a-zA-Z0-9_\\.]*$":
@@ -275,21 +259,11 @@ entities:
                 protocols:
                   title: Поддерживаемые протоколы для клиентских подключений
                   type: string
-                server_id:
-                  title: Список серверов реализующих кластер
-                  type: array
-                  items:
-                    $ref: "#/$rels/seaf.ta.components.server.server"
-                availabilityzone_id:
+                availabilityzone:
                   title: В какие зоны доступности входит
                   type: array
                   items:
                     $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
-                hw_storage_connected:
-                  title: Какие СХД подключены
-                  type: array
-                  items:
-                    $ref: "#/$rels/seaf.ta.components.hw_storage.hw_storage"
                 network_connection:
                   title: Перечисление связанных сетей
                   type: array
@@ -300,7 +274,7 @@ entities:
                 - type
                 - software
                 - volume
-                - availabilityzone_id
+                - availabilityzone
               additionalProperties: false
             - type: object
               properties:
@@ -318,11 +292,6 @@ entities:
                 software:
                   title: ПО реализующее S3
                   type: string
-                server_id:
-                  title: Список серверов реализующих кластер
-                  type: array
-                  items:
-                    $ref: "#/$rels/seaf.ta.components.server.server"
                 sla:
                   title: SLA хранилища
                   type: integer
@@ -373,12 +342,7 @@ entities:
             sdrs_support:
               title: Поддержка Storage DRS кластером виртуализации
               type: boolean
-            server_id:
-              title: Список серверов реализующих кластер
-              type: array
-              items:
-                $ref: "#/$rels/seaf.ta.components.server.server"
-            availabilityzone_id:
+            availabilityzone:
               title: В какие зоны доступности входит
               type: array
               items:
@@ -390,7 +354,7 @@ entities:
                 $ref: "#/$rels/seaf.ta.services.network.network"
           required:
             - virtualization_id
-            - availabilityzone_id
+            - availabilityzone
 
   seaf.ta.services.k8s:
     title: Kubernetes Cluster
@@ -406,7 +370,7 @@ entities:
             kubernetes_id:
               title: Kubernetes cluster ID
               type: string
-            availabilityzone_id:
+            availabilityzone:
               title: В какие зоны доступности входит
               type: array
               items:
@@ -417,11 +381,6 @@ entities:
             software:
               title: ПО реализующее Kubernetes кластер
               type: string
-            server_id:
-              title: Список серверов реализующих кластер
-              type: array
-              items:
-                $ref: "#/$rels/seaf.ta.components.server.server"
             master_qty:
               title: Количество мастер нод кластера
               type: integer
@@ -453,7 +412,7 @@ entities:
                 $ref: "#/$rels/seaf.ta.services.network.network"
           required:
             - kubernetes_id
-            - availabilityzone_id
+            - availabilityzone
             - software
             - master_qty
             - worker_qty
@@ -507,18 +466,12 @@ entities:
                 description:
                   title: Описание канала связи
                   type: string
-                network_appliance:
-                  title: ID оборудования коммутации сети
-                  type: array
-                  items:
-                    $ref: "#/$rels/seaf.ta.components.network.network"
               required:
                 - id
                 - wan_ip
                 - type
                 - provider
                 - bandwidth
-                - network_appliance
               additionalProperties: false
             - type: object
               properties:
@@ -536,11 +489,6 @@ entities:
                 office:
                   title: Офис
                   $ref: "#/$rels/seaf.ta.services.office.office"
-                az:
-                  title: В какие зоны доступности входит
-                  type: array
-                  items:
-                    $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
                 lan_type:
                   title: Тип LAN
                   type: string
@@ -557,17 +505,11 @@ entities:
                 purpose:
                   title: Назначение
                   type: string
-                network_appliance:
-                  title: ID оборудования коммутации сети
-                  type: array
-                  items:
-                    $ref: "#/$rels/seaf.ta.components.network.network"
               required:
                 - id
                 - type
                 - lan_type
                 - ipnetwork
-                - network_appliance
               additionalProperties: false
       type: object
       patternProperties:
@@ -588,13 +530,6 @@ entities:
             networklinks_id:
               title: Network Links ID
               type: string
-            network_appliance_id:
-              title: Сетевые устройства ID реализующие связь
-              type: array
-              items:
-                anyOf:
-                  - $ref: "#/$rels/seaf.ta.components.network.network"
-                  - $ref: "#/$rels/seaf.ta.components.user_device.user_device"
             network_connection:
               title: Перечисление связанных сетей
               type: array
@@ -618,7 +553,6 @@ entities:
               enum: [Основной, Резервный]
           required:
             - networklinks_id
-            - network_appliance_id
             - type
             - ch_type
       type: object
@@ -652,11 +586,6 @@ entities:
             replication:
               title: Репликация в другой ЦОД
               type: boolean
-            server_id:
-              title: Список серверов реализующих СРК
-              type: array
-              items:
-                $ref: "#/$rels/seaf.ta.components.server.server"
           required:
             - backup_id
             - availabilityzone_id
@@ -676,7 +605,7 @@ entities:
             monitoring_id:
               title: Monitoring System ID
               type: string
-            availabilityzone_id:
+            availabilityzone:
               title: В какие зоны доступности входит
               type: array
               items:
@@ -692,14 +621,9 @@ entities:
             ha:
               title: Высокая доступность системы мониторинга
               type: boolean
-            server_id:
-              title: Список серверов реализующих СМ
-              type: array
-              items:
-                $ref: "#/$rels/seaf.ta.components.server.server"
           required:
             - monitoring_id
-            - availabilityzone_id
+            - availabilityzone
             - role
             - ha
       type: object
@@ -738,11 +662,6 @@ entities:
             lic_qty:
               title: Количество лицензий
               type: integer
-            server_id:
-              title: Список серверов на которых установлена лицензия
-              type: array
-              items:
-                $ref: "#/$rels/seaf.ta.components.server.server"
           required:
             - software_id
             - vendor

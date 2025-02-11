@@ -99,14 +99,54 @@ entities:
                   type: array
                   items:
                     $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
-                virtualization_id:
-                  title: ID кластера виртуализации
+                virtualization:
+                  title: Кластер виртуализации
                   $ref: "#/$rels/seaf.ta.services.cluster_virtualization.cluster_virtualization"
                 subnets:
                   title: Подсети
                   type: array
                   items:
                     $ref: "#/$rels/seaf.ta.services.network.network"
+                is_part_of_compute_service:
+                  title: Какие сервисы вычислений реализует
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.compute_service.compute_service"
+                is_part_of_cluster_virtualization:
+                  title: Какие кластеры виртуализации реализует
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.cluster_virtualization.cluster_virtualization"
+                is_part_of_k8s_cluster:
+                  title: Какие кластеры Kubernetes реализует
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.k8s.k8s"
+                is_part_of_cluster:
+                  title: Какие кластеры вычислений реализует
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.cluster.cluster"
+                is_monitoring_connected:
+                  title: Какие технические сервисы мониторинга реализует (т.е. является узлом хранения или управления)
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.monitoring.monitoring"
+                is_backup_connected:
+                  title: Какие технические сервисы резервного копирования реализует (т.е. является узлом хранения или управления)
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.backup.backup"
+                sw_storage_connected:
+                  title: Какие технические сервисы СХД реализует (т.е. является узлом хранения или управления в составе SDS)
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.storage.storage"
+              software:
+                title: Какое ПО и лицезии установлены
+                type: array
+                items:
+                  $ref: "#/$rels/seaf.ta.services.software.software"
               required:
                 - id
                 - type
@@ -116,7 +156,7 @@ entities:
                 - cpu
                 - ram
                 - nic_qty
-                - virtualization_id
+                - virtualization
               additionalProperties: false
             - type: object
               properties:
@@ -181,7 +221,7 @@ entities:
                           type: string
                 storage_id:
                   title: Подключенные СХД
-                  type: string
+                  type: array
                   $ref: "#/$rels/seaf.ta.components.hw_storage.hw_storage"
                 nic_qty:
                   title: Количество NIC
@@ -200,6 +240,46 @@ entities:
                   type: string
                   items:
                     $ref: "#/$rels/seaf.ta.services.network.network"
+                is_part_of_compute_service:
+                  title: Какие сервисы вычислений реализует
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.compute_service.compute_service"
+                is_part_of_cluster_virtualization:
+                  title: Какие кластеры виртуализации реализует
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.cluster_virtualization.cluster_virtualization"
+                is_part_of_k8s_cluster:
+                  title: Какие кластеры Kubernetes реализует
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.k8s.k8s"
+                is_part_of_cluster:
+                  title: Какие кластеры вычислений реализует
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.cluster.cluster"
+                is_monitoring_connected:
+                  title: Какие технические сервисы мониторинга реализует (т.е. является узлом хранения или управления)
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.monitoring.monitoring"
+                is_backup_connected:
+                  title: Какие технические сервисы резервного копирования реализует (т.е. является узлом хранения или управления)
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.backup.backup"
+                sw_storage_connected:
+                  title: Какие технические сервисы СХД реализует (т.е. является узлом хранения или управления в составе SDS)
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.storage.storage"
+                software:
+                  title: Какое ПО и лицезии установлены
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.software.software"
               required:
                 - id
                 - type
@@ -246,22 +326,27 @@ entities:
             protocols:
               title: Поддерживаемые протоколы для клиентских подключений
               type: string
-            dc_id:
+            dc:
               title: Имя ЦОД/Серверной комнаты
               $ref: "#/$rels/seaf.ta.services.dc.dc"
-            office_id:
+            office:
               title: Офис
               $ref: "#/$rels/seaf.ta.services.office.office"
+            sw_storage_connected:
+              title: К каким техническим сервисам СХД подключено
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.storage.storage"
             network_connection:
               title: Перечисление связанных сетей
-              type: string
+              type: array
               items:
                 $ref: "#/$rels/seaf.ta.services.network.network"
           required:
             - storage_id
             - vendor
             - volume
-            - dc_id
+            - dc
       type: object
       patternProperties:
         "^[a-zA-Z0-9_-]*(\\.[a-zA-Z0-9_-]*)*$":
@@ -291,9 +376,14 @@ entities:
               enum: [Виртуальный, Физический]
             network_connection:
               title: Перечисление связанных сетей
-              type: string
+              type: array
               items:
                 $ref: "#/$rels/seaf.ta.services.network.network"
+            network_connection_devices:
+              title: Перечисление связанных сетевых линков
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.network_links.network_links"
             placement_segment:
               title: Место размещения в сетевом сегменте
               $ref: "#/$rels/seaf.ta.components.network_segment.network_segment"
@@ -358,9 +448,14 @@ entities:
               type: string
               items:
                 $ref: "#/$rels/seaf.ta.services.network.network"
-            office_id:
+            office:
               title: Имя офиса если устройство находится в офисе
               $ref: "#/$rels/seaf.ta.services.office.office"
+            network_connection_devices:
+              title: Перечисление связанных сетевых линков
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.network_links.network_links"
           required:
             - user_device_id
             - device_type
