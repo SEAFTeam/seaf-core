@@ -495,7 +495,7 @@ entities:
                   enum: [Проводная, Беспроводная]
                 segment:
                   title: Вхождение в сетевые сегменты сети
-                  $ref: "#/$rels/seaf.ta.components.network_segment.network_segment"
+                  $ref: "#/$rels/seaf.ta.services.network_segment.network_segment"
                 vlan:
                   title: Имя виртуальной сети (VLAN)
                   type: integer
@@ -668,3 +668,19 @@ entities:
             - type
             - support
             - expiration
+
+  seaf.ta.services.network_segment:
+    title: Network Segment
+    objects:
+      network_segment:
+        route: "/"
+        title: Сетевой сегмент
+    schema: # JSON Schema контролирующая описание объекта сущности
+      type: object
+      patternProperties:
+        "^[a-zA-Z0-9_\\.]*$":
+          $ref: "#/$defs/seaf.ta.services.base.entity"
+          properties:
+            id:
+              title: Network Segment ID
+              type: string

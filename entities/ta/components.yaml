@@ -386,7 +386,7 @@ entities:
                 $ref: "#/$rels/seaf.ta.services.network_links.network_links"
             placement_segment:
               title: Место размещения в сетевом сегменте
-              $ref: "#/$rels/seaf.ta.components.network_segment.network_segment"
+              $ref: "#/$rels/seaf.ta.services.network_segment.network_segment"
             purpose:
               title: Функциональное назначение сетевого аплаенса
               type: string
@@ -407,22 +407,6 @@ entities:
       patternProperties:
         "^[a-zA-Z0-9_-]*(\\.[a-zA-Z0-9_-]*)*$":
           $ref: "#/$defs/seaf.ta.components.network"
-
-  seaf.ta.components.network_segment:
-    title: Network Segment
-    objects:
-      network_segment:
-        route: "/"
-        title: Сетевой сегмент
-    schema: # JSON Schema контролирующая описание объекта сущности
-      type: object
-      patternProperties:
-        "^[a-zA-Z0-9_\\.]*$":
-          $ref: "#/$defs/seaf.ta.services.base.entity"
-          properties:
-            id:
-              title: Network Segment ID
-              type: string
 
   seaf.ta.components.user_device:
     title: Пользовательское устройство
