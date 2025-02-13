@@ -466,6 +466,9 @@ entities:
                 description:
                   title: Описание канала связи
                   type: string
+                segment:
+                  title: Вхождение в сетевые сегменты сети
+                  $ref: "#/$rels/seaf.ta.services.network_segment.network_segment"
               required:
                 - id
                 - wan_ip
