@@ -151,6 +151,9 @@ entities:
               type: array
               items:
                 $ref: "#/$rels/seaf.ta.services.network.network"
+            region_id:
+              title: В какой регион входит офис
+              $ref: "#/$rels/seaf.ta.services.dc_region.dc_region"
           required:
             - office_id
             - address
@@ -489,11 +492,6 @@ entities:
                 office:
                   title: Офис
                   $ref: "#/$rels/seaf.ta.services.office.office"
-                az:
-                  title: В какие зоны доступности входит
-                  type: array
-                  items:
-                    $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
                 ch_number:
                   title: Номер канала
                   type: string
