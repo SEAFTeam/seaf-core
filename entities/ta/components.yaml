@@ -13,7 +13,7 @@ entities:
               description:
                 title: Описание
                 type: string
-              stand_id:
+              stand:
                 title: Имя стенда внутри окружения
                 type: array
                 items:
@@ -83,7 +83,7 @@ entities:
                             type: string
                           size:
                             title: Размер диска
-                            type: string
+                            type: integer
                           type:
                             title: Тип диска (SAS, SATA, SSD)
                             type: string
@@ -210,19 +210,17 @@ entities:
                     .*:
                       type: object
                       properties:
-                        az:
-                          title: Зона доступности диска
-                          type: string
                         size:
                           title: Размер диска
                           type: integer
                         type:
                           title: Тип диска (SAS, SATA, SSD)
                           type: string
-                storage_id:
+                storage:
                   title: Подключенные СХД
                   type: array
-                  $ref: "#/$rels/seaf.ta.components.hw_storage.hw_storage"
+                  items:
+                    $ref: "#/$rels/seaf.ta.components.hw_storage.hw_storage"
                 nic_qty:
                   title: Количество NIC
                   type: integer
@@ -397,7 +395,7 @@ entities:
               title: Офис
               $ref: "#/$rels/seaf.ta.services.office.office"
           required:
-            - network_appliance_id
+            - id
             - model
             - realization_type
       type: object

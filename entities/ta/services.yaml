@@ -28,7 +28,7 @@ entities:
               type: array
               items:
                 $ref: "#/$rels/seaf.app.integrations.integrations"
-            stand_id:
+            stand:
               title: Имя стенда внутри окружения
               type: array
               items:
@@ -113,10 +113,8 @@ entities:
               title: Уровень сертификации ЦОД
               type: string
             availabilityzone:
-              title: В какие зоны доступности входит DC
-              type: array
-              items:
-                $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
+              title: В какую зону доступности входит DC
+              $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
           required:
             - dc_id
             - dc_ownership
