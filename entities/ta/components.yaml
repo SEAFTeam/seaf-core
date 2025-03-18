@@ -227,12 +227,13 @@ entities:
                 vlan:
                   title: Подключенные VLAN
                   type: array
-                dc_id:
-                  title: Имя ЦОД/Серверной комнаты
-                  $ref: "#/$rels/seaf.ta.services.dc.dc"
-                office_id:
-                  title: Офис
-                  $ref: "#/$rels/seaf.ta.services.office.office"
+                location:
+                  title: ID ЦОД или Офиса
+                  type: array
+                  items:
+                    anyOf:
+                      - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                      - $ref: "#/$rels/seaf.ta.services.office.office"
                 subnets:
                   title: Перечисление связанных сетей
                   type: string
@@ -289,7 +290,7 @@ entities:
                 - disks
                 - ram
                 - nic_qty
-                - dc_id
+                - location
               additionalProperties: false
       type: object
       patternProperties:
@@ -324,12 +325,13 @@ entities:
             protocols:
               title: Поддерживаемые протоколы для клиентских подключений
               type: string
-            dc:
-              title: Имя ЦОД/Серверной комнаты
-              $ref: "#/$rels/seaf.ta.services.dc.dc"
-            office:
-              title: Офис
-              $ref: "#/$rels/seaf.ta.services.office.office"
+            location:
+              title: ID ЦОД или Офиса
+              type: array
+              items:
+                anyOf:
+                  - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                  - $ref: "#/$rels/seaf.ta.services.office.office"
             sw_storage_connected:
               title: К каким техническим сервисам СХД подключено
               type: array
@@ -385,15 +387,19 @@ entities:
             purpose:
               title: Функциональное назначение сетевого аплаенса
               type: string
-            dc:
-              title: Имя ЦОД/Серверной комнаты
-              $ref: "#/$rels/seaf.ta.services.dc.dc"
+            location:
+              title: ID ЦОД или Офиса
+              type: array
+              items:
+                anyOf:
+                  - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                  - $ref: "#/$rels/seaf.ta.services.office.office"
             address:
               title: IP адрес устройства
               type: string
-            office:
-              title: Офис
-              $ref: "#/$rels/seaf.ta.services.office.office"
+            segment:
+              title: Вхождение в сетевые сегменты сети
+              $ref: "#/$rels/seaf.ta.services.network_segment.network_segment"
           required:
             - id
             - model
@@ -427,9 +433,13 @@ entities:
               type: array
               items:
                 $ref: "#/$rels/seaf.ta.services.network.network"
-            office:
-              title: Имя офиса если устройство находится в офисе
-              $ref: "#/$rels/seaf.ta.services.office.office"
+            location:
+              title: ID ЦОД или Офиса
+              type: array
+              items:
+                anyOf:
+                  - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                  - $ref: "#/$rels/seaf.ta.services.office.office"
             network_connection_devices:
               title: Перечисление связанных сетевых линков
               type: array

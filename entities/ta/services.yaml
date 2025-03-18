@@ -170,6 +170,13 @@ entities:
               type: array
               items:
                 $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
+            location:
+              title: ID ЦОД или Офиса
+              type: array
+              items:
+                anyOf:
+                  - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                  - $ref: "#/$rels/seaf.ta.services.office.office"
             cluster_fqdn:
               title: FQDN имя кластера
               type: string
@@ -209,6 +216,13 @@ entities:
               type: array
               items:
                 $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
+            location:
+              title: ID ЦОД или Офиса
+              type: array
+              items:
+                anyOf:
+                  - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                  - $ref: "#/$rels/seaf.ta.services.office.office"
             network_connection:
               title: Перечисление связанных сетей
               type: array
@@ -262,6 +276,13 @@ entities:
                   type: array
                   items:
                     $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
+                location:
+                  title: ID ЦОД или Офиса
+                  type: array
+                  items:
+                    anyOf:
+                      - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                      - $ref: "#/$rels/seaf.ta.services.office.office"
                 network_connection:
                   title: Перечисление связанных сетей
                   type: array
@@ -345,6 +366,13 @@ entities:
               type: array
               items:
                 $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
+            location:
+              title: ID ЦОД или Офиса
+              type: array
+              items:
+                anyOf:
+                  - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                  - $ref: "#/$rels/seaf.ta.services.office.office"
             network_connection:
               title: Перечисление связанных сетей
               type: array
@@ -373,6 +401,13 @@ entities:
               type: array
               items:
                 $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
+            location:
+              title: ID ЦОД или Офиса
+              type: array
+              items:
+                anyOf:
+                  - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                  - $ref: "#/$rels/seaf.ta.services.office.office"
             is_own:
               title: Кластер куплен как услуга
               type: boolean
@@ -441,14 +476,13 @@ entities:
                 type:
                   type: string
                   enum: [WAN]
-                dc:
-                  title: Имя ЦОД/Серверной комнаты
+                location:
+                  title: ID ЦОД или Офиса
                   type: array
                   items:
-                    $ref: "#/$rels/seaf.ta.services.dc.dc"
-                office:
-                  title: Офис
-                  $ref: "#/$rels/seaf.ta.services.office.office"
+                    anyOf:
+                      - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                      - $ref: "#/$rels/seaf.ta.services.office.office"
                 ch_number:
                   title: Номер канала
                   type: string
@@ -482,14 +516,13 @@ entities:
                 type:
                   type: string
                   enum: [LAN]
-                dc:
-                  title: Имя ЦОД/Серверной комнаты
+                location:
+                  title: ID ЦОД или Офиса
                   type: array
                   items:
-                    $ref: "#/$rels/seaf.ta.services.dc.dc"
-                office:
-                  title: Офис
-                  $ref: "#/$rels/seaf.ta.services.office.office"
+                    anyOf:
+                      - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                      - $ref: "#/$rels/seaf.ta.services.office.office"
                 lan_type:
                   title: Тип LAN
                   type: string
@@ -576,11 +609,18 @@ entities:
             backup_id:
               title: Backup System ID
               type: string
-            availabilityzone_id:
+            availabilityzone:
               title: В какие зоны доступности входит
               type: array
               items:
                 $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
+            location:
+              title: ID ЦОД или Офиса
+              type: array
+              items:
+                anyOf:
+                  - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                  - $ref: "#/$rels/seaf.ta.services.office.office"
             path:
               title: Место хранения РК
               type: string
@@ -589,7 +629,7 @@ entities:
               type: boolean
           required:
             - backup_id
-            - availabilityzone_id
+            - availabilityzone
             - path
 
   seaf.ta.services.monitoring:
@@ -611,6 +651,11 @@ entities:
               type: array
               items:
                 $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
+            dc:
+              title: Имя ЦОД/Серверной комнаты
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.dc.dc"
             name:
               title: Производитель и название системы мониторинга
               type: string
