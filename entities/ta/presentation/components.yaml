@@ -5,14 +5,14 @@ entities:
       table:
         type: table
         headers:
-          - value: fqdn_name
+          - value: fqdn
             text: Имя сервера FQDN
             sortable: true
             align: left
             width: 20%
             link: link
 
-          - value: title
+          - value: type
             text: Тип
             sortable: true
             align: left
@@ -24,18 +24,19 @@ entities:
             align: left
             width: 20%
 
-          - value: dc_id
-            text: ЦОД
+          - value: location
+            text: Расположение
             sortable: true
             align: left
             width: 20%
             link: dc_link
 
-          - value: office
-            text: ID Офиса где установлено оборудование
+          - value: virtualization
+            text: Платформа виртуализации
             sortable: true
             align: left
             width: 20%
+            link: dc_link
 
         source: >
           (
@@ -47,11 +48,11 @@ entities:
                 "title": title,
                 "description": description,
                 "type": type,      
-                "dc_id": dc_id,         
-                "office": office,
-                "fqdn_name": fqdn_name,
+                "location": location,
+                "virtualization": virtualization,
+                "fqdn": fqdn,
                 "link": '/entities/seaf.ta.components.server/list?ta-component-id=' & $COMPONENT_ID,
-                "dc_link" :  $eval($get_link,{"hr":$refs."dc_id","val":dc_id})
+                "dc_link" :  $eval($get_link,{"hr":$refs."dc","val":dc})
               }
             )]^(title)]
           )
@@ -90,18 +91,18 @@ entities:
             align: left
             width: 20%
 
-          - value: dc_id
-            text: ЦОД
+          - value: vendor
+            text: Производитель
             sortable: true
             align: left
             width: 20%
-            link: dc_link
 
-          - value: office
-            text: ID Офиса где установлено оборудование
+          - value: location
+            text: Расположение
             sortable: true
             align: left
             width: 20%
+
 
         source: >
           (
@@ -110,10 +111,10 @@ entities:
             [[$."seaf.ta.components.hw_storage".$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
-                "title": storage_id,
+                "title": title,
                 "description": description,
-                "dc_id": dc_id,
-                "office": office,
+                "vendor": vendor,
+                "location": location,
                 "link": '/entities/seaf.ta.components.hw_storage/list?ta-component-id=' & $COMPONENT_ID,
                 "dc_link" :  $eval($get_link,{"hr":$refs."dc_id","val":dc_id})
               }
@@ -161,18 +162,12 @@ entities:
             align: left
             width: 20%
 
-          - value: dc_id
-            text: ЦОД
+          - value: location
+            text: Расположение
             sortable: true
             align: left
             width: 20%
-            link: dc_link
 
-          - value: office
-            text: ID Офиса где установлено оборудование
-            sortable: true
-            align: left
-            width: 20%
 
         source: >
           (
@@ -183,9 +178,8 @@ entities:
              $.*.{
                 "title": title,
                 "description": description,
-                "dc_id": dc_id,
+                "location": location,
                 "ip": address,
-                "office": office,
                 "model": model,
                 "link": '/entities/seaf.ta.components.network/list?ta-component-id=' & $COMPONENT_ID,
                 "dc_link" :  $eval($get_link,{"hr":$refs."dc_id","val":dc_id})
@@ -244,7 +238,7 @@ entities:
                 "device_type": device_type,    
                 "link": '/entities/seaf.ta.components.user_device/list?ta-component-id=' & $COMPONENT_ID
               }
-            )]^(name)]
+            )]^(title)]
           )
       list:
         title: Карточка спецификации пользовательского устройства

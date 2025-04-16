@@ -18,6 +18,9 @@ entities:
                 type: array
                 items:
                   $ref: "#/$rels/seaf.ta.services.stand.stand"
+              external_id:
+                title: Идентификатор во внешней системе
+                type: string
 
 #### Описания технологических компонентов. Добавляются все необходимые поля и устанавливаются правила их наполнения ####
   seaf.ta.components.server:
@@ -33,9 +36,6 @@ entities:
           oneOf:
             - type: object
               properties:
-                id:
-                  title: Server ID
-                  type: string
                 type:
                   type: string
                   enum: [Виртуальный]
@@ -148,7 +148,6 @@ entities:
                 items:
                   $ref: "#/$rels/seaf.ta.services.software.software"
               required:
-                - id
                 - type
                 - fqdn
                 - os
@@ -160,9 +159,6 @@ entities:
               additionalProperties: false
             - type: object
               properties:
-                id:
-                  title: Server ID
-                  type: string
                 type:
                   type: string
                   enum: [Физический]
@@ -280,7 +276,6 @@ entities:
                   items:
                     $ref: "#/$rels/seaf.ta.services.software.software"
               required:
-                - id
                 - type
                 - vendor
                 - model
@@ -309,9 +304,6 @@ entities:
           type: object
           $ref: "#/$defs/seaf.ta.components.base.entity"
           properties:
-            storage_id:
-              title: Storage ID
-              type: string
             vendor:
               title: Производитель и модель
               type: string
@@ -343,7 +335,6 @@ entities:
               items:
                 $ref: "#/$rels/seaf.ta.services.network.network"
           required:
-            - storage_id
             - vendor
             - volume
             - dc
@@ -364,9 +355,6 @@ entities:
           type: object
           $ref: "#/$defs/seaf.ta.components.base.entity"
           properties:
-            id:
-              title: Network Appliance ID
-              type: string
             model:
               title: Модель и производитель
               type: string
@@ -401,7 +389,6 @@ entities:
               title: Вхождение в сетевые сегменты сети
               $ref: "#/$rels/seaf.ta.services.network_segment.network_segment"
           required:
-            - id
             - model
             - realization_type
       type: object
@@ -422,9 +409,6 @@ entities:
           type: object
           $ref: "#/$defs/seaf.ta.components.base.entity"
           properties:
-            user_device_id:
-              title: User Device
-              type: string
             device_type:
               title: Тип устройства относительно среды использования
               type: string
@@ -446,5 +430,4 @@ entities:
               items:
                 $ref: "#/$rels/seaf.ta.services.network_links.network_links"
           required:
-            - user_device_id
             - device_type
