@@ -362,6 +362,10 @@ entities:
               title: Тип исполнения
               type: string
               enum: [Виртуальный, Физический]
+            type:
+              title: Тип устройства
+              type: string
+              enum: [ Маршрутизатор, МСЭ, Контроллер WiFi, Криптошлюз ]
             network_connection:
               title: Перечисление связанных сетей
               type: array
