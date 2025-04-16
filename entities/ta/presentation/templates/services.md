@@ -28,6 +28,9 @@
 ## Network Links
 ![Network Links](@entity/seaf.ta.services.network_links/table)
 
+## Network Segment
+![Network Segment](@entity/seaf.ta.services.network_segment/table)
+
 ## Backup Service
 ![Backup Service](@entity/seaf.ta.services.backup/table)
 
