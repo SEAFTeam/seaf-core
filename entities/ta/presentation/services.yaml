@@ -821,3 +821,100 @@ entities:
         template: templates/list.md
         source: >
           ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
+          
+
+  seaf.ta.services.environment:
+    presentations:
+      table:
+        type: table
+        headers:
+          - value: title
+            text: Название
+            sortable: true
+            align: left
+            width: 20%
+
+          - value: description
+            text: Описание
+            sortable: true
+            align: left
+            width: 20%
+
+        source: >
+          (
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.environment"}, $]); 
+            $get_link := $.functions."seaf.ta".get_link;
+            [[$."seaf.ta.services.environment".$spread().(
+              $COMPONENT_ID := $keys()[0];
+             $.*.{
+                "title": title,
+                "description": description
+              }
+            )]^(title)]
+          )
+
+      list:
+        title: Карточка спецификации окружения
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ({'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
+
+  seaf.ta.services.stand:
+    presentations:
+      table:
+        type: table
+        headers:
+          - value: title
+            text: Название
+            sortable: true
+            align: left
+            width: 20%
+
+          - value: description
+            text: Описание
+            sortable: true
+            align: left
+            width: 20%
+
+          - value: env
+            text: В какое окружение входит стенд
+            sortable: true
+            align: left
+            width: 20%
+        source: >
+          (
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.stand"}, $]); 
+            $get_link := $.functions."seaf.ta".get_link;
+            [[$."seaf.ta.services.stand".$spread().(
+              $COMPONENT_ID := $keys()[0];
+             $.*.{
+                "title": title,
+                "description": description,
+                "env": env
+              }
+            )]^(title)]
+          )
+
+      list:
+        title: Карточка спецификации стенда
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ({'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)

@@ -23,3 +23,7 @@ entities:
       patternProperties:
         "^[a-zA-Z0-9_\\.]*$":
           $ref: "#/$defs/seaf.ta.services.base.entity"
+          properties:
+            env:
+              title: В какое окружение входит стенд
+              $ref: "#/$rels/seaf.ta.services.environment.environment"

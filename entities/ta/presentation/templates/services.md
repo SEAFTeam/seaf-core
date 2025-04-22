@@ -10,6 +10,12 @@
 ## Office
 ![Office](@entity/seaf.ta.services.office/table)
 
+## Environments
+![Environment](@entity/seaf.ta.services.environment/table)
+
+## Stands
+![Stand](@entity/seaf.ta.services.stand/table)
+
 ## Clusters
 ![Clusters](@entity/seaf.ta.services.cluster/table)
 
