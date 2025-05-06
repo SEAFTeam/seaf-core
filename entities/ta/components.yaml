@@ -13,11 +13,14 @@ entities:
               description:
                 title: Описание
                 type: string
-              stand_id:
+              stand:
                 title: Имя стенда внутри окружения
                 type: array
                 items:
                   $ref: "#/$rels/seaf.ta.services.stand.stand"
+              external_id:
+                title: Идентификатор во внешней системе
+                type: string
 
 #### Описания технологических компонентов. Добавляются все необходимые поля и устанавливаются правила их наполнения ####
   seaf.ta.components.server:
@@ -33,9 +36,6 @@ entities:
           oneOf:
             - type: object
               properties:
-                id:
-                  title: Server ID
-                  type: string
                 type:
                   type: string
                   enum: [Виртуальный]
@@ -83,7 +83,7 @@ entities:
                             type: string
                           size:
                             title: Размер диска
-                            type: string
+                            type: integer
                           type:
                             title: Тип диска (SAS, SATA, SSD)
                             type: string
@@ -99,16 +99,55 @@ entities:
                   type: array
                   items:
                     $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
-                virtualization_id:
-                  title: ID кластера виртуализации
+                virtualization:
+                  title: Кластер виртуализации
                   $ref: "#/$rels/seaf.ta.services.cluster_virtualization.cluster_virtualization"
                 subnets:
                   title: Подсети
                   type: array
                   items:
                     $ref: "#/$rels/seaf.ta.services.network.network"
+                is_part_of_compute_service:
+                  title: Какие сервисы вычислений реализует
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.compute_service.compute_service"
+                is_part_of_cluster_virtualization:
+                  title: Какие кластеры виртуализации реализует
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.cluster_virtualization.cluster_virtualization"
+                is_part_of_k8s_cluster:
+                  title: Какие кластеры Kubernetes реализует
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.k8s.k8s"
+                is_part_of_cluster:
+                  title: Какие кластеры вычислений реализует
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.cluster.cluster"
+                is_monitoring_connected:
+                  title: Какие технические сервисы мониторинга реализует (т.е. является узлом хранения или управления)
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.monitoring.monitoring"
+                is_backup_connected:
+                  title: Какие технические сервисы резервного копирования реализует (т.е. является узлом хранения или управления)
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.backup.backup"
+                sw_storage_connected:
+                  title: Какие технические сервисы СХД реализует (т.е. является узлом хранения или управления в составе SDS)
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.storage.storage"
+              software:
+                title: Какое ПО и лицезии установлены
+                type: array
+                items:
+                  $ref: "#/$rels/seaf.ta.services.software.software"
               required:
-                - id
                 - type
                 - fqdn
                 - os
@@ -116,13 +155,10 @@ entities:
                 - cpu
                 - ram
                 - nic_qty
-                - virtualization_id
+                - virtualization
               additionalProperties: false
             - type: object
               properties:
-                id:
-                  title: Server ID
-                  type: string
                 type:
                   type: string
                   enum: [Физический]
@@ -170,38 +206,76 @@ entities:
                     .*:
                       type: object
                       properties:
-                        az:
-                          title: Зона доступности диска
-                          type: string
                         size:
                           title: Размер диска
                           type: integer
                         type:
                           title: Тип диска (SAS, SATA, SSD)
                           type: string
-                storage_id:
+                storage:
                   title: Подключенные СХД
-                  type: string
-                  $ref: "#/$rels/seaf.ta.components.hw_storage.hw_storage"
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.components.hw_storage.hw_storage"
                 nic_qty:
                   title: Количество NIC
                   type: integer
                 vlan:
                   title: Подключенные VLAN
                   type: array
-                dc_id:
-                  title: Имя ЦОД/Серверной комнаты
-                  $ref: "#/$rels/seaf.ta.services.dc.dc"
-                office_id:
-                  title: Офис
-                  $ref: "#/$rels/seaf.ta.services.office.office"
+                location:
+                  title: ID ЦОД или Офиса
+                  type: array
+                  items:
+                    anyOf:
+                      - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                      - $ref: "#/$rels/seaf.ta.services.office.office"
                 subnets:
                   title: Перечисление связанных сетей
                   type: string
                   items:
                     $ref: "#/$rels/seaf.ta.services.network.network"
+                is_part_of_compute_service:
+                  title: Какие сервисы вычислений реализует
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.compute_service.compute_service"
+                is_part_of_cluster_virtualization:
+                  title: Какие кластеры виртуализации реализует
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.cluster_virtualization.cluster_virtualization"
+                is_part_of_k8s_cluster:
+                  title: Какие кластеры Kubernetes реализует
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.k8s.k8s"
+                is_part_of_cluster:
+                  title: Какие кластеры вычислений реализует
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.cluster.cluster"
+                is_monitoring_connected:
+                  title: Какие технические сервисы мониторинга реализует (т.е. является узлом хранения или управления)
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.monitoring.monitoring"
+                is_backup_connected:
+                  title: Какие технические сервисы резервного копирования реализует (т.е. является узлом хранения или управления)
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.backup.backup"
+                sw_storage_connected:
+                  title: Какие технические сервисы СХД реализует (т.е. является узлом хранения или управления в составе SDS)
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.storage.storage"
+                software:
+                  title: Какое ПО и лицезии установлены
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.software.software"
               required:
-                - id
                 - type
                 - vendor
                 - model
@@ -211,7 +285,7 @@ entities:
                 - disks
                 - ram
                 - nic_qty
-                - dc_id
+                - location
               additionalProperties: false
       type: object
       patternProperties:
@@ -230,9 +304,6 @@ entities:
           type: object
           $ref: "#/$defs/seaf.ta.components.base.entity"
           properties:
-            storage_id:
-              title: Storage ID
-              type: string
             vendor:
               title: Производитель и модель
               type: string
@@ -246,22 +317,27 @@ entities:
             protocols:
               title: Поддерживаемые протоколы для клиентских подключений
               type: string
-            dc_id:
-              title: Имя ЦОД/Серверной комнаты
-              $ref: "#/$rels/seaf.ta.services.dc.dc"
-            office_id:
-              title: Офис
-              $ref: "#/$rels/seaf.ta.services.office.office"
+            location:
+              title: ID ЦОД или Офиса
+              type: array
+              items:
+                anyOf:
+                  - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                  - $ref: "#/$rels/seaf.ta.services.office.office"
+            sw_storage_connected:
+              title: К каким техническим сервисам СХД подключено
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.storage.storage"
             network_connection:
               title: Перечисление связанных сетей
-              type: string
+              type: array
               items:
                 $ref: "#/$rels/seaf.ta.services.network.network"
           required:
-            - storage_id
             - vendor
             - volume
-            - dc_id
+            - location
       type: object
       patternProperties:
         "^[a-zA-Z0-9_-]*(\\.[a-zA-Z0-9_-]*)*$":
@@ -279,9 +355,6 @@ entities:
           type: object
           $ref: "#/$defs/seaf.ta.components.base.entity"
           properties:
-            id:
-              title: Network Appliance ID
-              type: string
             model:
               title: Модель и производитель
               type: string
@@ -289,50 +362,43 @@ entities:
               title: Тип исполнения
               type: string
               enum: [Виртуальный, Физический]
+            type:
+              title: Тип устройства
+              type: string
+              enum: [ Маршрутизатор, МСЭ, Контроллер WiFi, Криптошлюз ]
             network_connection:
               title: Перечисление связанных сетей
-              type: string
+              type: array
               items:
                 $ref: "#/$rels/seaf.ta.services.network.network"
-            placement_segment:
-              title: Место размещения в сетевом сегменте
-              $ref: "#/$rels/seaf.ta.components.network_segment.network_segment"
+            network_connection_devices:
+              title: Перечисление связанных сетевых линков
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.network_links.network_links"
             purpose:
               title: Функциональное назначение сетевого аплаенса
               type: string
-            dc:
-              title: Имя ЦОД/Серверной комнаты
-              $ref: "#/$rels/seaf.ta.services.dc.dc"
+            location:
+              title: ID ЦОД или Офиса
+              type: array
+              items:
+                anyOf:
+                  - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                  - $ref: "#/$rels/seaf.ta.services.office.office"
             address:
               title: IP адрес устройства
               type: string
-            office:
-              title: Офис
-              $ref: "#/$rels/seaf.ta.services.office.office"
+            segment:
+              title: Вхождение в сетевые сегменты сети
+              $ref: "#/$rels/seaf.ta.services.network_segment.network_segment"
           required:
-            - network_appliance_id
             - model
             - realization_type
       type: object
       patternProperties:
-        "^[a-zA-Z0-9_-]*(\\.[a-zA-Z0-9_-]*)*$":
-          $ref: "#/$defs/seaf.ta.components.network"
-
-  seaf.ta.components.network_segment:
-    title: Network Segment
-    objects:
-      network_segment:
-        route: "/"
-        title: Сетевой сегмент
-    schema: # JSON Schema контролирующая описание объекта сущности
-      type: object
-      patternProperties:
         "^[a-zA-Z0-9_\\.]*$":
-          $ref: "#/$defs/seaf.ta.services.base.entity"
-          properties:
-            id:
-              title: Network Segment ID
-              type: string
+          $ref: "#/$defs/seaf.ta.components.network"
 
   seaf.ta.components.user_device:
     title: Пользовательское устройство
@@ -347,20 +413,25 @@ entities:
           type: object
           $ref: "#/$defs/seaf.ta.components.base.entity"
           properties:
-            user_device_id:
-              title: User Device
-              type: string
             device_type:
               title: Тип устройства относительно среды использования
               type: string
             network_connection:
               title: Перечисление связанных сетей
-              type: string
+              type: array
               items:
                 $ref: "#/$rels/seaf.ta.services.network.network"
-            office_id:
-              title: Имя офиса если устройство находится в офисе
-              $ref: "#/$rels/seaf.ta.services.office.office"
+            location:
+              title: ID ЦОД или Офиса
+              type: array
+              items:
+                anyOf:
+                  - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                  - $ref: "#/$rels/seaf.ta.services.office.office"
+            network_connection_devices:
+              title: Перечисление связанных сетевых линков
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.network_links.network_links"
           required:
-            - user_device_id
             - device_type
