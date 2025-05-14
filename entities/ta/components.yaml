@@ -392,6 +392,11 @@ entities:
             segment:
               title: Вхождение в сетевые сегменты сети
               $ref: "#/$rels/seaf.ta.services.network_segment.network_segment"
+            is_part_of_IS_service:
+              title: Перечисление связанных КБ сервисов
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.kb.kb"
           required:
             - model
             - realization_type
