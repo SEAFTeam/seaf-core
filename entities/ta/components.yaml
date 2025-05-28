@@ -365,7 +365,7 @@ entities:
             type:
               title: Тип устройства
               type: string
-              enum: [ Маршрутизатор, МСЭ, Контроллер WiFi, Криптошлюз ]
+              enum: [ Маршрутизатор, МСЭ, Контроллер WiFi, Криптошлюз, VPN, NAT, Коммутатор ]
             network_connection:
               title: Перечисление связанных сетей
               type: array
