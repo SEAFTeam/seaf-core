@@ -605,6 +605,11 @@ entities:
             replication:
               title: Репликация в другой ЦОД
               type: boolean
+            network_connection:
+              title: Перечисление связанных сетей
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.network.network"
           required:
             - availabilityzone
             - path
@@ -641,6 +646,11 @@ entities:
             ha:
               title: Высокая доступность системы мониторинга
               type: boolean
+            network_connection:
+              title: Перечисление связанных сетей
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.network.network"
           required:
             - availabilityzone
             - role
