@@ -19,6 +19,9 @@
 ## Clusters
 ![Clusters](@entity/seaf.ta.services.cluster/table)
 
+## Compute Service
+![Compute Service](@entity/seaf.ta.services.compute_service/table)
+
 ## Storages
 ![Storages](@entity/seaf.ta.services.storage/table)
 
