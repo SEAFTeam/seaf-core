@@ -256,6 +256,12 @@ entities:
             width: 20%
             link: avail_link
 
+          - value: service_type
+            text: Тип сервиса
+            sortable: true
+            align: left
+            width: 20%
+
         source: >
           (
             $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.cluster"}, $]);
@@ -265,6 +271,7 @@ entities:
              $.*.{
                 "title": title,                
                 "description": description,
+                "service_type": service_type,                
                 "availabilityzone": availabilityzone,
                 "fqdn": fqdn,
                 "link": '/entities/seaf.ta.services.cluster/list?ta-component-id=' & $COMPONENT_ID,
@@ -288,6 +295,72 @@ entities:
         template: templates/list.md
         source: >
           ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
+
+
+  seaf.ta.services.compute_service:
+    presentations:
+      table:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+
+          - value: description
+            text: Описание
+            sortable: true
+            align: left
+            width: 20%
+
+          - value: availabilityzone
+            text: Имя зоны доступности
+            sortable: true
+            align: left
+            width: 20%
+            link: avail_link
+
+          - value: service_type
+            text: Тип сервиса
+            sortable: true
+            align: left
+            width: 20%
+
+        source: >
+          (
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.compute_service"}, $]);
+            $get_link := $.functions."seaf.ta".get_link;
+            [[$."seaf.ta.services.compute_service".$spread().(
+              $COMPONENT_ID := $keys()[0];
+             $.*.{
+                "title": title,                
+                "description": description,
+                "service_type": service_type,                
+                "availabilityzone": availabilityzone,
+                "link": '/entities/seaf.ta.services.cluster/list?ta-component-id=' & $COMPONENT_ID,
+                "avail_link" :  $eval($get_link,{"hr":$refs."availabilityzone","val":availabilityzone})
+              }
+          
+              )]^(title)];  
+          )
+
+      list:
+        title: Вычислительный сервис
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
+         
 
   seaf.ta.services.storage:
     presentations:
