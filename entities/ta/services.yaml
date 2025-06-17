@@ -490,7 +490,9 @@ entities:
                   type: string
                 segment:
                   title: Вхождение в сетевые сегменты сети
-                  $ref: "#/$rels/seaf.ta.services.network_segment.network_segment"
+                  type: array
+                  items:
+                    ref: "#/$rels/seaf.ta.services.network_segment.network_segment"
               required:
                 - wan_ip
                 - type
@@ -515,7 +517,9 @@ entities:
                   enum: [Проводная, Беспроводная]
                 segment:
                   title: Вхождение в сетевые сегменты сети
-                  $ref: "#/$rels/seaf.ta.services.network_segment.network_segment"
+                  type: array
+                  items:
+                    ref: "#/$rels/seaf.ta.services.network_segment.network_segment"
                 vlan:
                   title: Имя виртуальной сети (VLAN)
                   type: integer
