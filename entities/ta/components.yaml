@@ -419,8 +419,9 @@ entities:
           $ref: "#/$defs/seaf.ta.components.base.entity"
           properties:
             device_type:
-              title: Тип устройства относительно среды использования
+              title: Тип устройства
               type: string
+              enum: [АРМ, Терминалы сбора данных (ТСД), Мобильные рабочие места (МРМ), IoT]
             network_connection:
               title: Перечисление связанных сетей
               type: array
