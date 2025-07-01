@@ -15,11 +15,13 @@ entities:
               type: array
               items:
                 $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
-            dc:  ##todo переделать на location
-              title: Имя ЦОД/Серверной комнаты
+            location:
+              title: ID ЦОД или Офиса
               type: array
               items:
-                $ref: "#/$rels/seaf.ta.services.dc.dc"
+                anyOf:
+                  - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                  - $ref: "#/$rels/seaf.ta.services.office.office"
             name:
               title: Производитель и название системы мониторинга
               type: string
