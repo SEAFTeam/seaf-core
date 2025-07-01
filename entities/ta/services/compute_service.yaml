@@ -1,0 +1,52 @@
+entities:
+  seaf.ta.services.compute_service:
+    title: Compute Service
+    objects:
+      compute_service:
+        route: "/"
+        title: Вычислительный сервис
+    schema: # JSON Schema контролирующая описание объекта сущности
+      $defs:
+        seaf.ta.services.compute_service:
+          $ref: "#/$defs/seaf.ta.services.base.entity"
+          properties:
+            availabilityzone:
+              title: В какие зоны доступности входит
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
+            service_type:
+              title: Тип сервиса
+              type: string
+              enum:
+                - "Управление ИТ-службой, ИТ-инфраструктурой и ИТ-активами (CMDB, ITSM и т.д.)"
+                - "Управление и автоматизацией (Ansible, Terraform, Jenkins и т.д.)"
+                - "Управление разработкой и хранения кода (Gitlab, Jira и т.д.)"
+                - "Управление сетевым адресным пространством (DHCP, DNS и т.д.)"
+                - "Виртуализация рабочих мест (ВАРМ и VDI)"
+                - "Шлюз, Балансировщик, прокси"
+                - "СУБД"
+                - "Распределенный кэш"
+                - "Интеграционная шина  (MQ, ETL, API)"
+                - "Файловый ресурс (FTP, NFS, SMB, S3 и т.д.)"
+                - "Инфраструктура удаленного доступа"
+                - "Коммуникации (АТС, Почта, мессенджеры, СМС шлюзы и т.д.)"
+                - "Cерверы приложений и т.д."
+            location:
+              title: ID ЦОД или Офиса
+              type: array
+              items:
+                anyOf:
+                  - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                  - $ref: "#/$rels/seaf.ta.services.office.office"
+            network_connection:
+              title: Перечисление связанных сетей
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.network.network"
+          required:
+            - availabilityzone
+      type: object
+      patternProperties:
+        "^[a-zA-Z0-9_\\.]*$":
+          $ref: "#/$defs/seaf.ta.services.compute_service"

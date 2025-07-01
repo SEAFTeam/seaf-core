@@ -1,0 +1,34 @@
+entities:
+  seaf.ta.services.software:
+    title: Licenses and support
+    objects:
+      software:
+        route: "/"
+        title: Программное обеспечение и лицензии
+    schema: # JSON Schema контролирующая описание объекта сущности
+      type: object
+      patternProperties:
+        "^[a-zA-Z0-9_\\.]*$":
+          $ref: "#/$defs/seaf.ta.services.base.entity"
+          properties:
+            vendor:
+              title: Производитель ПО
+              type: string
+            type:
+              title: Тип лицензии
+              type: string
+              enum: [ Открытая, Закрытая бесплатная, Закрытая платная ]
+            support:
+              title: Наличие платной  поддержки вендора\интегратора
+              type: string
+            expiration:
+              title: Срок действия лицензий
+              type: string
+            lic_qty:
+              title: Количество лицензий
+              type: integer
+          required:
+            - vendor
+            - type
+            - support
+            - expiration

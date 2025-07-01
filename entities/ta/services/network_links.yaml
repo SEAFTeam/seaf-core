@@ -1,0 +1,40 @@
+entities:
+  seaf.ta.services.network_links:
+    title: Network Links
+    objects:
+      network_links:
+        route: "/"
+        title: Сетевые связанности
+    schema: # JSON Schema контролирующая описание объекта сущности
+      $defs:
+        seaf.ta.services.network_links:
+          $ref: "#/$defs/seaf.ta.services.base.entity"
+          properties:
+            network_connection:
+              title: Перечисление связанных сетей
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.network.network"
+            ch_number:
+              title: Номер канала
+              type: string
+            type:
+              title: Тип канала
+              type: string
+            provider:
+              title: Оператор связи
+              type: string
+            bandwidth:
+              title: Пропускная способность, Мб\с
+              type: integer
+            ch_type:
+              title: Тип канала
+              type: string
+              enum: [Основной, Резервный]
+          required:
+            - type
+            - ch_type
+      type: object
+      patternProperties:
+        "^[a-zA-Z0-9_\\.]*$":
+          $ref: "#/$defs/seaf.ta.services.network_links"

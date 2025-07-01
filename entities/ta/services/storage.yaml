@@ -1,0 +1,90 @@
+entities:
+  seaf.ta.services.storage:
+    title: Storage
+    objects:
+      storage:
+        route: "/"
+        title: Система хранения данных
+    schema: # JSON Schema контролирующая описание объекта сущности
+      $defs:
+        seaf.ta.services.storage:
+          $ref: "#/$defs/seaf.ta.services.base.entity"
+          oneOf:
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum: [Software Defined Storage]
+                software:
+                  title: ПО реализующее SDS
+                  type: string
+                volume:
+                  title: Общий объём хранилища в ТБ
+                  type: integer
+                disk_type:
+                  title: Тип используемых дисков
+                  type: string
+                  enum: [SSD, SAS, SATA]
+                erasure_coding:
+                  title: Параметр чётности
+                  type: integer
+                protocols:
+                  title: Поддерживаемые протоколы для клиентских подключений
+                  type: string
+                availabilityzone:
+                  title: В какие зоны доступности входит
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
+                location:
+                  title: ID ЦОД или Офиса
+                  type: array
+                  items:
+                    anyOf:
+                      - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                      - $ref: "#/$rels/seaf.ta.services.office.office"
+                network_connection:
+                  title: Перечисление связанных сетей
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.network.network"
+              required:
+                - type
+                - software
+                - volume
+                - availabilityzone
+              additionalProperties: false
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum: [Simple Storage Service]
+                availabilityzone:
+                  title: В какие зоны доступности входит
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
+                software:
+                  title: ПО реализующее S3
+                  type: string
+                sla:
+                  title: SLA хранилища
+                  type: integer
+                network_connection:
+                  title: Перечисление связанных сетей
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.network.network"
+                hw_storage_connected:
+                  title: Какие СХД подключены
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.components.hw_storage.hw_storage"
+              required:
+                - type
+                - availabilityzone
+              additionalProperties: false
+      type: object
+      patternProperties:
+        "^[a-zA-Z0-9_\\.]*$":
+          $ref: "#/$defs/seaf.ta.services.storage"

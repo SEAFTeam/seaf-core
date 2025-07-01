@@ -1,0 +1,22 @@
+entities:
+  seaf.ta.services.office:
+    title: Офис или иное место присутствия
+    objects:
+      office:
+        route: "/"
+        title: Офис или иное место присутствия
+    schema: # JSON Schema контролирующая описание объекта сущности
+      type: object
+      patternProperties:
+        "^[a-zA-Z0-9_\\.]*$":
+          type: object
+          $ref: "#/$defs/seaf.ta.services.base.entity"
+          properties:
+            address:
+              title: Адрес офиса или местоположения
+              type: string
+            region:
+              title: В какой регион входит офис
+              $ref: "#/$rels/seaf.ta.services.dc_region.dc_region"
+          required:
+            - address

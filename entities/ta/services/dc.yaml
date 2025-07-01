@@ -1,0 +1,40 @@
+entities:
+  seaf.ta.services.dc:
+    title: Datacenter
+    objects:
+      dc:
+        route: "/"
+        title: Центр обработки данных
+    schema: # JSON Schema контролирующая описание объекта сущности
+      type: object
+      patternProperties:
+        "^[a-zA-Z0-9_\\.]*$":
+          $ref: "#/$defs/seaf.ta.services.base.entity"
+          properties:
+            ownership:
+              title: Тип владения ЦОД
+              type: string
+            type:
+              title: Тип ЦОД
+              type: string
+            vendor:
+              title: Поставщик
+              type: string
+            address:
+              title: Адрес ЦОД
+              type: string
+            rack_qty:
+              title: Количество стоек (аренда или владение)
+              type: integer
+            tier:
+              title: Уровень сертификации ЦОД
+              type: string
+            availabilityzone:
+              title: В какую зону доступности входит DC
+              $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
+          required:
+            - ownership
+            - type
+            - vendor
+            - address
+            - availabilityzone
