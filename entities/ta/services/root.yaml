@@ -16,3 +16,4 @@ imports:
   - software.yaml
   - network_segment.yaml
   - kb.yaml
+  - logical_link.yaml
