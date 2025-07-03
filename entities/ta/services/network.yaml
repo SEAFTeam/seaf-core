@@ -42,6 +42,9 @@ entities:
                   type: array
                   items:
                     $ref: "#/$rels/seaf.ta.services.network_segment.network_segment"
+                VRF:
+                  title: VRF
+                  type: string
               required:
                 - wan_ip
                 - type
@@ -77,6 +80,9 @@ entities:
                   type: string
                 purpose:
                   title: Назначение
+                  type: string
+                VRF:
+                  title: VRF
                   type: string
               required:
                 - type
