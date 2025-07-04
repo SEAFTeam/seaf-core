@@ -58,13 +58,14 @@ entities:
               items:
                 $ref: "#/$rels/seaf.ta.services.network.network"
           required:
-            - availabilityzone
             - software
             - master_qty
             - worker_qty
             - auth
             - cni
             - is_own
+            - network_connection
+            - availabilityzone
       type: object
       patternProperties:
         "^[a-zA-Z0-9_\\.]*$":

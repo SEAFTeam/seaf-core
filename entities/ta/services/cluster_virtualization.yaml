@@ -41,4 +41,4 @@ entities:
               items:
                 $ref: "#/$rels/seaf.ta.services.network.network"
           required:
-            - availabilityzone
+            - network_connection

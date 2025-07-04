@@ -35,5 +35,6 @@ entities:
               items:
                 $ref: "#/$rels/seaf.ta.services.network.network"
           required:
-            - availabilityzone
             - path
+            - network_connection
+            - availabilityzone

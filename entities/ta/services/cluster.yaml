@@ -51,7 +51,7 @@ entities:
                 - "Коммуникации (АТС, Почта, мессенджеры, СМС шлюзы и т.д.)"
                 - "Cерверы приложений и т.д."
           required:
-            - availabilityzone
+            - network_connection
       type: object
       patternProperties:
                 "^[a-zA-Z0-9_\\.]*$":

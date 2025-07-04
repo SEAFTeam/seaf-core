@@ -52,7 +52,7 @@ entities:
                 - type
                 - software
                 - volume
-                - availabilityzone
+                - network_connection
               additionalProperties: false
             - type: object
               properties:
@@ -82,6 +82,7 @@ entities:
                     $ref: "#/$rels/seaf.ta.components.hw_storage.hw_storage"
               required:
                 - type
+                - network_connection
                 - availabilityzone
               additionalProperties: false
       type: object
