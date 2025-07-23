@@ -19,3 +19,4 @@ imports:
   - dc_az_parent_check.yaml
   - dc_region_parent_check.yaml
   - network_segment_parent_check.yaml
+  - kb_connection_check.yaml
