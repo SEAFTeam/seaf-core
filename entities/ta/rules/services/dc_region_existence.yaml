@@ -1,0 +1,19 @@
+rules:
+  validators:
+    seaf.validation.ta.services.dc_region_existence:
+      uid: SEAF-TA-EXIST-002
+      title: Проверка наличия Региона (dc_region)
+      description: |
+        Проверяет, что в архитектуре описан хотя бы один Регион (dc_region).
+      correction: |
+        Убедитесь, что в файлах архитектуры (`/architecture/ta/`) создан
+        хотя бы один объект типа `seaf.ta.services.dc_region`.
+      source: |
+        ([
+          $count($."seaf.ta.services.dc_region") = 0 ? {
+              "uid": "seaf.validation.ta.existence.dc_region",
+              "title": "Отсутствует описание Региона (dc_region)",
+              "correction": "Необходимо описать хотя бы один Регион (seaf.ta.services.dc_region) в архитектуре.",
+              "description": "В архитектуре не описано ни одного Региона. Это базовый элемент для построения иерархии ТА."
+          }
+        ])

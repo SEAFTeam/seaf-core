@@ -1,0 +1,19 @@
+rules:
+  validators:
+    seaf.validation.ta.services.office_existence:
+      uid: SEAF-TA-EXIST-OFFICE
+      title: Проверка наличия Офиса (office)
+      description: |
+        Проверяет, что в архитектуре описан хотя бы один Офис (seaf.ta.services.office).
+      correction: |
+        Убедитесь, что в файлах архитектуры (`/architecture/ta/`) создан
+        хотя бы один объект типа `seaf.ta.services.office`.
+      source: |
+        ([
+          $count($."seaf.ta.services.office") = 0 ? {
+              "uid": "seaf.validation.ta.existence.office",
+              "title": "Отсутствует описание Офиса (office)",
+              "correction": "Необходимо описать хотя бы один Офис (seaf.ta.services.office) в архитектуре.",
+              "description": "В архитектуре не описано ни одного Офиса."
+          }
+        ])

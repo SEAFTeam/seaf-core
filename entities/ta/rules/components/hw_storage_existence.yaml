@@ -1,0 +1,19 @@
+rules:
+  validators:
+    seaf.validation.ta.components.hw_storage_existence:
+      uid: SEAF-TA-EXIST-HW-STORAGE
+      title: Проверка наличия Аппаратной СХД (hw_storage)
+      description: |
+        Проверяет, что в архитектуре описана хотя бы одна Аппаратная СХД (hw_storage).
+      correction: |
+        Убедитесь, что в файлах архитектуры (`/architecture/ta/`) создан
+        хотя бы один объект типа `seaf.ta.components.hw_storage`.
+      source: |
+        ([
+          $count($."seaf.ta.components.hw_storage") = 0 ? {
+              "uid": "seaf.validation.ta.existence.hw_storage",
+              "title": "Отсутствует описание Аппаратной СХД (hw_storage)",
+              "correction": "Необходимо описать хотя бы одну Аппаратную СХД (seaf.ta.components.hw_storage) в архитектуре.",
+              "description": "В архитектуре не описано ни одной Аппаратной СХД."
+          }
+        ])

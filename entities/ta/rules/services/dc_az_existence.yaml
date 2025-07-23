@@ -1,0 +1,19 @@
+rules:
+  validators:
+    seaf.validation.ta.services.dc_az_existence:
+      uid: SEAF-TA-EXIST-003
+      title: Проверка наличия Зоны доступности (dc_az)
+      description: |
+        Проверяет, что в архитектуре описана хотя бы одна Зона доступности (seaf.ta.services.dc_az).
+      correction: |
+        Убедитесь, что в файлах архитектуры (`/architecture/ta/`) создан
+        хотя бы один объект типа `seaf.ta.services.dc_az`.
+      source: |
+        ([
+          $count($."seaf.ta.services.dc_az") = 0 ? {
+              "uid": "seaf.validation.ta.existence.dc_az",
+              "title": "Отсутствует описание Зоны доступности (dc_az)",
+              "correction": "Необходимо описать хотя бы одну Зону доступности (seaf.ta.services.dc_az) в архитектуре.",
+              "description": "В архитектуре не описано ни одной Зоны доступности. Это базовый элемент для построения иерархии ТА."
+          }
+        ])

@@ -1,0 +1,19 @@
+rules:
+  validators:
+    seaf.validation.ta.services.network_segment_existence:
+      uid: SEAF-TA-EXIST-NET-SEGMENT
+      title: Проверка наличия Сетевого сегмента (network_segment)
+      description: |
+        Проверяет, что в архитектуре описан хотя бы один Сетевой сегмент (seaf.ta.services.network_segment).
+      correction: |
+        Убедитесь, что в файлах архитектуры (`/architecture/ta/`) создан
+        хотя бы один объект типа `seaf.ta.services.network_segment`.
+      source: |
+        ([
+          $count($."seaf.ta.services.network_segment") = 0 ? {
+              "uid": "seaf.validation.ta.existence.network_segment",
+              "title": "Отсутствует описание Сетевого сегмента (network_segment)",
+              "correction": "Необходимо описать хотя бы один Сетевой сегмент (seaf.ta.services.network_segment) в архитектуре.",
+              "description": "В архитектуре не описано ни одного Сетевого сегмента."
+          }
+        ])

@@ -1,0 +1,19 @@
+rules:
+  validators:
+    seaf.validation.ta.services.kb_existence:
+      uid: SEAF-TA-EXIST-KB
+      title: Проверка наличия Базы знаний (kb)
+      description: |
+        Проверяет, что в архитектуре описана хотя бы одна База знаний (kb).
+      correction: |
+        Убедитесь, что в файлах архитектуры (`/architecture/ta/`) создан
+        хотя бы один объект типа `seaf.ta.services.kb`.
+      source: |
+        ([
+          $count($."seaf.ta.services.kb") = 0 ? {
+              "uid": "seaf.validation.ta.existence.kb",
+              "title": "Отсутствует описание Базы знаний (kb)",
+              "correction": "Необходимо описать хотя бы одну Базу знаний (seaf.ta.services.kb) в архитектуре.",
+              "description": "В архитектуре не описано ни одной Базы знаний."
+          }
+        ])

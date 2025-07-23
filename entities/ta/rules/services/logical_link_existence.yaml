@@ -1,0 +1,19 @@
+rules:
+  validators:
+    seaf.validation.ta.services.logical_link_existence:
+      uid: SEAF-TA-EXIST-LOGICAL-LINK
+      title: Проверка наличия Логического канала (logical_link)
+      description: |
+        Проверяет, что в архитектуре описан хотя бы один Логический канал (logical_link).
+      correction: |
+        Убедитесь, что в файлах архитектуры (`/architecture/ta/`) создан
+        хотя бы один объект типа `seaf.ta.services.logical_link`.
+      source: |
+        ([
+          $count($."seaf.ta.services.logical_link") = 0 ? {
+              "uid": "seaf.validation.ta.existence.logical_link",
+              "title": "Отсутствует описание Логического канала (logical_link)",
+              "correction": "Необходимо описать хотя бы один Логический канал (seaf.ta.services.logical_link) в архитектуре.",
+              "description": "В архитектуре не описано ни одного Логического канала."
+          }
+        ])

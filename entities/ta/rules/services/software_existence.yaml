@@ -1,0 +1,19 @@
+rules:
+  validators:
+    seaf.validation.ta.services.software_existence:
+      uid: SEAF-TA-EXIST-SOFTWARE
+      title: Проверка наличия Программного обеспечения (software)
+      description: |
+        Проверяет, что в архитектуре описано хотя бы одно Программное обеспечение (seaf.ta.services.software).
+      correction: |
+        Убедитесь, что в файлах архитектуры (`/architecture/ta/`) создан
+        хотя бы один объект типа `seaf.ta.services.software`.
+      source: |
+        ([
+          $count($."seaf.ta.services.software") = 0 ? {
+              "uid": "seaf.validation.ta.existence.software",
+              "title": "Отсутствует описание Программного обеспечения (software)",
+              "correction": "Необходимо описать хотя бы одно Программное обеспечение (seaf.ta.services.software) в архитектуре.",
+              "description": "В архитектуре не описано ни одного Программного обеспечения."
+          }
+        ])
