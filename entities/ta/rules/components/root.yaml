@@ -3,3 +3,4 @@ imports:
   - network_existence.yaml
   - server_existence.yaml
   - user_device_existence.yaml
+  - network_connection_check.yaml
