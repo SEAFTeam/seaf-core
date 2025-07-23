@@ -20,3 +20,4 @@ imports:
   - dc_region_parent_check.yaml
   - network_segment_parent_check.yaml
   - kb_connection_check.yaml
+  - cluster_connection_check.yaml
