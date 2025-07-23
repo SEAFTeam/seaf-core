@@ -21,3 +21,8 @@ imports:
   - network_segment_parent_check.yaml
   - kb_connection_check.yaml
   - cluster_connection_check.yaml
+  - compute_service_connection_check.yaml
+  - monitoring_connection_check.yaml
+  - backup_connection_check.yaml
+  - cluster_virtualization_connection_check.yaml
+  - k8s_connection_check.yaml
