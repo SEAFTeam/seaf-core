@@ -1,5 +1,4 @@
-entities:
-  seaf.ta.services.network_links:
+seaf.ta.services.network_links:
     title: Network Links
     objects:
       network_links:
@@ -13,28 +12,45 @@ entities:
             network_connection:
               title: Перечисление связанных сетей
               type: array
+              maxItems: 2
               items:
                 $ref: "#/$rels/seaf.ta.services.network.network"
-            ch_number:
-              title: Номер канала
+            typeL1:
+              title: Протокол сигнального уровня (L1)
               type: string
-            type:
-              title: Тип канала
+              enum: [SONET/SDH,DWDM,Ethernet(over Dark Fiber),WIFI,Other_broadband]
+            typeL2: 
+              title: Проткол канального уровня (L2)
               type: string
-            provider:
-              title: Оператор связи
-              type: string
-            bandwidth:
-              title: Пропускная способность, Мб\с
-              type: integer
-            ch_type:
-              title: Тип канала
-              type: string
-              enum: [Основной, Резервный]
-          required:
-            - type
-            - ch_type
+              enum: [Ethernet,HDLC,IEEE 802.11 wireless LAN,MPLS,STP]
+            routing:
+                title: Протокол маршрутизации
+                type: string
+                enum: [static,ospf,ebgp,ibgp,eigrp,IGMP,bgpevpn]
+            encryption:
+                title: Тип шифрования канала
+                type: string
+                enum: [none,ipsec,ipsec_GOST,wireguard,openvpn]
+            encapsulation:
+                title: Инкапсуляция и туннелирвоание
+                type: string
+                enum: [none,GRE,IPoE,VXLAN,GENEVE,L2TP,PPTP,pppoe]
+            technology:
+                title: Технология коммуникации 
+                type: string
+                enum: [directlink,vpls,sdwan,dmvpn,s2svpn,c2svpn]
+            sla: 
+                title: Тип SLA
+                type: string
+                enum: [none,ipsla,provider,other_monitored]
+        required:
+            - network_connection
       type: object
       patternProperties:
         "^[a-zA-Z0-9_\\.]*$":
           $ref: "#/$defs/seaf.ta.services.network_links"
+
+
+
+
+          
