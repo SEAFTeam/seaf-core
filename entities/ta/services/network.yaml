@@ -22,21 +22,12 @@ entities:
                     anyOf:
                       - $ref: "#/$rels/seaf.ta.services.dc.dc"
                       - $ref: "#/$rels/seaf.ta.services.office.office"
-                ch_number:
-                  title: Номер канала
-                  type: string
                 wan_ip:
                   title: Внешняя сеть\IP
-                  type: string
-                provider:
-                  title: Оператор связи
                   type: string
                 bandwidth:
                   title: Пропускная способность, Мб\с
                   type: integer
-                description:
-                  title: Описание канала связи
-                  type: string
                 segment:
                   title: Вхождение в сетевые сегменты сети
                   type: array
@@ -45,11 +36,18 @@ entities:
                 VRF:
                   title: VRF
                   type: string
+                autonomus_system:
+                  title: Автономная система
+                  type: string
+                ip_version:
+                  title: Версия IP
+                  type: string
+                  enum: [v4,v6]
               required:
                 - wan_ip
                 - type
-                - provider
                 - bandwidth
+                - autonomus_system
               additionalProperties: false
             - type: object
               properties:
