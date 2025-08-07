@@ -17,7 +17,7 @@ entities:
             software_name:
               title: Наименование ПО
               type: string
-            label:
+            tag:
               title: Метка сервиса
               type: string
             status:
@@ -32,5 +32,5 @@ entities:
           required:
             - technology
             - software_name
-            - label
+            - tag
             - status
