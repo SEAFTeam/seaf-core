@@ -1,0 +1,19 @@
+rules:
+  validators:
+    seaf.validation.ta.services.cluster_existence:
+      uid: SEAF-TA-EXIST-CLUSTER
+      title: Проверка наличия Кластера (cluster)
+      description: |
+        Проверяет, что в архитектуре описан хотя бы один Кластер (cluster).
+      correction: |
+        Убедитесь, что в файлах архитектуры (`/architecture/ta/`) создан
+        хотя бы один объект типа `seaf.ta.services.cluster`.
+      source: |
+        ([
+          $count($."seaf.ta.services.cluster") = 0 ? {
+              "uid": "seaf.validation.ta.existence.cluster",
+              "title": "Отсутствует описание Кластера (cluster)",
+              "correction": "Необходимо описать хотя бы один Кластер (seaf.ta.services.cluster) в архитектуре.",
+              "description": "В архитектуре не описано ни одного Кластера."
+          }
+        ])

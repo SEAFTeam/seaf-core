@@ -1,0 +1,72 @@
+entities:
+  seaf.ta.services.k8s:
+    title: Kubernetes Cluster
+    objects:
+      k8s:
+        route: "/"
+        title: Kubernetes кластер
+    schema: # JSON Schema контролирующая описание объекта сущности
+      $defs:
+        seaf.ta.services.k8s:
+          $ref: "#/$defs/seaf.ta.services.base.entity"
+          properties:
+            availabilityzone:
+              title: В какие зоны доступности входит
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
+            location:
+              title: ID ЦОД или Офиса
+              type: array
+              items:
+                anyOf:
+                  - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                  - $ref: "#/$rels/seaf.ta.services.office.office"
+            is_own:
+              title: Кластер куплен как услуга
+              type: boolean
+            software:
+              title: ПО реализующее Kubernetes кластер
+              type: string
+            master_qty:
+              title: Количество мастер нод кластера
+              type: integer
+            worker_qty:
+              title: Количество воркер нод кластера
+              type: integer
+            cni:
+              title: CNI плагин
+              type: string
+            service_mesh:
+              title: Service Mesh
+              type: string
+            cluster_autoscaler:
+              title: Работа автомасштабирования воркер нод кластера
+              type: boolean
+            keys:
+              title: Хранилище секретов кластера
+              type: string
+            policy:
+              title: ПО для реализации управления политиками
+              type: string
+            auth:
+              title: ПО для реализации внешней системой аутентификации
+              type: string
+            network_connection:
+              title: Перечисление связанных сетей
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.network.network"
+          required:
+            - software
+            - master_qty
+            - worker_qty
+            - auth
+            - cni
+            - is_own
+            - network_connection
+            - availabilityzone
+      type: object
+      patternProperties:
+        "^[a-zA-Z0-9_\\.]*$":
+          $ref: "#/$defs/seaf.ta.services.k8s"

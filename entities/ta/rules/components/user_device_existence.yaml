@@ -1,0 +1,19 @@
+rules:
+  validators:
+    seaf.validation.ta.components.user_device_existence:
+      uid: SEAF-TA-EXIST-USER-DEVICE
+      title: Проверка наличия Клиентского устройства (user_device)
+      description: |
+        Проверяет, что в архитектуре описано хотя бы одно Клиентское устройство (seaf.ta.components.user_device).
+      correction: |
+        Убедитесь, что в файлах архитектуры (`/architecture/ta/`) создан
+        хотя бы один объект типа `seaf.ta.components.user_device`.
+      source: |
+        ([
+          $count($."seaf.ta.components.user_device") = 0 ? {
+              "uid": "seaf.validation.ta.existence.user_device",
+              "title": "Отсутствует описание Клиентского устройства (user_device)",
+              "correction": "Необходимо описать хотя бы одно Клиентское устройство (seaf.ta.components.user_device) в архитектуре.",
+              "description": "В архитектуре не описано ни одного Клиентского устройства."
+          }
+        ])

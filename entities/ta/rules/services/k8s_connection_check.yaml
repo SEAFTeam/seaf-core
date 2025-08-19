@@ -1,0 +1,36 @@
+rules:
+  validators:
+    seaf.validation.ta.k8s_connection_check:
+      uid: SEAF-TA-K8S-CONN-001
+      title: Проверка корректности связи Кластера Kubernetes с сетями
+      description: |
+        Проверяет, что у каждого Кластера Kubernetes (seaf.ta.services.k8s)
+        указано поле `network_connection`, оно не пустое и каждый его элемент
+        ссылается на реально существующую сеть.
+      correction: |
+        Убедитесь, что для каждого объекта типа `seaf.ta.services.k8s` указано
+        непустое поле `network_connection` и что каждая указанная сеть
+        определена в `seaf.ta.services.network`.
+      source: |
+        ([
+          $each($."seaf.ta.services.k8s", function($entity, $entity_key) {
+            (
+                $connections := $entity.network_connection;
+                $not($exists($connections)) or $count($connections) = 0 ? {
+                    "uid": "seaf.validation.ta.k8s_connection_check.missing." & $entity_key,
+                    "title": "У Кластера Kubernetes '" & $entity.title & "' отсутствует или не заполнено поле network_connection.",
+                    "correction": "Необходимо указать хотя бы одну сеть для поля `network_connection`.",
+                    "description": "У Кластера Kubernetes '" & $entity.title & "' (UID: " & $entity_key & ") отсутствует или не заполнено поле `network_connection`."
+                } : (
+                    $defined_network_keys := $keys($."seaf.ta.services.network");
+                    $invalid_connections := $filter($connections, function($c) { $not($c in $defined_network_keys) });
+                    $count($invalid_connections) > 0 ? {
+                        "uid": "seaf.validation.ta.k8s_connection_check.notfound." & $entity_key,
+                        "title": "Кластер Kubernetes '" & $entity.title & "' содержит ссылку на несуществующую сеть.",
+                        "correction": "Проверьте все сети в поле `network_connection` для сущности '" & $entity.title & "'. Одна или несколько из них не определены в `seaf.ta.services.network`.",
+                        "description": "Кластер Kubernetes '" & $entity.title & "' (UID: " & $entity_key & ") ссылается на несуществующие сети: " & $join($invalid_connections, ", ")
+                    }
+                )
+            )
+          })
+        ])

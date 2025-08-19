@@ -1,0 +1,22 @@
+entities:
+  seaf.ta.components.entity:
+    title: Базовая сущность компонента
+    schema:
+      $defs:
+        seaf.ta.components.base.entity:
+            type: object
+            properties:
+              title:
+                title: Наименование
+                type: string
+              description:
+                title: Описание
+                type: string
+              stand:
+                title: Имя стенда внутри окружения
+                type: array
+                items:
+                  $ref: "#/$rels/seaf.ta.services.stand.stand"
+              external_id:
+                title: Идентификатор во внешней системе
+                type: string

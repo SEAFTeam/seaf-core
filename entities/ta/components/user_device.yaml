@@ -1,0 +1,40 @@
+entities:
+  seaf.ta.components.user_device:
+    title: Пользовательское устройство
+    objects:
+      user_device:
+        route: "/"
+        title: Пользовательское устройство
+    schema: # JSON Schema контролирующая описание объекта сущности
+      type: object
+      patternProperties:
+        "^[a-zA-Z0-9_\\.]*$":
+          type: object
+          $ref: "#/$defs/seaf.ta.components.base.entity"
+          properties:
+            device_type:
+              title: Тип устройства
+              type: string
+              enum: [АРМ, Терминалы сбора данных (ТСД), Мобильные рабочие места (МРМ), IoT]
+            network_connection:
+              title: Перечисление связанных сетей
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.network.network"
+            location:
+              title: ID ЦОД или Офиса
+              type: array
+              items:
+                anyOf:
+                  - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                  - $ref: "#/$rels/seaf.ta.services.office.office"
+            segment:
+              title: Вхождение в сетевые сегменты сети
+              $ref: "#/$rels/seaf.ta.services.network_segment.network_segment"
+            network_connection_devices:
+              title: Перечисление связанных сетевых линков
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.network_links.network_links"
+          required:
+            - device_type

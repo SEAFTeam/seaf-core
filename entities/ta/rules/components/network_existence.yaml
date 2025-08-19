@@ -1,0 +1,19 @@
+rules:
+  validators:
+    seaf.validation.ta.components.network_existence:
+      uid: SEAF-TA-EXIST-NETWORK-COMP
+      title: Проверка наличия Сетевого устройства (network)
+      description: |
+        Проверяет, что в архитектуре описано хотя бы одно Сетевое устройство (seaf.ta.components.network).
+      correction: |
+        Убедитесь, что в файлах архитектуры (`/architecture/ta/`) создан
+        хотя бы один объект типа `seaf.ta.components.network`.
+      source: |
+        ([
+          $count($."seaf.ta.components.network") = 0 ? {
+              "uid": "seaf.validation.ta.existence.network_component",
+              "title": "Отсутствует описание Сетевого устройства (network)",
+              "correction": "Необходимо описать хотя бы одно Сетевое устройство (seaf.ta.components.network) в архитектуре.",
+              "description": "В архитектуре не описано ни одного Сетевого устройства."
+          }
+        ])

@@ -1,0 +1,37 @@
+rules:
+  validators:
+    seaf.validation.ta.dc_az_parent_check:
+      uid: SEAF-TA-DC-AZ-PARENT-001
+      title: Проверка корректности связи ЦОДа с зоной доступности
+      description: |
+        Проверяет, что у каждого Центра Обработки Данных (ЦОД) указано
+        поле `availabilityzone`, оно не пустое и ссылается на реально
+        существующую зону доступности.
+      correction: |
+        Убедитесь, что для каждого объекта типа `seaf.ta.services.dc` указано
+        непустое поле `availabilityzone` и что указанная зона доступности
+        определена в `seaf.ta.services.dc_az`.
+      source: |
+        ([
+          $each(
+            $."seaf.ta.services.dc",
+            function($v, $k) {
+              (
+                $az_key := $v.availabilityzone;
+                $az_exists := $exists($lookup($."seaf.ta.services.dc_az", $az_key));
+
+                $not($exists($az_key)) or $az_key = "" ? {
+                  "uid": "seaf.validation.ta.dc_az_parent_check.missing." & $k,
+                  "title": "У ЦОДа отсутствует или не заполнено поле availabilityzone: " & $v.title,
+                  "correction": "Необходимо указать непустое значение для поля `availabilityzone`.",
+                  "description": "У ЦОДа '" & $v.title & "' (UID: " & $k & ") отсутствует или не заполнено поле `availabilityzone`."
+                } : $not($az_exists) ? {
+                  "uid": "seaf.validation.ta.dc_az_parent_check.notfound." & $k,
+                  "title": "У ЦОДа '" & $v.title & "' указана несуществующая зона доступности: " & $az_key,
+                  "correction": "Убедитесь, что зона доступности '" & $az_key & "' определена в `seaf.ta.services.dc_az`.",
+                  "description": "ЦОД '" & $v.title & "' (UID: " & $k & ") ссылается на зону доступности '" & $az_key & "', которая не описана."
+                }
+              )
+            }
+          )
+        ])

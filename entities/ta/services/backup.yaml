@@ -1,0 +1,40 @@
+entities:
+  seaf.ta.services.backup:
+    title: Backup Service
+    objects:
+      backup:
+        route: "/"
+        title: Сервис резервного копирования
+    schema: # JSON Schema контролирующая описание объекта сущности
+      type: object
+      patternProperties:
+        "^[a-zA-Z0-9_\\.]*$":
+          $ref: "#/$defs/seaf.ta.services.base.entity"
+          properties:
+            availabilityzone:
+              title: В какие зоны доступности входит
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
+            location:
+              title: ID ЦОД или Офиса
+              type: array
+              items:
+                anyOf:
+                  - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                  - $ref: "#/$rels/seaf.ta.services.office.office"
+            path:
+              title: Место хранения РК
+              type: string
+            replication:
+              title: Репликация в другой ЦОД
+              type: boolean
+            network_connection:
+              title: Перечисление связанных сетей
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.network.network"
+          required:
+            - path
+            - network_connection
+            - availabilityzone

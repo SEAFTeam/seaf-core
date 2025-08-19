@@ -1,0 +1,12 @@
+entities:
+  seaf.ta.services.network_segment:
+    title: Network Segment
+    objects:
+      network_segment:
+        route: "/"
+        title: Сетевой сегмент
+    schema: # JSON Schema контролирующая описание объекта сущности
+      type: object
+      patternProperties:
+        "^[a-zA-Z0-9_\\.]*$":
+          $ref: "#/$defs/seaf.ta.services.base.entity"

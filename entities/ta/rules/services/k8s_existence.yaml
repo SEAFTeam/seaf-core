@@ -1,0 +1,19 @@
+rules:
+  validators:
+    seaf.validation.ta.services.k8s_existence:
+      uid: SEAF-TA-EXIST-K8S
+      title: Проверка наличия Кластера Kubernetes (k8s)
+      description: |
+        Проверяет, что в архитектуре описан хотя бы один Кластер Kubernetes (seaf.ta.services.k8s).
+      correction: |
+        Убедитесь, что в файлах архитектуры (`/architecture/ta/`) создан
+        хотя бы один объект типа `seaf.ta.services.k8s`.
+      source: |
+        ([
+          $count($."seaf.ta.services.k8s") = 0 ? {
+              "uid": "seaf.validation.ta.existence.k8s",
+              "title": "Отсутствует описание Кластера Kubernetes (k8s)",
+              "correction": "Необходимо описать хотя бы один Кластер Kubernetes (seaf.ta.services.k8s) в архитектуре.",
+              "description": "В архитектуре не описано ни одного Кластера Kubernetes."
+          }
+        ])

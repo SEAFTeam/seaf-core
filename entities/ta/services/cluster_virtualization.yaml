@@ -1,0 +1,44 @@
+entities:
+  seaf.ta.services.cluster_virtualization:
+    title: Описание кластера виртуализации
+    objects:
+      cluster_virtualization:
+        route: "/"
+        title: Кластер виртуализации
+    schema: # JSON Schema контролирующая описание объекта сущности
+      type: object
+      patternProperties:
+        "^[a-zA-Z0-9_\\.]*$":
+          $ref: "#/$defs/seaf.ta.services.base.entity"
+          properties:
+            hypervisor:
+              title: Гипервизор
+              type: string
+            oversubscription_rate:
+              title: Коэффициент переподписки кластера виртуализации
+              type: integer
+            drs_support:
+              title: Поддержка DRS кластером виртуализации
+              type: boolean
+            sdrs_support:
+              title: Поддержка Storage DRS кластером виртуализации
+              type: boolean
+            availabilityzone:
+              title: В какие зоны доступности входит
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
+            location:
+              title: ID ЦОД или Офиса
+              type: array
+              items:
+                anyOf:
+                  - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                  - $ref: "#/$rels/seaf.ta.services.office.office"
+            network_connection:
+              title: Перечисление связанных сетей
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.network.network"
+          required:
+            - network_connection

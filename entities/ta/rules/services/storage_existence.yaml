@@ -1,0 +1,19 @@
+rules:
+  validators:
+    seaf.validation.ta.services.storage_existence:
+      uid: SEAF-TA-EXIST-STORAGE
+      title: Проверка наличия Системы хранения данных (storage)
+      description: |
+        Проверяет, что в архитектуре описана хотя бы одна Система хранения данных (seaf.ta.services.storage).
+      correction: |
+        Убедитесь, что в файлах архитектуры (`/architecture/ta/`) создан
+        хотя бы один объект типа `seaf.ta.services.storage`.
+      source: |
+        ([
+          $count($."seaf.ta.services.storage") = 0 ? {
+              "uid": "seaf.validation.ta.existence.storage",
+              "title": "Отсутствует описание Системы хранения данных (storage)",
+              "correction": "Необходимо описать хотя бы одну Систему хранения данных (seaf.ta.services.storage) в архитектуре.",
+              "description": "В архитектуре не описано ни одной Системы хранения данных."
+          }
+        ])
