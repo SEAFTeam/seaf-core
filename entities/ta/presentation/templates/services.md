@@ -10,8 +10,17 @@
 ## Office
 ![Office](@entity/seaf.ta.services.office/table)
 
+## Environments
+![Environment](@entity/seaf.ta.services.environment/table)
+
+## Stands
+![Stand](@entity/seaf.ta.services.stand/table)
+
 ## Clusters
 ![Clusters](@entity/seaf.ta.services.cluster/table)
+
+## Compute Service
+![Compute Service](@entity/seaf.ta.services.compute_service/table)
 
 ## Storages
 ![Storages](@entity/seaf.ta.services.storage/table)
@@ -27,6 +36,9 @@
 
 ## Network Links
 ![Network Links](@entity/seaf.ta.services.network_links/table)
+
+## Network Segment
+![Network Segment](@entity/seaf.ta.services.network_segment/table)
 
 ## Backup Service
 ![Backup Service](@entity/seaf.ta.services.backup/table)

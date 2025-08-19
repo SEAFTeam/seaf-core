@@ -1,0 +1,19 @@
+rules:
+  validators:
+    seaf.validation.ta.services.dc_existence:
+      uid: SEAF-TA-EXIST-004
+      title: Проверка наличия ЦОД (dc)
+      description: |
+        Проверяет, что в архитектуре описан хотя бы один ЦОД (dc).
+      correction: |
+        Убедитесь, что в файлах архитектуры (`/architecture/ta/`) создан
+        хотя бы один объект типа `seaf.ta.services.dc`.
+      source: |
+        ([
+          $count($."seaf.ta.services.dc") = 0 ? {
+              "uid": "seaf.validation.ta.existence.dc",
+              "title": "Отсутствует описание ЦОД (dc)",
+              "correction": "Необходимо описать хотя бы один Центр Обработки Данных (seaf.ta.services.dc) в архитектуре.",
+              "description": "В архитектуре не описано ни одного ЦОДа. Это базовый элемент для построения иерархии ТА."
+          }
+        ])

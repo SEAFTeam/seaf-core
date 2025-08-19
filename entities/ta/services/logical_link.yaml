@@ -1,0 +1,69 @@
+entities:
+  seaf.ta.services.logical_link:
+    title: Логическая связь
+    objects:
+      logical_link:
+        route: "/"
+        title: Логическая связь
+    schema: # JSON Schema контролирующая описание объекта сущности
+      type: object
+      patternProperties:
+        "^[a-zA-Z0-9_\\.]*$":
+          $ref: "#/$defs/seaf.ta.services.base.entity"
+          properties:
+            source:
+              title: Источник связи
+              oneOf:
+                - $ref: "#/$rels/seaf.ta.components.hw_storage.hw_storage"
+                - $ref: "#/$rels/seaf.ta.components.network.network"
+                - $ref: "#/$rels/seaf.ta.components.server.server"
+                - $ref: "#/$rels/seaf.ta.components.user_device.user_device"
+                - $ref: "#/$rels/seaf.ta.services.backup.backup"
+                - $ref: "#/$rels/seaf.ta.services.cluster.cluster"
+                - $ref: "#/$rels/seaf.ta.services.cluster_virtualization.cluster_virtualization"
+                - $ref: "#/$rels/seaf.ta.services.compute_service.compute_service"
+                - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                - $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
+                - $ref: "#/$rels/seaf.ta.services.dc_region.dc_region"
+                - $ref: "#/$rels/seaf.ta.services.k8s.k8s"
+                - $ref: "#/$rels/seaf.ta.services.kb.kb"
+                - $ref: "#/$rels/seaf.ta.services.monitoring.monitoring"
+                - $ref: "#/$rels/seaf.ta.services.network.network"
+                - $ref: "#/$rels/seaf.ta.services.network_links.network_links"
+                - $ref: "#/$rels/seaf.ta.services.network_segment.network_segment"
+                - $ref: "#/$rels/seaf.ta.services.office.office"
+                - $ref: "#/$rels/seaf.ta.services.software.software"
+                - $ref: "#/$rels/seaf.ta.services.storage.storage"
+            target:
+              title: Приемник связи
+              type: array
+              items:
+                anyOf:
+                  - $ref: "#/$rels/seaf.ta.components.hw_storage.hw_storage"
+                  - $ref: "#/$rels/seaf.ta.components.network.network"
+                  - $ref: "#/$rels/seaf.ta.components.server.server"
+                  - $ref: "#/$rels/seaf.ta.components.user_device.user_device"
+                  - $ref: "#/$rels/seaf.ta.services.backup.backup"
+                  - $ref: "#/$rels/seaf.ta.services.cluster.cluster"
+                  - $ref: "#/$rels/seaf.ta.services.cluster_virtualization.cluster_virtualization"
+                  - $ref: "#/$rels/seaf.ta.services.compute_service.compute_service"
+                  - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                  - $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
+                  - $ref: "#/$rels/seaf.ta.services.dc_region.dc_region"
+                  - $ref: "#/$rels/seaf.ta.services.k8s.k8s"
+                  - $ref: "#/$rels/seaf.ta.services.kb.kb"
+                  - $ref: "#/$rels/seaf.ta.services.monitoring.monitoring"
+                  - $ref: "#/$rels/seaf.ta.services.network.network"
+                  - $ref: "#/$rels/seaf.ta.services.network_links.network_links"
+                  - $ref: "#/$rels/seaf.ta.services.network_segment.network_segment"
+                  - $ref: "#/$rels/seaf.ta.services.office.office"
+                  - $ref: "#/$rels/seaf.ta.services.software.software"
+                  - $ref: "#/$rels/seaf.ta.services.storage.storage"
+            direction:
+              title: Направление связи
+              type: string
+              enum: [ "==>", "<==", "<==>" ]
+          required:
+            - source
+            - target
+            - direction

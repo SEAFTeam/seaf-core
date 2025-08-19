@@ -1,0 +1,19 @@
+rules:
+  validators:
+    seaf.validation.ta.services.network_links_existence:
+      uid: SEAF-TA-EXIST-NET-LINKS
+      title: Проверка наличия Канала передачи данных (network_links)
+      description: |
+        Проверяет, что в архитектуре описан хотя бы один Канал передачи данных (seaf.ta.services.network_links).
+      correction: |
+        Убедитесь, что в файлах архитектуры (`/architecture/ta/`) создан
+        хотя бы один объект типа `seaf.ta.services.network_links`.
+      source: |
+        ([
+          $count($."seaf.ta.services.network_links") = 0 ? {
+              "uid": "seaf.validation.ta.existence.network_links",
+              "title": "Отсутствует описание Канала передачи данных (network_links)",
+              "correction": "Необходимо описать хотя бы один Канал передачи данных (seaf.ta.services.network_links) в архитектуре.",
+              "description": "В архитектуре не описано ни одного Канала передачи данных."
+          }
+        ])

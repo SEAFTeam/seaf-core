@@ -1,0 +1,19 @@
+rules:
+  validators:
+    seaf.validation.ta.services.monitoring_existence:
+      uid: SEAF-TA-EXIST-MONITORING
+      title: Проверка наличия Сервиса мониторинга (monitoring)
+      description: |
+        Проверяет, что в архитектуре описан хотя бы один Сервис мониторинга (monitoring).
+      correction: |
+        Убедитесь, что в файлах архитектуры (`/architecture/ta/`) создан
+        хотя бы один объект типа `seaf.ta.services.monitoring`.
+      source: |
+        ([
+          $count($."seaf.ta.services.monitoring") = 0 ? {
+              "uid": "seaf.validation.ta.existence.monitoring",
+              "title": "Отсутствует описание Сервиса мониторинга (monitoring)",
+              "correction": "Необходимо описать хотя бы один Сервис мониторинга (seaf.ta.services.monitoring) в архитектуре.",
+              "description": "В архитектуре не описано ни одного Сервиса мониторинга."
+          }
+        ])
