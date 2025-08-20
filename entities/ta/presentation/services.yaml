@@ -609,7 +609,7 @@ entities:
           )
 
       list:
-        title: Сервис доступа к ресурсам сети
+        title: Сетевые линки
         params:
           type: object
           properties:
@@ -640,34 +640,43 @@ entities:
             align: left
             width: 20%
 
-          - value: type
-            text: Тип
+          - value: encryption
+            text: Тип шифрования канала
             sortable: true
             align: left
             width: 20%
 
-          - value: provider
-            text: Провайдера
+          - value: technology
+            text: Технология коммуникации
+            sortable: true
+            align: left
+            width: 20%
+
+          - value: network_connection
+            text: Перечисление связанных сетей
             sortable: true
             align: left
             width: 20%
 
         source: >
           (
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.network_links"}, $]);
+            $get_link := $.functions."seaf.ta".get_link;
             [[$."seaf.ta.services.network_links".$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": title,
                 "description": description,
-                "type": type,
-                "provider": provider,
+                "encryption": encryption,
+                "technology": technology,
+                "network_connection": network_connection,
                 "link": '/entities/seaf.ta.services.network_links/list?ta-component-id=' & $COMPONENT_ID
               }
             )]^(title)]
           )
 
       list:
-        title: Сервис UP-LINK
+        title: Сетевые связанности
         params:
           type: object
           properties:
@@ -860,6 +869,7 @@ entities:
             sortable: true
             align: left
             width: 20%
+            link: link
 
           - value: description
             text: Описание
@@ -869,11 +879,14 @@ entities:
 
         source: >
           (
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.network_segment"}, $]);
+            $get_link := $.functions."seaf.ta".get_link;
             [[$."seaf.ta.services.network_segment".$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": title,
-                "description": description
+                "description": description,
+                "link": '/entities/seaf.ta.services.network_segment/list?ta-component-id=' & $COMPONENT_ID
               }
             )]^(title)]
           )
