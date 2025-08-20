@@ -6,11 +6,11 @@ entities:
           [
               {
                   'location': 'Архитектура/Техническая/Технические компоненты',
-                  'link': 'entities/seaf.ta/components_md'
+                  'link': 'entities/seaf.ta/components_md?domain='
               },
               {
                   'location': 'Архитектура/Техническая/Технические сервисы',
-                  'link': 'entities/seaf.ta/services_md'
+                  'link': 'entities/seaf.ta/services_md?domain='
               }
           ]
       )

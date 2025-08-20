@@ -4,9 +4,15 @@ functions:
      (
       $component := $.c;
       $context := $lookup($.entities,$component).**."properties";
-      $context.$spread().{
+      $refs := $context.$spread().{
       $keys()[0] : ($split($string($.**."$ref".%."$ref"),"/")[2])~>$replace(/^(.*)(\.\w+)$/,"$1") 
-      }~>$merge();   
+      }~>$merge();
+      $base_name := $split($lookup($lookup($.entities,$component).schema."$defs", $component)."$ref", "/")[2]~>$replace(".base","");
+      $context := $lookup($.entities,$base_name).**."properties";
+      $base_refs := $context.$spread().{
+                $keys()[0] : ($split($string($.**."$ref".%."$ref"),"/")[2])~>$replace(/^(.*)(\.\w+)$/,"$1") 
+                }~>$merge();
+      $merge([$refs, $base_refs]);
      )
 
   get_titles: >
@@ -33,6 +39,8 @@ functions:
        $type($v) = 'array'? 
          $count($v) >1?($link:=$v;$log("-+-> " & $link,["MTG"]);):$link :=  $map($v, function($val){'/entities/' & $href & '/list?ta-component-id=' & $val}):
        $link := $v;
+       /*$log("-??????-> " & $link,["MTG"]);*/
+       $link
      )
 
   get_item: >
@@ -45,7 +53,7 @@ functions:
   get_parent: >
      (
          /* o - объект, r - root поиска */
-         $obj := $.o;
+        $obj := $.o;
         $root := $.r?$.r:$.**;
         $keys($root)~> $single(function ($key) {
                   $lookup($root, $key)~>$keys()~>$single(function($v) { $v =  $obj })
@@ -80,4 +88,15 @@ functions:
                })?{$key:$val}})~>$merge();
           /* Получение наибольшей критичности */ 
           $b[($each($contain,function($v){ $map($b, function($val, $i) { $val = $v.'criticality' ? $i})[0] })~>$sort())[0]];
+    )
+
+# Фунуция выборки ограниченного списка объектов по критерию
+  get_list: >
+    (
+       $scope := $lookup($,$.s);
+       $domain := $.d & ".";
+       /*$log("-??????-> " & $.d,["MTG"]);*/
+       $boolean($trim($domain))?
+        $scope~>$keys()~>$filter(function($v){$contains($v,$domain)})~>$map(function($v){{$v:$lookup($scope, $v)}})~>$merge():
+        $scope;
     )
