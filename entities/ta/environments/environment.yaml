@@ -1,0 +1,12 @@
+entities:
+  seaf.ta.services.environment:
+    title: Environment
+    objects:
+      environment:
+        route: "/"
+        title: Имя окружения
+    schema:
+      type: object
+      patternProperties:
+        "^[a-zA-Z0-9_\\.]*$":
+          $ref: "#/$defs/seaf.ta.services.base.entity"

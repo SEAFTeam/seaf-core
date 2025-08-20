@@ -1,0 +1,19 @@
+rules:
+  validators:
+    seaf.validation.ta.environments.stand_existence:
+      uid: SEAF-TA-EXIST-STAND
+      title: Проверка наличия Стенда (stand)
+      description: |
+        Проверяет, что в архитектуре описан хотя бы один Стенд (seaf.ta.services.stand).
+      correction: |
+        Убедитесь, что в файлах архитектуры (`/architecture/ta/`) создан
+        хотя бы один объект типа `seaf.ta.services.stand`.
+      source: |
+        ([
+          $count($."seaf.ta.services.stand") = 0 ? {
+              "uid": "seaf.validation.ta.existence.stand",
+              "title": "Отсутствует описание Стенда (stand)",
+              "correction": "Необходимо описать хотя бы один Стенд (seaf.ta.services.stand) в архитектуре.",
+              "description": "В архитектуре не описано ни одного Стенда."
+          }
+        ])

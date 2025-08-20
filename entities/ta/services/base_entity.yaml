@@ -1,0 +1,37 @@
+entities:
+  seaf.ta.services.entity:
+    title: Базовая сущность сервиса
+    schema:
+      $defs:
+        seaf.ta.services.base.entity:
+          type: object
+          properties:
+            title:
+              title: Наименование
+              type: string
+            description:
+              title: Описание
+              type: string
+            app_components:
+              title: Перечисление связанных прикладных компонентов с технологичесим сервисом в виде массива
+              type: array
+              items:
+                $ref: "#/$rels/components.component"
+            requirements:
+              title: Требования
+              type: array
+              items:
+                $ref: "#/$rels/seaf.change.requirements.requirement"
+            integrations:
+              title: Перечисление связанных интеграций с технологичесим сервисом в виде массива
+              type: array
+              items:
+                $ref: "#/$rels/seaf.app.integrations.integrations"
+            stand:
+              title: Имя стенда внутри окружения
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.stand.stand"
+            external_id:
+              title: Идентификатор во внешней системе
+              type: string

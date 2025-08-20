@@ -1,0 +1,19 @@
+rules:
+  validators:
+    seaf.validation.ta.services.cluster_virtualization_existence:
+      uid: SEAF-TA-EXIST-CLUSTER-VIRT
+      title: Проверка наличия Кластера виртуализации (cluster_virtualization)
+      description: |
+        Проверяет, что в архитектуре описан хотя бы один Кластер виртуализации (cluster_virtualization).
+      correction: |
+        Убедитесь, что в файлах архитектуры (`/architecture/ta/`) создан
+        хотя бы один объект типа `seaf.ta.services.cluster_virtualization`.
+      source: |
+        ([
+          $count($."seaf.ta.services.cluster_virtualization") = 0 ? {
+              "uid": "seaf.validation.ta.existence.cluster_virtualization",
+              "title": "Отсутствует описание Кластера виртуализации (cluster_virtualization)",
+              "correction": "Необходимо описать хотя бы один Кластер виртуализации (seaf.ta.services.cluster_virtualization) в архитектуре.",
+              "description": "В архитектуре не описано ни одного Кластера виртуализации."
+          }
+        ])

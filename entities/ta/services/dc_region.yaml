@@ -1,0 +1,12 @@
+entities:
+  seaf.ta.services.dc_region:
+    title: Region for DCs
+    objects:
+      dc_region:
+        route: "/"
+        title: Имя региона
+    schema: # JSON Schema контролирующая описание объекта сущности
+      type: object
+      patternProperties:
+        "^[a-zA-Z0-9_\\.]*$":
+          $ref: "#/$defs/seaf.ta.services.base.entity"

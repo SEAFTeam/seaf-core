@@ -1,0 +1,37 @@
+rules:
+  validators:
+    seaf.validation.ta.dc_region_parent_check:
+      uid: SEAF-TA-DC-REGION-PARENT-001
+      title: Проверка корректности связи Зоны доступности с регионом
+      description: |
+        Проверяет, что у каждой Зоны доступности (dc_az) указано
+        поле `region`, оно не пустое и ссылается на реально
+        существующий регион.
+      correction: |
+        Убедитесь, что для каждого объекта типа `seaf.ta.services.dc_az` указано
+        непустое поле `region` и что указанный регион
+        определен в `seaf.ta.services.dc_region`.
+      source: |
+        ([
+          $each(
+            $."seaf.ta.services.dc_az",
+            function($v, $k) {
+              (
+                $region_key := $v.region;
+                $region_exists := $exists($lookup($."seaf.ta.services.dc_region", $region_key));
+
+                $not($exists($region_key)) or $region_key = "" ? {
+                  "uid": "seaf.validation.ta.dc_region_parent_check.missing." & $k,
+                  "title": "У Зоны доступности отсутствует или не заполнено поле region: " & $v.title,
+                  "correction": "Необходимо указать непустое значение для поля `region`.",
+                  "description": "У Зоны доступности '" & $v.title & "' (UID: " & $k & ") отсутствует или не заполнено поле `region`."
+                } : $not($region_exists) ? {
+                  "uid": "seaf.validation.ta.dc_region_parent_check.notfound." & $k,
+                  "title": "У Зоны доступности '" & $v.title & "' указан несуществующий регион: " & $region_key,
+                  "correction": "Убедитесь, что регион '" & $region_key & "' определен в `seaf.ta.services.dc_region`.",
+                  "description": "Зона доступности '" & $v.title & "' (UID: " & $k & ") ссылается на регион '" & $region_key & "', который не описан."
+                }
+              )
+            }
+          )
+        ])

@@ -1,0 +1,19 @@
+rules:
+  validators:
+    seaf.validation.ta.services.network_existence:
+      uid: SEAF-TA-EXIST-NETWORK
+      title: Проверка наличия Сети (network)
+      description: |
+        Проверяет, что в архитектуре описана хотя бы одна Сеть (network).
+      correction: |
+        Убедитесь, что в файлах архитектуры (`/architecture/ta/`) создан
+        хотя бы один объект типа `seaf.ta.services.network`.
+      source: |
+        ([
+          $count($."seaf.ta.services.network") = 0 ? {
+              "uid": "seaf.validation.ta.existence.network",
+              "title": "Отсутствует описание Сети (network)",
+              "correction": "Необходимо описать хотя бы одну Сеть (seaf.ta.services.network) в архитектуре.",
+              "description": "В архитектуре не описано ни одной Сети."
+          }
+        ])

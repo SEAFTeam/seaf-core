@@ -1,0 +1,19 @@
+rules:
+  validators:
+    seaf.validation.ta.services.compute_service_existence:
+      uid: SEAF-TA-EXIST-COMPUTE
+      title: Проверка наличия Вычислительного сервиса (compute_service)
+      description: |
+        Проверяет, что в архитектуре описан хотя бы один Вычислительный сервис (compute_service).
+      correction: |
+        Убедитесь, что в файлах архитектуры (`/architecture/ta/`) создан
+        хотя бы один объект типа `seaf.ta.services.compute_service`.
+      source: |
+        ([
+          $count($."seaf.ta.services.compute_service") = 0 ? {
+              "uid": "seaf.validation.ta.existence.compute_service",
+              "title": "Отсутствует описание Вычислительного сервиса (compute_service)",
+              "correction": "Необходимо описать хотя бы один Вычислительный сервис (seaf.ta.services.compute_service) в архитектуре.",
+              "description": "В архитектуре не описано ни одного Вычислительного сервиса."
+          }
+        ])

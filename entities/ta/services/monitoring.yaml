@@ -1,0 +1,49 @@
+entities:
+  seaf.ta.services.monitoring:
+    title: Monitoring Service
+    objects:
+      monitoring:
+        route: "/"
+        title: Сервис мониторинга
+    schema: # JSON Schema контролирующая описание объекта сущности
+      $defs:
+        seaf.ta.services.monitoring:
+          $ref: "#/$defs/seaf.ta.services.base.entity"
+          properties:
+            availabilityzone:
+              title: В какие зоны доступности входит
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
+            location:
+              title: ID ЦОД или Офиса
+              type: array
+              items:
+                anyOf:
+                  - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                  - $ref: "#/$rels/seaf.ta.services.office.office"
+            name:
+              title: Производитель и название системы мониторинга
+              type: string
+            role:
+              title: Роль
+              type: array
+              items:
+                enum: [Инфраструктурный, Прикладной, Журналирование, Трейсинг]
+            ha:
+              title: Высокая доступность системы мониторинга
+              type: boolean
+            network_connection:
+              title: Перечисление связанных сетей
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.network.network"
+          required:
+            - role
+            - ha
+            - network_connection
+            - availabilityzone
+      type: object
+      patternProperties:
+        "^[a-zA-Z0-9_\\.]*$":
+          $ref: "#/$defs/seaf.ta.services.monitoring"

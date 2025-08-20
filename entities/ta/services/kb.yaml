@@ -1,0 +1,36 @@
+entities:
+  seaf.ta.services.kb:
+    title: Сервис кибербезопасности
+    objects:
+      kb:
+        route: "/"
+        title: Сервис кибербезопасности
+    schema: # JSON Schema контролирующая описание объекта сущности
+      type: object
+      patternProperties:
+        "^[a-zA-Z0-9_\\.]*$":
+          $ref: "#/$defs/seaf.ta.services.base.entity"
+          properties:
+            technology:
+              title: Технология КБ
+              type: string
+            software_name:
+              title: Наименование ПО
+              type: string
+            tag:
+              title: Метка сервиса
+              type: string
+            status:
+              title: Статус сервиса
+              type: string
+              enum: [Создается, Используется, Выводится из эксплуатации]
+            network_connection:
+              title: Перечисление связанных сетей
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.network.network"
+          required:
+            - technology
+            - software_name
+            - tag
+            - status
