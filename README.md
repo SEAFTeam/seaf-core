@@ -4,8 +4,8 @@ Sber Enterprise Architecture Framework (SEAF) - открытый и развив
 
 ## Быстрый старт
 
-1. Установите DocHub используя [инструкцию](https://github.com/RabotaRu/dochub?tab=readme-ov-file#%D0%B1%D1%8B%D1%81%D1%82%D1%80%D1%8B%D0%B9-%D1%81%D1%82%D0%B0%D1%80%D1%82).
-Для ознокомления, рекомендуется использовать вариант развертывания - плагин для IDEA;
+1. Ознакомьтесь с [документацией](https://gitverse.ru/seafteam/seaf-archtool-core#user-content-быстрый-старт) и установите [актуальную версию ArchTool](https://gitverse.ru/seafteam/seaf-archtool-core/releases).
+Для первого ознакомления рекомендуется использовать вариант развертывания в виде плагина для IDEA (файл SEAF.ArchTool.JBPlugin-х.хх.х);
 2. Клонируйте данный репозиторий;
 3. Откройте проект в IDE.
 
@@ -34,18 +34,16 @@ flowchart TB
 ```
 * (1, 2, 3, 4) Философия фреймворка выражается в [манифесте](#манифест);
 * (5) Под поставкой понимается выпуск очередного релиза фреймворка в форме repo;
-* (6) В качестве референсного инструмента предлагается [DocHub](https://github.com/RabotaRu/DocHub);
+* (6) В качестве референсного инструмента предлагается [ArchTool](https://gitverse.ru/seafteam/seaf-archtool-core#user-content-быстрый-старт);
 * (7) Методология включается в виде документов в поставку;
 * (8) Поставка содержит [пример](https://github.com/SEAFTeam/seaf-dzo-example) описания архитектуры,
-  а также предлагается репозиторий [примеров](https://github.com/rpiontik/DocHubExamples)
-  применения подхода;
+  а также предлагается [репозиторий примеров применения подхода на gitverse](https://gitverse.ru/seafteam/seaf-examples);
 * (9) Входит в поставку;
 * (10) Входит в поставку;
 * (11) Сообщество обеспечивает развитие фреймворка и генерирует поставку;
 * (12) [Репозиторий фреймворка](https://github.com/SEAFTeam/seaf-core);
-* (13) Группа сообщества развивающего подход управления архитектуры кодом [DocHubTeam](https://t.me/archascode);
-* (14) [Статьи о развитии подхода](https://habr.com/ru/users/rpiontik/) и видео
-  c [воркшопами и митапами](https://www.youtube.com/@user-eq5pj3zk6w).
+* (13) Закрытая телеграм-группа сообщества развивающего подход управления архитектуры кодом;
+* (14) [Контент (видео) в канале сообщества с воркшопами и митапами](https://rutube.ru/channel/32378011/).
 
 ## Метамодель
 
@@ -171,30 +169,30 @@ ru.yandex.app.search
 sequenceDiagram
     actor Team 1
     actor Team 2
-    participant DocHub
+    participant ArchTool
     participant Repo Metamodel
     participant Repo Main
     participant Repo 1
     participant Repo 2
 
     alt Обзор архитектуры
-        Repo Metamodel->>DocHub: Метамодель
-        Repo Main->>DocHub: Концептуальная архитектура
-        Repo 1->>DocHub: Детальная архитектура
-        Repo 2->>DocHub: Детальная архитектура
-        DocHub->>Team 1: Артефакты
-        DocHub->>Team 2: Артефакты
+        Repo Metamodel->>ArchTool: Метамодель
+        Repo Main->>ArchTool: Концептуальная архитектура
+        Repo 1->>ArchTool: Детальная архитектура
+        Repo 2->>ArchTool: Детальная архитектура
+        ArchTool->>Team 1: Артефакты
+        ArchTool->>Team 2: Артефакты
     end
 
     alt Фокус на свой домен
-        Repo Metamodel->>DocHub: Метамодель
-        Repo 1->>DocHub: Детальная архитектура
-        DocHub->>Team 1: Артефакты
+        Repo Metamodel->>ArchTool: Метамодель
+        Repo 1->>ArchTool: Детальная архитектура
+        ArchTool->>Team 1: Артефакты
     end
 ```
 
 Связать репозитории и представить их в едином интерфейсе позволит референсный инструмент -
-[DocHub](https://dochub.info/)
+[ArchTool](https://gitverse.ru/seafteam/seaf-archtool-core).
 
 ### Развитие архкода
 
