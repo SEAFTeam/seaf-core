@@ -2,6 +2,7 @@ entities:
   # Структура меню
   seaf.ta.menu:
     menu: >
+     ($not($exists(base.sber.kadzo.enterprise_mode)) or $.sber.kadzo.enterprise_mode = false)? 
       (
           [
               {
