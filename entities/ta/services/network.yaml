@@ -25,9 +25,9 @@ entities:
                 wan_ip:
                   title: Внешняя сеть\IP
                   type: string
-                bandwidth:
-                  title: Пропускная способность, Мб\с
-                  type: integer
+                provider:
+                  title: Оператор связи
+                  type: string
                 segment:
                   title: Вхождение в сетевые сегменты сети
                   type: array
@@ -46,8 +46,7 @@ entities:
               required:
                 - wan_ip
                 - type
-                - bandwidth
-                - autonomus_system
+                - provider
               additionalProperties: false
             - type: object
               properties:

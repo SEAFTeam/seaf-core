@@ -11,11 +11,13 @@ entities:
             $ref: "#/$defs/seaf.ta.services.base.entity"
             properties:
               network_connection:
-                title: Перечисление связанных сетей
+                title: Перечисление связей
                 type: array
                 maxItems: 2
                 items:
-                  $ref: "#/$rels/seaf.ta.services.network.network"
+                  anyOf:
+                    - $ref: "#/$rels/seaf.ta.services.network.network"
+                    - $ref: "#/$rels/seaf.ta.components.network.network"
               typeL1:
                 title: Протокол сигнального уровня (L1)
                 type: string
