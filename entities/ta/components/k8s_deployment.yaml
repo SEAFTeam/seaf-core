@@ -1,0 +1,51 @@
+entities:
+  seaf.ta.components.k8s_deployment:
+    title: K8s deployment
+    objects:
+      deployment:
+        route: "/"
+        title: K8s deployment
+    schema:
+      $defs:
+        seaf.ta.components.k8s_deployment:
+          type: object
+          $ref: "#/$defs/seaf.ta.components.base.entity"
+          properties:
+            namespace_ref:
+              title: Ссылка на namespace
+              $ref: "#/$rels/seaf.ta.components.k8s_namespace.namespace"
+            cluster_ref:
+              title: Ссылка на кластер
+              $ref: "#/$rels/seaf.ta.services.k8s.k8s"
+            labels:
+              title: Список labels
+              type: array
+            containers:
+              type: array
+              items:
+                properties:
+                  name:
+                    title: название контейнера
+                    type: string
+                  image:
+                    title: ссылка на образ
+                    type: string
+                  resources:
+                    title: ресурсные ограничения для контейнера
+                    type: object
+                    properties:
+                      limits:
+                        title: ограничение на максимальное потребление
+                        type: object
+                        properties:
+                          cpu:
+                            title: ограничения на процессор
+                            type: string
+                          ram:
+                            title: ограничения на оперативную память
+                            type: string
+
+      type: object
+      patternProperties:
+        "^[a-zA-Z0-9_\\.]*$":
+          $ref: "#/$defs/seaf.ta.components.k8s_deployment"
