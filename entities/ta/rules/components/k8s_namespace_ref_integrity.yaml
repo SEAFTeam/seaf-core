@@ -1,0 +1,34 @@
+rules:
+  validators:
+    seaf.validation.ta.k8s_namespace_ref_integrity:
+      uid: SEAF-TA-K8S-REF-NS
+      title: Проверка ссылочной целостности Namespace → K8s
+      description: |
+        Проверяет, что у каждого seaf.ta.components.k8s_namespace поле cluster_ref
+        ссылается на существующий объект в seaf.ta.services.k8s.
+      correction: |
+        Убедитесь, что значение cluster_ref у Namespace соответствует ключу существующего
+        кластера в seaf.ta.services.k8s, или скорректируйте ссылку/создайте кластер.
+      source: |
+        ([
+          $each($."seaf.ta.components.k8s_namespace", function($ns, $ns_key){
+            (
+              $defined_k8s := $keys($."seaf.ta.services.k8s");
+              $ref := $ns.cluster_ref;
+              ($not($exists($ref)) or $ref = "") ? {
+                "uid": "seaf.validation.ta.k8s_namespace_ref_integrity.empty." & $ns_key,
+                "title": "Namespace '" & $ns.title & "' не содержит cluster_ref",
+                "correction": "Заполните поле cluster_ref значением ключа кластера K8s",
+                "description": "Namespace '" & $ns.title & "' (UID: " & $ns_key & ") не содержит ссылку cluster_ref"
+              } : (
+                $not($ref in $defined_k8s) ? {
+                  "uid": "seaf.validation.ta.k8s_namespace_ref_integrity.notfound." & $ns_key,
+                  "title": "Namespace '" & $ns.title & "' ссылается на несуществующий кластер",
+                  "correction": "Исправьте cluster_ref на существующий ключ из seaf.ta.services.k8s",
+                  "description": "Указанный cluster_ref='" & $ref & "' отсутствует среди ключей seaf.ta.services.k8s"
+                }
+              )
+            )
+          })
+        ])
+
