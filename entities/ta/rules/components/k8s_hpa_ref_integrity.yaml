@@ -1,8 +1,8 @@
 rules:
   validators:
-    seaf.validation.ta.k8s_hpa_ref_integrity:
+    seaf.validation.ta.components.k8s_hpa_ref_integrity:
       uid: SEAF-TA-K8S-REF-HPA
-      title: Проверка ссылочной целостности HPA → K8s и Deployment
+      title: Проверка корректности связи HPA с K8s и Deployment
       description: |
         Проверяет, что у каждого seaf.ta.components.k8s_hpa поля cluster_ref и target_ref
         указывают на существующие объекты в seaf.ta.services.k8s и seaf.ta.components.k8s_deployment соответственно.

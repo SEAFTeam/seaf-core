@@ -61,8 +61,22 @@ entities:
             sortable: false
             align: left
             width: 15%
+          - value: monitoring
+            text: Мониторинг
+            sortable: false
+            align: left
+            width: 15%
+            link: mon_link
+          - value: backup
+            text: Backup
+            sortable: false
+            align: left
+            width: 12%
+            link: backup_link
         source: >
           (
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.k8s"}, $]);
+            $get_link := $.functions."seaf.ta".get_link;
             [[$."seaf.ta.services.k8s".$spread().(
               $COMPONENT_ID := $keys()[0];
               $.*.{
@@ -77,6 +91,10 @@ entities:
                 "availabilityzone": availabilityzone,
                 "location": location,
                 "network_connection": network_connection,
+                "monitoring": $join(monitoring, ", "),
+                "backup": $join(backup, ", "),
+                "mon_link": $eval($get_link,{"hr":$refs."monitoring","val":monitoring}),
+                "backup_link": $eval($get_link,{"hr":$refs."backup","val":backup}),
                 "link": '/entities/seaf.ta.services.k8s/list?ta-component-id=' & $COMPONENT_ID
               }
             )]^(title)]
@@ -88,6 +106,72 @@ entities:
           properties:
             seaf-ta-component-id:
               title: Идентификатор компонента
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
+  seaf.ta.services.kb:
+    presentations:
+      table:
+        type: table
+        headers:
+          - value: title
+            text: Сервис КБ
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+          - value: tag
+            text: Тег
+            sortable: true
+            align: left
+            width: 10%
+          - value: technology
+            text: Технология
+            sortable: true
+            align: left
+            width: 20%
+          - value: software_name
+            text: Продукт
+            sortable: true
+            align: left
+            width: 15%
+          - value: status
+            text: Статус
+            sortable: true
+            align: left
+            width: 10%
+          - value: network_connection
+            text: Сети
+            sortable: false
+            align: left
+            width: 25%
+        source: >
+          (
+            [[$."seaf.ta.services.kb".$spread().(
+              $COMPONENT_ID := $keys()[0];
+              $val := $.*;
+              {
+                "title": $val.title,
+                "tag": $val.tag,
+                "technology": $val.technology,
+                "software_name": $val.software_name,
+                "status": $val.status,
+                "network_connection": $join($val.network_connection, ", "),
+                "link": '/entities/seaf.ta.services.kb/list?ta-component-id=' & $COMPONENT_ID
+              }
+            )]^(title)]
+          )
+      list:
+        title: Сервисы КБ
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: ????????????? ????????????
               type: string
           required:
             - ta-component-id

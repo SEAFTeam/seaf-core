@@ -1,8 +1,8 @@
 rules:
   validators:
-    seaf.validation.ta.k8s_namespace_ref_integrity:
+    seaf.validation.ta.components.k8s_namespace_ref_integrity:
       uid: SEAF-TA-K8S-REF-NS
-      title: Проверка ссылочной целостности Namespace → K8s
+      title: Проверка корректности связи Namespace с K8s
       description: |
         Проверяет, что у каждого seaf.ta.components.k8s_namespace поле cluster_ref
         ссылается на существующий объект в seaf.ta.services.k8s.

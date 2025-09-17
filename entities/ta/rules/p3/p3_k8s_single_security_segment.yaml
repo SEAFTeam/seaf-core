@@ -1,0 +1,79 @@
+rules:
+  validators:
+    seaf.validation.ta.p3.k8s_single_security_segment:
+      uid: SEAF-TA-P3-K8S-ONE-SEG
+      title: "[TACCS_1-P10-25-04] Все сети кластера одного типа сегмента (zone)"
+      description: |
+        Проверяет, что все сети из `network_connection` для каждого `seaf.ta.services.k8s` относятся
+        к одному и тому же типу сегмента, определяемому полем `zone` в `seaf.ta.services.network_segment`.
+        Допускается, что для разных ЦОДов сегменты разные (разные ключи), но значение `zone` должно совпадать
+        (например, везде `INT-NET`, либо везде `DMZ`).
+        Требование (цитата):
+        Каждый кластер вычислительных систем должен размещаться только в одной зоне безопасности
+      correction: |
+        Приведите `network_connection` к набору сетей одного сегмента безопасности.
+      source: |
+        ([
+          (
+          $code := "TACCS_1-P10-25-04";
+          $each($."seaf.ta.services.k8s", function($k, $k_key){
+            (
+              $user := $k.network_connection;
+              ($exists($user) and $count($user)>0) ? (
+                $net := $."seaf.ta.services.network";
+                $seg_defs := $."seaf.ta.services.network_segment";
+                /* Собираем список всех сегментов, на которые указывают сети кластера */
+                $seg_list := $reduce(
+                  $map($user, function($un){
+                    (
+                      $n := $lookup($net, $un);
+                      $seg := ($exists($n) and $exists($n.segment)) ? $n.segment : [];
+                      ($type($seg) = 'array') ? $seg : ($exists($seg) and $seg!="" ? [$seg] : [])
+                    )
+                  }),
+                  function($acc, $cur){ $acc ~> $append($cur) },
+                  []
+                );
+                /* Для каждого сегмента извлекаем тип зоны (zone): сначала верхний уровень, затем sber.zone */
+                $zones_list := $map($seg_list, function($sk){
+                  (
+                    $s := $lookup($seg_defs, $sk);
+                    $z := $exists($s.zone) ? $s.zone : (($exists($s.sber) and $exists($s.sber.zone)) ? $s.sber.zone : "");
+                    $z
+                  )
+                });
+                $zones := $distinct($filter($zones_list, function($z){ $exists($z) and $z != "" }));
+                $missing := $filter($seg_list, function($sk){
+                  (
+                    $s := $lookup($seg_defs, $sk);
+                    $not($exists($s.zone)) and $not($exists($s.sber) and $exists($s.sber.zone))
+                  )
+                });
+                (
+                  ($count($missing) > 0) ? {
+                    "uid": "seaf.validation.ta.p3.k8s_single_security_segment.zone_missing." & $k_key,
+                    "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_single_security_segment.zone_missing." & $k_key,
+                    "title": "K8s '" & $k.title & "': у части сегментов не задано поле zone",
+                    "correction": "Укажите свойство zone для всех используемых сетевых сегментов",
+                    "description": "Количество сегментов без zone: " & $string($count($missing))
+                  } : (
+                    ($count($zones) > 1) ? {
+                      "uid": "seaf.validation.ta.p3.k8s_single_security_segment.multi_zone." & $k_key,
+                      "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_single_security_segment.multi_zone." & $k_key,
+                      "title": "K8s '" & $k.title & "' использует сети с разными типами сегмента (zone)",
+                      "correction": "Приведите все сети к одному типу сегмента (zone)",
+                      "description": "Найдены zone: " & $join($zones, ", ")
+                    }
+                  )
+                )
+              ) : {
+                "uid": "seaf.validation.ta.p3.k8s_single_security_segment.empty." & $k_key,
+                "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_single_security_segment.empty." & $k_key,
+                "title": "K8s '" & $k.title & "' не задан network_connection",
+                "correction": "Укажите сети кластера",
+                "description": "Пустой network_connection"
+              }
+            )
+          })
+          )
+        ])

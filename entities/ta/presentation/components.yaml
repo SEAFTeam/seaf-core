@@ -52,6 +52,87 @@ entities:
         source: >
           ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
 
+  seaf.ta.components.k8s_node:
+    presentations:
+      table:
+        type: table
+        headers:
+          - value: title
+            text: K8s Узел
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+          - value: cluster_ref
+            text: Кластер
+            sortable: true
+            align: left
+            width: 15%
+            link: cluster_link
+          - value: version
+            text: Версия kubelet
+            sortable: true
+            align: left
+            width: 10%
+          - value: architecture
+            text: Архитектура CPU
+            sortable: true
+            align: left
+            width: 10%
+          - value: cpu
+            text: CPU
+            sortable: true
+            align: left
+            width: 10%
+          - value: ram
+            text: RAM (ГБ)
+            sortable: true
+            align: left
+            width: 10%
+          - value: zone
+            text: Зона
+            sortable: true
+            align: left
+            width: 10%
+          - value: labels
+            text: Метки
+            sortable: false
+            align: left
+            width: 15%
+        source: >
+          (
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.components.k8s_node"}, $]);
+            $get_link := $.functions."seaf.ta".get_link;
+            [[$."seaf.ta.components.k8s_node".$spread().(
+              $COMPONENT_ID := $keys()[0];
+              $.*.{
+                "title": title,
+                "cluster_ref": cluster_ref,
+                "version": version,
+                "architecture": architecture,
+                "cpu": cpu,
+                "ram": ram,
+                "zone": zone,
+                "labels": $join(labels, ", "),
+                "cluster_link": $eval($get_link,{"hr":$refs."cluster_ref","val":cluster_ref}),
+                "link": '/entities/seaf.ta.components.k8s_node/list?ta-component-id=' & $COMPONENT_ID
+              }
+            )]^(title)]
+          )
+      list:
+        title: K8s Узел
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: ????????????? ??????????
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
   seaf.ta.components.k8s_deployment:
     presentations:
       table:

@@ -1,0 +1,49 @@
+rules:
+  validators:
+    seaf.validation.ta.p3.k8s_hpa_constraints:
+      uid: SEAF-TA-P3-K8S-HPA-CONS
+      title: "[TACSA_4-P3-33-04 (частично)] Проверка ограничений HPA (min/max)"
+      description: |
+        Проверяет, что для каждого `seaf.ta.components.k8s_hpa` заданы min/max (min>0, max>=min).
+        Целостность ссылок (target_ref, cluster_ref) покрывается отдельными валидаторами, здесь — численные пределы.
+        Требование (частично): TACSA_4-P3-33-04 — Горизонтальное автоскалирование приложения; проверяем корректные пороги HPA.
+        
+        Требование (цитата):
+        Необходимо обеспечить резервное копирование конфигурации платформы контейнерной оркестрации.
+      correction: |
+        Задайте `min` и `max` у HPA, обеспечив min > 0 и max >= min.
+      source: |
+        ([
+          (
+            $req := "Необходимо обеспечить резервное копирование конфигурации платформы контейнерной оркестрации.";
+            $code := "TACSA_4-P3-33-04";
+            $each($."seaf.ta.components.k8s_hpa", function($h, $h_key){
+              (
+                $mn := $h.min; $mx := $h.max;
+                ($not($exists($mn)) or $not($exists($mx))) ? {
+                  "uid": "seaf.validation.ta.p3.k8s_hpa_constraints.missing." & $h_key,
+                  "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_hpa_constraints.missing." & $h_key,
+                  "title": "HPA '" & $h.title & "' не заданы min/max",
+                  "correction": "Заполните min и max",
+                  "description": "У HPA (" & $h_key & ") отсутствуют поля min/max\n\nТребование (цитата):\n" & $req
+                } : (
+                  ($mn <= 0) ? {
+                    "uid": "seaf.validation.ta.p3.k8s_hpa_constraints.min." & $h_key,
+                    "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_hpa_constraints.min." & $h_key,
+                    "title": "HPA '" & $h.title & "' имеет некорректный min",
+                    "correction": "min должен быть > 0",
+                    "description": "min=" & $string($mn) & "\n\nТребование (цитата):\n" & $req
+                  } : (
+                    ($mx < $mn) ? {
+                      "uid": "seaf.validation.ta.p3.k8s_hpa_constraints.max." & $h_key,
+                      "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_hpa_constraints.max." & $h_key,
+                      "title": "HPA '" & $h.title & "' имеет max < min",
+                      "correction": "max должен быть >= min",
+                      "description": "min=" & $string($mn) & ", max=" & $string($mx) & "\n\nТребование (цитата):\n" & $req
+                    }
+                  )
+                )
+              )
+            })
+          )
+        ])

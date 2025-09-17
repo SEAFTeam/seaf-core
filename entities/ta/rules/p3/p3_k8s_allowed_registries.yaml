@@ -1,0 +1,52 @@
+rules:
+  validators:
+    seaf.validation.ta.p3.k8s_allowed_registries:
+      uid: SEAF-TA-P3-K8S-REGISTRIES
+      title: "[TACCS_1-P10-29-04] Наличие ссылок на целевые реестры/репозитории (registries)"
+      description: |
+        Проверяет, что у `seaf.ta.services.k8s` задан массив `registries`, каждая ссылка указывает
+        на существующий объект `seaf.ta.services.kb` с тегом `Repo` или `Registry`. Проверка образов
+        Deployment на соответствие этим реестрам выполняется отдельными проверками (если будут добавлены).
+        Требование (цитата): TACCS_1-P10-29 04 — Программное обеспечение в Компании должно быть получено из целевых репозиториев
+      correction: |
+        Заполните массив `registries` ключами КБ с tag=Repo/Registry.
+      source: |
+        ([
+          (
+          $code := "TACCS_1-P10-29-04";
+          $each($."seaf.ta.services.k8s", function($k, $k_key){
+            (
+              $kb := $."seaf.ta.services.kb"; $regs := $k.registries;
+              ($not($exists($regs)) or $count($regs)=0) ? {
+                "uid": "seaf.validation.ta.p3.k8s_allowed_registries.missing." & $k_key,
+                "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_allowed_registries.missing." & $k_key,
+                "title": "K8s '" & $k.title & "' не заданы registries",
+                "correction": "Укажите список разрешенных реестров/репозиториев",
+                "description": "Пустой или отсутствующий массив registries"
+              } : (
+                $issues := $map($regs, function($r, $i){
+                  (
+                    $ref := $kb[$r];
+                    $not($exists($ref)) ? {
+                      "uid": "seaf.validation.ta.p3.k8s_allowed_registries.notfound." & $k_key & "." & $string($i),
+                      "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_allowed_registries.notfound." & $k_key & "." & $string($i),
+                      "title": "K8s '" & $k.title & "' registries[" & $string($i) & "] указывает на несуществующий КБ",
+                      "correction": "Исправьте ключ КБ в registries[" & $string($i) & "]",
+                      "description": "Ключ КБ='" & $r & "' отсутствует"
+                    } : (
+                      ($ref.tag!="Repo" and $ref.tag!="Registry") ? {
+                        "uid": "seaf.validation.ta.p3.k8s_allowed_registries.tag." & $k_key & "." & $string($i),
+                        "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_allowed_registries.tag." & $k_key & "." & $string($i),
+                        "title": "K8s '" & $k.title & "' registries[" & $string($i) & "] имеет неподходящий tag",
+                        "correction": "Ожидаемый tag Repo|Registry",
+                        "description": "Найден tag='" & $ref.tag & "'"
+                      }
+                    )
+                  )
+                });
+                $filter($issues, function($v){ $type($v) = 'object' })
+              )
+            )
+          })
+          )
+        ])

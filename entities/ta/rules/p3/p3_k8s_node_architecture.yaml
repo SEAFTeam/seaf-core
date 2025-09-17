@@ -1,0 +1,45 @@
+rules:
+  validators:
+    seaf.validation.ta.p3.k8s_node_architecture:
+      uid: SEAF-TA-P3-K8S-NODE-ARCH
+      title: "[TACSA_4-P3-2-04] Проверка архитектуры CPU узлов Kubernetes (x86-64/ARM)"
+      description: |
+        Проверяет, что у каждого `seaf.ta.components.k8s_node` заполнено поле `architecture`
+        и оно принимает одно из допустимых значений: `x86-64` или `ARM`.
+        Дополнительно: допускается синоним `amd64` для `x86-64`.
+        Требование: TACSA_4-P3-2-04 — Поддерживаемые аппаратные архитектуры для вычислительных узлов: x86-64 или ARM.
+        
+        Требование (цитата):
+        Серверное оборудование должно базироваться на процессорах архитектуры:
+        x86-64
+        ARM
+      correction: |
+        Заполните поле `architecture` узла Kubernetes значением `x86-64` или `ARM`.
+      source: |
+        ([
+          (
+            $req := "Серверное оборудование должно базироваться на процессорах архитектуры:\nx86-64\nARM";
+            $code := "TACSA_4-P3-2-04";
+            $each($."seaf.ta.components.k8s_node", function($n, $n_key){
+              (
+                $arch := $n.architecture;
+                $norm := $lowercase($arch);
+                ($not($exists($arch)) or $arch = "") ? {
+                  "uid": "seaf.validation.ta.p3.k8s_node_architecture.empty." & $n_key,
+                  "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_node_architecture.empty." & $n_key,
+                  "title": "K8s Node '" & $n.title & "' не указана архитектура CPU",
+                  "correction": "Укажите архитектуру CPU: x86-64 (или amd64) либо ARM",
+                  "description": "Узел (" & $n_key & ") не содержит поле architecture\n\nТребование (цитата):\n" & $req
+                } : (
+                  ($not($norm = "x86-64" or $norm = "arm" or $norm = "amd64")) ? {
+                    "uid": "seaf.validation.ta.p3.k8s_node_architecture.invalid." & $n_key,
+                    "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_node_architecture.invalid." & $n_key,
+                    "title": "K8s Node '" & $n.title & "' имеет недопустимую архитектуру",
+                    "correction": "Измените architecture на x86-64 (или amd64) либо ARM",
+                    "description": "architecture='" & $arch & "' недопустимо\n\nТребование (цитата):\n" & $req
+                  }
+                )
+              )
+            })
+          )
+        ])

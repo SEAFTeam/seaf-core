@@ -1,0 +1,56 @@
+rules:
+  validators:
+    seaf.validation.ta.p3.k8s_pam:
+      uid: SEAF-TA-P3-K8S-PAM
+      title: "[TACCS_1-P10-7-04] Привилегированный доступ (PAM)"
+      description: |
+        Проверяет, что для `seaf.ta.services.k8s` задано поле `pam`, ссылка указывает на существующий
+        объект `seaf.ta.services.kb` с тегом `PAM`, и между k8s и сервисом есть пересечение сетей.
+      correction: |
+        Укажите `pam` (ключ КБ с tag=PAM) и обеспечьте сетевую достижимость (общие сети).
+      source: |
+        ([
+          (
+          $code := "TACCS_1-P10-7-04";
+          $each($."seaf.ta.services.k8s", function($k, $k_key){
+            (
+              $kb := $."seaf.ta.services.kb"; $nets := $k.network_connection; $val := $k.pam;
+              ($not($exists($val)) or $val="") ? {
+                "uid": "seaf.validation.ta.p3.k8s_pam.missing." & $k_key,
+                "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_pam.missing." & $k_key,
+                "title": "K8s '" & $k.title & "' не задан pam (PAM)",
+                "correction": "Укажите ключ КБ с tag=PAM",
+                "description": "Отсутствует ссылка на PAM в поле pam"
+              } : (
+                $ref := $kb[$val];
+                $not($exists($ref)) ? {
+                  "uid": "seaf.validation.ta.p3.k8s_pam.notfound." & $k_key,
+                  "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_pam.notfound." & $k_key,
+                  "title": "K8s '" & $k.title & "' pam указывает на несуществующий КБ",
+                  "correction": "Исправьте ключ КБ в pam",
+                  "description": "Ключ='" & $val & "' отсутствует в seaf.ta.services.kb"
+                } : (
+                  $ref.tag != "PAM" ? {
+                    "uid": "seaf.validation.ta.p3.k8s_pam.tag." & $k_key,
+                    "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_pam.tag." & $k_key,
+                    "title": "K8s '" & $k.title & "' pam указывает на КБ с неподходящим тегом",
+                    "correction": "Укажите КБ с tag=PAM",
+                    "description": "Найден tag='" & $ref.tag & "'"
+                  } : (
+                    ($exists($nets) and $exists($ref.network_connection)) ? (
+                      $common := $filter($nets, function($n){ $n in $ref.network_connection });
+                      ($count($common)=0) ? {
+                        "uid": "seaf.validation.ta.p3.k8s_pam.reach." & $k_key,
+                        "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_pam.reach." & $k_key,
+                        "title": "K8s '" & $k.title & "' и PAM не имеют общих сетей",
+                        "correction": "Добавьте пересечение в network_connection",
+                        "description": "Нет общих сетей между K8s и PAM"
+                      }
+                    )
+                  )
+                )
+              )
+            )
+          })
+          )
+        ])

@@ -1,0 +1,57 @@
+rules:
+  validators:
+    seaf.validation.ta.p3.k8s_policy_engine:
+      uid: SEAF-TA-P3-K8S-POLICY
+      title: "[TACCS_1-P10-28-04] Политики безопасности (policy)"
+      description: |
+        Проверяет, что для `seaf.ta.services.k8s` задано поле `policy`, ссылка указывает на существующий
+        объект `seaf.ta.services.kb` с тегом `Policy`, и между k8s и сервисом есть пересечение сетей.
+        Требование (цитата): TACCS_1-P10-28 04 — Платформа контейнерной оркестрации должна обеспечивать возможность управления политиками безопасности
+      correction: |
+        Укажите `policy` (ключ КБ с tag=Policy) и обеспечьте сетевую достижимость (общие сети).
+      source: |
+        ([
+          (
+          $code := "TACCS_1-P10-28-04";
+          $each($."seaf.ta.services.k8s", function($k, $k_key){
+            (
+              $kb := $."seaf.ta.services.kb"; $nets := $k.network_connection; $val := $k.policy;
+              ($not($exists($val)) or $val="") ? {
+                "uid": "seaf.validation.ta.p3.k8s_policy_engine.missing." & $k_key,
+                "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_policy_engine.missing." & $k_key,
+                "title": "K8s '" & $k.title & "' не задан policy (Policy)",
+                "correction": "Укажите ключ КБ с tag=Policy",
+                "description": "Отсутствует ссылка на Policy в поле policy"
+              } : (
+                $ref := $kb[$val];
+                $not($exists($ref)) ? {
+                  "uid": "seaf.validation.ta.p3.k8s_policy_engine.notfound." & $k_key,
+                  "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_policy_engine.notfound." & $k_key,
+                  "title": "K8s '" & $k.title & "' policy указывает на несуществующий КБ",
+                  "correction": "Исправьте ключ КБ в policy",
+                  "description": "Ключ='" & $val & "' отсутствует в seaf.ta.services.kb"
+                } : (
+                  $ref.tag != "Policy" ? {
+                    "uid": "seaf.validation.ta.p3.k8s_policy_engine.tag." & $k_key,
+                    "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_policy_engine.tag." & $k_key,
+                    "title": "K8s '" & $k.title & "' policy указывает на КБ с неподходящим тегом",
+                    "correction": "Укажите КБ с tag=Policy",
+                    "description": "Найден tag='" & $ref.tag & "'"
+                  } : (
+                    ($exists($nets) and $exists($ref.network_connection)) ? (
+                      $common := $filter($nets, function($n){ $n in $ref.network_connection });
+                      ($count($common)=0) ? {
+                        "uid": "seaf.validation.ta.p3.k8s_policy_engine.reach." & $k_key,
+                        "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_policy_engine.reach." & $k_key,
+                        "title": "K8s '" & $k.title & "' и Policy не имеют общих сетей",
+                        "correction": "Добавьте пересечение в network_connection",
+                        "description": "Нет общих сетей между K8s и Policy"
+                      }
+                    )
+                  )
+                )
+              )
+            )
+          })
+          )
+        ])

@@ -1,0 +1,71 @@
+rules:
+  validators:
+    seaf.validation.ta.p3.k8s_management_networks:
+      uid: SEAF-TA-P3-K8S-MGMT-NET
+      title: Проверка управляемых сетей (Management) и их изоляции
+      description: |
+        Проверяет, что у `seaf.ta.services.k8s` заполнено поле `management_networks`,
+        и что сегменты сетей управления не пересекаются с сегментами пользовательских сетей
+        из `network_connection`.
+        Требование (цитата):
+        Управляющие интерфейсы должны быть изолированы или размещаться в одном или более выделенных управляющих сегментах (Management) в сети компании
+      correction: |
+        Укажите `management_networks` и обеспечьте, чтобы их `segment` отличались от сегментов сетей
+        из `network_connection`.
+      source: |
+        ([
+          (
+          $code := "TACCS_1-P10-13-04";
+          $each($."seaf.ta.services.k8s", function($k, $k_key){
+            (
+              $mgmt := $k.management_networks;
+              $user := $k.network_connection;
+              $net := $."seaf.ta.services.network";
+              ($not($exists($mgmt)) or $count($mgmt)=0) ? {
+                "uid": "seaf.validation.ta.p3.k8s_management_networks.missing." & $k_key,
+                "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_management_networks.missing." & $k_key,
+                "title": "K8s '" & $k.title & "' не заполнено management_networks",
+                "correction": "Заполните management_networks ссылками на сети управления",
+                "description": "Отсутствует список управляющих сетей"
+              } : (
+                ($exists($user) and $count($user)>0) ? (
+                  /* Собираем сегменты для mgmt без $flatten */
+                  $mgmtSegList := $reduce(
+                    $map($mgmt, function($id){
+                      (
+                        $n := $lookup($net, $id);
+                        $seg := ($exists($n) and $exists($n.segment)) ? $n.segment : [];
+                        ($type($seg) = 'array') ? $seg : ($exists($seg) and $seg!="" ? [$seg] : [])
+                      )
+                    }),
+                    function($acc, $cur){ $acc ~> $append($cur) },
+                    []
+                  );
+                  $mgmtSeg := $distinct($mgmtSegList);
+                  /* Собираем сегменты для user без $flatten */
+                  $userSegList := $reduce(
+                    $map($user, function($id){
+                      (
+                        $n := $lookup($net, $id);
+                        $seg := ($exists($n) and $exists($n.segment)) ? $n.segment : [];
+                        ($type($seg) = 'array') ? $seg : ($exists($seg) and $seg!="" ? [$seg] : [])
+                      )
+                    }),
+                    function($acc, $cur){ $acc ~> $append($cur) },
+                    []
+                  );
+                  $userSeg := $distinct($userSegList);
+                  $inter := $filter($mgmtSeg, function($s){ $s in $userSeg });
+                  ($count($inter) > 0) ? {
+                    "uid": "seaf.validation.ta.p3.k8s_management_networks.overlap." & $k_key,
+                    "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_management_networks.overlap." & $k_key,
+                    "title": "K8s '" & $k.title & "' сети управления пересекаются по сегментам с пользовательскими",
+                    "correction": "Разделите сегменты: вынесите management-сети в отдельные сегменты",
+                    "description": "Найдены общие сегменты: " & $join($inter, ", ")
+                  }
+                )
+              )
+            )
+          })
+          )
+        ])

@@ -1,6 +1,6 @@
 rules:
   validators:
-    seaf.validation.ta.cluster_connection_check:
+    seaf.validation.ta.services.cluster_connection_check:
       uid: SEAF-TA-CLUSTER-CONN-001
       title: Проверка корректности связи Кластера с сетями
       description: |

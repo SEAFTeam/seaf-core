@@ -1,0 +1,57 @@
+rules:
+  validators:
+    seaf.validation.ta.p3.k8s_idp_integration:
+      uid: SEAF-TA-P3-K8S-IDP
+      title: "[TACCS_1-P10-10-04] Интеграция с IdP (auth)"
+      description: |
+        Проверяет, что для `seaf.ta.services.k8s` задано поле `auth`, ссылка указывает на существующий
+        объект `seaf.ta.services.kb` с тегом `IdP`, и между k8s и сервисом IdP есть пересечение сетей.
+        Требование (цитата): TACCS_1-P10-10 04 — Объекты управления, предоставляющие внутренним пользователям (сотрудникам Компании и сотрудникам сторонних организаций, работающих по договору) доступ через пользовательский WEB-интерфейс или толстый клиент, должны интегрироваться с целевой системой аутентификации
+      correction: |
+        Укажите `auth` (ключ КБ с tag=IdP) и обеспечьте сетевую достижимость (общие сети).
+      source: |
+        ([
+          (
+          $code := "TACCS_1-P10-10-04";
+          $each($."seaf.ta.services.k8s", function($k, $k_key){
+            (
+              $kb := $."seaf.ta.services.kb"; $nets := $k.network_connection; $val := $k.auth;
+              ($not($exists($val)) or $val="") ? {
+                "uid": "seaf.validation.ta.p3.k8s_idp_integration.missing." & $k_key,
+                "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_idp_integration.missing." & $k_key,
+                "title": "K8s '" & $k.title & "' не задан auth (IdP)",
+                "correction": "Укажите ключ КБ с tag=IdP",
+                "description": "Отсутствует ссылка на IdP в поле auth"
+              } : (
+                $ref := $kb[$val];
+                $not($exists($ref)) ? {
+                  "uid": "seaf.validation.ta.p3.k8s_idp_integration.notfound." & $k_key,
+                  "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_idp_integration.notfound." & $k_key,
+                  "title": "K8s '" & $k.title & "' auth указывает на несуществующий КБ",
+                  "correction": "Исправьте ключ КБ в auth",
+                  "description": "Ключ='" & $val & "' отсутствует в seaf.ta.services.kb"
+                } : (
+                  $ref.tag != "IdP" ? {
+                    "uid": "seaf.validation.ta.p3.k8s_idp_integration.tag." & $k_key,
+                    "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_idp_integration.tag." & $k_key,
+                    "title": "K8s '" & $k.title & "' auth указывает на КБ с неподходящим тегом",
+                    "correction": "Укажите КБ с tag=IdP",
+                    "description": "Найден tag='" & $ref.tag & "'"
+                  } : (
+                    ($exists($nets) and $exists($ref.network_connection)) ? (
+                      $common := $filter($nets, function($n){ $n in $ref.network_connection });
+                      ($count($common)=0) ? {
+                        "uid": "seaf.validation.ta.p3.k8s_idp_integration.reach." & $k_key,
+                        "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_idp_integration.reach." & $k_key,
+                        "title": "K8s '" & $k.title & "' и IdP не имеют общих сетей",
+                        "correction": "Добавьте пересечение в network_connection",
+                        "description": "Нет общих сетей между K8s и IdP"
+                      }
+                    )
+                  )
+                )
+              )
+            )
+          })
+          )
+        ])

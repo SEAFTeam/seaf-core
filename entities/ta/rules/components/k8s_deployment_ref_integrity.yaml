@@ -1,8 +1,8 @@
 rules:
   validators:
-    seaf.validation.ta.k8s_deployment_ref_integrity:
+    seaf.validation.ta.components.k8s_deployment_ref_integrity:
       uid: SEAF-TA-K8S-REF-DEP
-      title: Проверка ссылочной целостности Deployment → Namespace и K8s
+      title: Проверка корректности связи Deployment с Namespace и K8s
       description: |
         Проверяет, что у каждого seaf.ta.components.k8s_deployment поля namespace_ref и cluster_ref
         указывают на существующие объекты в seaf.ta.components.k8s_namespace и seaf.ta.services.k8s соответственно.

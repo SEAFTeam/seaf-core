@@ -1,0 +1,57 @@
+rules:
+  validators:
+    seaf.validation.ta.p3.k8s_access_mgmt_integration:
+      uid: SEAF-TA-P3-K8S-ACCESS
+      title: "[TACCS_1-P10-5-04] Интеграция с системой управления доступом (IdM)"
+      description: |
+        Проверяет, что для `seaf.ta.services.k8s` задано поле `idm`, ссылка указывает на существующий
+        объект `seaf.ta.services.kb` с тегом `IdM`, и между k8s и сервисом есть пересечение сетей.
+        Требование (цитата): TACCS_1-P10-5-04 — Требуется централизованное управление правами доступа и журналирование изменений, а также разграничение полномочий и аудит операций, в том числе с привилегиями, при предоставлении доступа к объектам управления
+      correction: |
+        Укажите `idm` (ключ КБ с tag=IdM) и обеспечьте сетевую достижимость (общие сети).
+      source: |
+        ([
+          (
+          $code := "TACCS_1-P10-5-04";
+          $each($."seaf.ta.services.k8s", function($k, $k_key){
+            (
+              $kb := $."seaf.ta.services.kb"; $nets := $k.network_connection; $val := $k.idm;
+              ($not($exists($val)) or $val="") ? {
+                "uid": "seaf.validation.ta.p3.k8s_access_mgmt_integration.missing." & $k_key,
+                "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_access_mgmt_integration.missing." & $k_key,
+                "title": "K8s '" & $k.title & "' не задан idm (IdM)",
+                "correction": "Укажите ключ КБ с tag=IdM",
+                "description": "Отсутствует ссылка на IdM в поле idm"
+              } : (
+                $ref := $kb[$val];
+                $not($exists($ref)) ? {
+                  "uid": "seaf.validation.ta.p3.k8s_access_mgmt_integration.notfound." & $k_key,
+                  "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_access_mgmt_integration.notfound." & $k_key,
+                  "title": "K8s '" & $k.title & "' idm указывает на несуществующий КБ",
+                  "correction": "Исправьте ключ КБ в idm",
+                  "description": "Ключ='" & $val & "' отсутствует в seaf.ta.services.kb"
+                } : (
+                  $ref.tag != "IdM" ? {
+                    "uid": "seaf.validation.ta.p3.k8s_access_mgmt_integration.tag." & $k_key,
+                    "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_access_mgmt_integration.tag." & $k_key,
+                    "title": "K8s '" & $k.title & "' idm указывает на КБ с неподходящим тегом",
+                    "correction": "Укажите КБ с tag=IdM",
+                    "description": "Найден tag='" & $ref.tag & "'"
+                  } : (
+                    ($exists($nets) and $exists($ref.network_connection)) ? (
+                      $common := $filter($nets, function($n){ $n in $ref.network_connection });
+                      ($count($common)=0) ? {
+                        "uid": "seaf.validation.ta.p3.k8s_access_mgmt_integration.reach." & $k_key,
+                        "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_access_mgmt_integration.reach." & $k_key,
+                        "title": "K8s '" & $k.title & "' и IdM не имеют общих сетей",
+                        "correction": "Добавьте пересечение в network_connection",
+                        "description": "Нет общих сетей между K8s и IdM"
+                      }
+                    )
+                  )
+                )
+              )
+            )
+          })
+          )
+        ])

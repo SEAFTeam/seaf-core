@@ -1,6 +1,6 @@
 rules:
   validators:
-    seaf.validation.ta.dc_az_parent_check:
+    seaf.validation.ta.services.dc_az_parent_check:
       uid: SEAF-TA-DC-AZ-PARENT-001
       title: Проверка корректности связи ЦОДа с зоной доступности
       description: |

@@ -1,6 +1,6 @@
 rules:
   validators:
-    seaf.validation.ta.kb_connection_check:
+    seaf.validation.ta.services.kb_connection_check:
       uid: SEAF-TA-KB-CONN-001
       title: Проверка корректности связи Сервиса КБ с сетями
       description: |

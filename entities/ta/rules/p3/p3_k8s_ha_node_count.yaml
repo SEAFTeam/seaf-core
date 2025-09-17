@@ -1,0 +1,38 @@
+rules:
+  validators:
+    seaf.validation.ta.p3.k8s_ha_node_count:
+      uid: SEAF-TA-P3-K8S-HA-NODES
+      title: "[TACSA_4-P9-46-04 (частично)] Минимальное число узлов на кластер (>=5)"
+      description: |
+        Частичная проверка отказоустойчивости (без разделения master/worker):
+        для каждого `seaf.ta.services.k8s` проверяется, что суммарное число `k8s_node`
+        с `cluster_ref` на этот кластер не меньше 5.
+        Требование (частично): TACSA_4-P9-46-04 — Минимально допустимая конфигурация HA (целевое требование: ≥3 master и ≥2 worker). Здесь проверяется только суммарное количество узлов.
+        
+        Требование (цитата):
+        Кластер платформы контейнерной оркестрации должен состоять из набора машин (узлов) и развёртывается на нескольких узлах.
+         - мастер узлы (master nodes) - минимум 3 узла
+         - рабочие узлы (woker nodes) - минимум 2 узла
+      correction: |
+        Добавьте узлы в кластер так, чтобы их общее количество было не ниже 5.
+      source: |
+        ([
+          (
+            $req := "Кластер платформы контейнерной оркестрации должен состоять из набора машин (узлов) и развёртывается на нескольких узлах.\n - мастер узлы (master nodes) - минимум 3 узла\n - рабочие узлы (woker nodes) - минимум 2 узла";
+            $code := "TACSA_4-P9-46-04";
+            $each($."seaf.ta.services.k8s", function($k, $k_key){
+              (
+                $node_keys := $keys($."seaf.ta.components.k8s_node");
+                $nodes := $filter($node_keys, function($nk){ $lookup($."seaf.ta.components.k8s_node", $nk).cluster_ref = $k_key });
+                $cnt := $count($nodes);
+                ($cnt < 5) ? {
+                  "uid": "seaf.validation.ta.p3.k8s_ha_node_count.too_few." & $k_key,
+                  "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_ha_node_count.too_few." & $k_key,
+                  "title": "Кластер '" & $k.title & "' содержит недостаточно узлов",
+                  "correction": "Обеспечьте суммарно не менее 5 узлов",
+                  "description": "Найдено узлов: " & $string($cnt) & ". Проверка частичная: без ролей master/worker\n\nТребование (цитата):\n" & $req
+                }
+              )
+            })
+          )
+        ])
