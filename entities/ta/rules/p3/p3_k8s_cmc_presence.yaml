@@ -1,0 +1,57 @@
+rules:
+  validators:
+    seaf.validation.ta.p3.k8s_cmc_presence:
+      uid: SEAF-TA-P3-K8S-CMC
+      title: "[TACCS_1-P10-2-04] ЦУЦ/УЦ: наличие целевого центра (ca)"
+      description: |
+        Проверяет, что для `seaf.ta.services.k8s` задано поле `ca`, ссылка указывает на существующий
+        объект `seaf.ta.services.kb` с тегом `CMC`, и при наличии сетей они пересекаются.
+        Требование (цитата): TACCS_1-P10-2-04 — Сертификаты, выпускаемые для объектов управления компании, за исключением публикуемых в сеть интернет (публичных), должны быть выпущены целевым удостоверяющим центром
+      correction: |
+        Укажите `ca` (ключ КБ с tag=CMC) и обеспечьте сетевую достижимость при необходимости.
+      source: |
+        ([
+          (
+          $code := "TACCS_1-P10-2-04";
+          $each($."seaf.ta.services.k8s", function($k, $k_key){
+            (
+              $kb := $."seaf.ta.services.kb"; $nets := $k.network_connection; $val := $k.ca;
+              ($not($exists($val)) or $val="") ? {
+                "uid": "seaf.validation.ta.p3.k8s_cmc_presence.missing." & $k_key,
+                "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_cmc_presence.missing." & $k_key,
+                "title": "K8s '" & $k.title & "' не задан ca (CMC)",
+                "correction": "Укажите ключ КБ с tag=CMC",
+                "description": "Отсутствует ссылка на CMC в поле ca"
+              } : (
+                $ref := $kb[$val];
+                $not($exists($ref)) ? {
+                  "uid": "seaf.validation.ta.p3.k8s_cmc_presence.notfound." & $k_key,
+                  "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_cmc_presence.notfound." & $k_key,
+                  "title": "K8s '" & $k.title & "' ca указывает на несуществующий КБ",
+                  "correction": "Исправьте ключ КБ в ca",
+                  "description": "Ключ='" & $val & "' отсутствует в seaf.ta.services.kb"
+                } : (
+                  $ref.tag != "CMC" ? {
+                    "uid": "seaf.validation.ta.p3.k8s_cmc_presence.tag." & $k_key,
+                    "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_cmc_presence.tag." & $k_key,
+                    "title": "K8s '" & $k.title & "' ca указывает на КБ с неподходящим тегом",
+                    "correction": "Укажите КБ с tag=CMC",
+                    "description": "Найден tag='" & $ref.tag & "'"
+                  } : (
+                    ($exists($nets) and $exists($ref.network_connection)) ? (
+                      $common := $filter($nets, function($n){ $n in $ref.network_connection });
+                      ($count($common)=0) ? {
+                        "uid": "seaf.validation.ta.p3.k8s_cmc_presence.reach." & $k_key,
+                        "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_cmc_presence.reach." & $k_key,
+                        "title": "K8s '" & $k.title & "' и CMC не имеют общих сетей",
+                        "correction": "Добавьте пересечение в network_connection",
+                        "description": "Нет общих сетей между K8s и CMC"
+                      }
+                    )
+                  )
+                )
+              )
+            )
+          })
+          )
+        ])

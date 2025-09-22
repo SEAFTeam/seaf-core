@@ -2,3 +2,4 @@ imports:
   - components/root.yaml
   - environments/root.yaml
   - services/root.yaml
+  - p3/root.yaml

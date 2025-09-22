@@ -1,6 +1,6 @@
 rules:
   validators:
-    seaf.validation.ta.user_device_connection_check:
+    seaf.validation.ta.components.user_device_connection_check:
       uid: SEAF-TA-USER-DEV-CONN-001
       title: Проверка корректности связи Пользовательского устройства с сетями
       description: |

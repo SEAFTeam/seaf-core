@@ -1,0 +1,50 @@
+rules:
+  validators:
+    seaf.validation.ta.p3.k8s_cluster_core_features:
+      uid: SEAF-TA-P3-K8S-CLUSTER-FEAT
+      title: "[TACSA_4-P3-33-04 (частично)] Наличие CNI, Service Mesh и Cluster Autoscaler у кластера"
+      description: |
+        Проверяет, что для `seaf.ta.services.k8s` заполнены поля `cni` и `service_mesh`,
+        а также задан признак `cluster_autoscaler`.
+        Требование (частично): TACSA_4-P3-33-04 — Обеспечить горизонтальное масштабирование приложения; проверяем наличие HPA/кластерного автоскейлера и сетевых компонентов кластера.
+        
+        Требование (цитата):
+        Необходимо обеспечить резервное копирование конфигурации платформы контейнерной оркестрации.
+      correction: |
+        Для кластера укажите используемые `cni`, `service_mesh` и значение `cluster_autoscaler`.
+      source: |
+        ([
+          (
+            $req := "Необходимо обеспечить резервное копирование конфигурации платформы контейнерной оркестрации.";
+            $code := "TACSA_4-P3-33-04";
+            $each($."seaf.ta.services.k8s", function($k, $k_key){
+              (
+                $issues := [
+                  ($not($exists($k.cni)) or $k.cni = "") ? {
+                    "uid": "seaf.validation.ta.p3.k8s_cluster_core_features.cni." & $k_key,
+                    "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_cluster_core_features.cni." & $k_key,
+                    "title": "Кластер '" & $k.title & "' без указанного CNI",
+                    "correction": "Заполните поле cni",
+                    "description": "Кластер (" & $k_key & ") не содержит cni\n\nТребование (цитата):\n" & $req
+                  },
+                  ($not($exists($k.service_mesh)) or $k.service_mesh = "") ? {
+                    "uid": "seaf.validation.ta.p3.k8s_cluster_core_features.mesh." & $k_key,
+                    "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_cluster_core_features.mesh." & $k_key,
+                    "title": "Кластер '" & $k.title & "' без указанного Service Mesh",
+                    "correction": "Заполните поле service_mesh",
+                    "description": "Кластер (" & $k_key & ") не содержит service_mesh\n\nТребование (цитата):\n" & $req
+                  },
+                  ($not($exists($k.cluster_autoscaler))) ? {
+                    "uid": "seaf.validation.ta.p3.k8s_cluster_core_features.autoscaler." & $k_key,
+                    "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_cluster_core_features.autoscaler." & $k_key,
+                    "title": "Кластер '" & $k.title & "' не задан cluster_autoscaler",
+                    "correction": "Укажите cluster_autoscaler (true/false)",
+                    "description": "Кластер (" & $k_key & ") не содержит признак cluster_autoscaler\n\nТребование (цитата):\n" & $req
+                  }
+                ];
+                $viol := $filter($issues, function($i){ $type($i) = "object" });
+                ($count($viol) > 0) ? $viol
+              )
+            })
+          )
+        ])

@@ -1,0 +1,29 @@
+rules:
+  validators:
+    seaf.validation.ta.p3.k8s_ca_trust:
+      uid: SEAF-TA-P3-K8S-CA-TRUST
+      title: "[TACCS_1-P10-3-04] Доверие к целевому УЦ (ca)"
+      description: |
+        Проверяет, что у `seaf.ta.services.k8s` задана ссылка `ca` на целевой центр (KB tag=CMC).
+        Глубокую проверку TLS/доверия эта проверка не выполняет — только наличие привязки к целевому УЦ.
+        Требование (цитата): TACCS_1-P10-3-04 — Объекты управления компании, при использовании цифровых сертификатов должны использовать и проверять сертификаты целевого УЦ в соответствии с порядком управления сертификатами целевого УЦ
+      correction: |
+        Укажите `ca` (ключ КБ с tag=CMC) для кластера.
+      source: |
+        ([
+          (
+          $code := "TACCS_1-P10-3-04";
+          $each($."seaf.ta.services.k8s", function($k, $k_key){
+            (
+              $val := $k.ca;
+              ($not($exists($val)) or $val="") ? {
+                "uid": "seaf.validation.ta.p3.k8s_ca_trust.missing." & $k_key,
+                "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_ca_trust.missing." & $k_key,
+                "title": "K8s '" & $k.title & "' не задан ca (целевой УЦ)",
+                "correction": "Укажите ключ КБ с tag=CMC",
+                "description": "Отсутствует ссылка на целевой УЦ в поле ca"
+              }
+            )
+          })
+          )
+        ])

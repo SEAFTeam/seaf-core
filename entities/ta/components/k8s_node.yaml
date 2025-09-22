@@ -1,0 +1,43 @@
+entities:
+  seaf.ta.components.k8s_node:
+    title: Kubernetes Node
+    objects:
+      node:
+        route: "/"
+        title: Нода
+    schema:
+      $defs:
+        seaf.ta.components.k8s_node:
+          type: object
+          $ref: "#/$defs/seaf.ta.components.base.entity"
+          properties:
+            version:
+              title: Версия kubelet
+              type: string
+            architecture:
+              title: Архитектура CPU
+              type: string
+            cpu:
+              title: Количество CPU для ноды
+              type: integer
+            ram:
+              title: Количество RAM для ноды, GB
+              type: integer
+            cluster_ref:
+              title: Кластер Kubernetes
+              $ref: "#/$rels/seaf.ta.services.k8s.k8s"
+            zone:
+              title: Название зона доступнности, в которой расположена нода
+              type: string
+            labels:
+              title: Метки
+              type: array
+            required:
+              - architecture
+      type: object
+      patternProperties:
+        "^[a-zA-Z0-9_\\.]*$":
+          $ref: "#/$defs/seaf.ta.components.k8s_node"
+
+                
+              

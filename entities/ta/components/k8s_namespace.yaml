@@ -1,0 +1,23 @@
+entities:
+  seaf.ta.components.k8s_namespace:
+    title: K8s Namespace
+    objects:
+      namespace:
+        route: "/"
+        title: K8s Namespace
+    schema:
+      $defs:
+        seaf.ta.components.k8s_namespace:
+          type: object
+          $ref: "#/$defs/seaf.ta.components.base.entity"
+          properties:
+            cluster_ref:
+              title: Ссылка на кластер
+              $ref: "#/$rels/seaf.ta.services.k8s.k8s"
+            labels:
+              title: Список labels
+              type: array
+      type: object
+      patternProperties:
+        "^[a-zA-Z0-9_\\.]*$":
+          $ref: "#/$defs/seaf.ta.components.k8s_namespace"

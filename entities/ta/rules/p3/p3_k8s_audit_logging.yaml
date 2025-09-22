@@ -1,0 +1,57 @@
+rules:
+  validators:
+    seaf.validation.ta.p3.k8s_audit_logging:
+      uid: SEAF-TA-P3-K8S-AUDIT
+      title: "[TACCS_1-P10-1-04] Аудит: передача событий в целевой сервис (audit)"
+      description: |
+        Проверяет, что для `seaf.ta.services.k8s` задано поле `audit`, ссылка указывает на существующий
+        объект `seaf.ta.services.kb` с тегом `Log`, и между k8s и сервисом есть пересечение сетей.
+        Требование (цитата): TACCS_1-P10-1-04 — Объекты управления должны поддерживать передачу событий аудита в целевой сервис аудита
+      correction: |
+        Укажите `audit` (ключ КБ с tag=Log) и обеспечьте сетевую достижимость (общие сети).
+      source: |
+        ([
+          (
+          $code := "TACCS_1-P10-1-04";
+          $each($."seaf.ta.services.k8s", function($k, $k_key){
+            (
+              $kb := $."seaf.ta.services.kb"; $nets := $k.network_connection; $val := $k.audit;
+              ($not($exists($val)) or $val="") ? {
+                "uid": "seaf.validation.ta.p3.k8s_audit_logging.missing." & $k_key,
+                "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_audit_logging.missing." & $k_key,
+                "title": "K8s '" & $k.title & "' не задан audit (Log)",
+                "correction": "Укажите ключ КБ с tag=Log",
+                "description": "Отсутствует ссылка на логирование в поле audit"
+              } : (
+                $ref := $kb[$val];
+                $not($exists($ref)) ? {
+                  "uid": "seaf.validation.ta.p3.k8s_audit_logging.notfound." & $k_key,
+                  "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_audit_logging.notfound." & $k_key,
+                  "title": "K8s '" & $k.title & "' audit указывает на несуществующий КБ",
+                  "correction": "Исправьте ключ КБ в audit",
+                  "description": "Ключ='" & $val & "' отсутствует в seaf.ta.services.kb"
+                } : (
+                  $ref.tag != "Log" ? {
+                    "uid": "seaf.validation.ta.p3.k8s_audit_logging.tag." & $k_key,
+                    "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_audit_logging.tag." & $k_key,
+                    "title": "K8s '" & $k.title & "' audit указывает на КБ с неподходящим тегом",
+                    "correction": "Укажите КБ с tag=Log",
+                    "description": "Найден tag='" & $ref.tag & "'"
+                  } : (
+                    ($exists($nets) and $exists($ref.network_connection)) ? (
+                      $common := $filter($nets, function($n){ $n in $ref.network_connection });
+                      ($count($common)=0) ? {
+                        "uid": "seaf.validation.ta.p3.k8s_audit_logging.reach." & $k_key,
+                        "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_audit_logging.reach." & $k_key,
+                        "title": "K8s '" & $k.title & "' и Log не имеют общих сетей",
+                        "correction": "Добавьте пересечение в network_connection",
+                        "description": "Нет общих сетей между K8s и Log"
+                      }
+                    )
+                  )
+                )
+              )
+            )
+          })
+          )
+        ])

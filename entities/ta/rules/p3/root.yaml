@@ -1,0 +1,23 @@
+imports:
+  - p3_k8s_cluster_core_features.yaml
+  - p3_k8s_deployment_resource_limits.yaml
+  - p3_k8s_ha_node_count.yaml
+  - p3_k8s_hpa_constraints.yaml
+  - p3_k8s_multi_az_distribution.yaml
+  - p3_k8s_namespace_labels.yaml
+  - p3_k8s_node_architecture.yaml
+  - p3_monitoring_presence.yaml
+  - p3_k8s_management_networks.yaml
+  - p3_k8s_idp_integration.yaml
+  - p3_k8s_secrets_service.yaml
+  - p3_k8s_policy_engine.yaml
+  - p3_k8s_audit_logging.yaml
+  - p3_k8s_audit_sanitization.yaml
+  - p3_k8s_access_mgmt_integration.yaml
+  - p3_k8s_pam.yaml
+  - p3_k8s_cmc_presence.yaml
+  - p3_k8s_ca_trust.yaml
+  - p3_k8s_allowed_registries.yaml
+  - p3_k8s_single_security_segment.yaml
+  - p3_k8s_logging_service.yaml
+  - p3_k8s_backup_service.yaml

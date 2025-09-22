@@ -1,6 +1,6 @@
 rules:
   validators:
-    seaf.validation.ta.k8s_connection_check:
+    seaf.validation.ta.services.k8s_connection_check:
       uid: SEAF-TA-K8S-CONN-001
       title: Проверка корректности связи Кластера Kubernetes с сетями
       description: |

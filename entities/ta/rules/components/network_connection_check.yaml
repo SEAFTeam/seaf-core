@@ -1,6 +1,6 @@
 rules:
   validators:
-    seaf.validation.ta.network_connection_check:
+    seaf.validation.ta.components.network_connection_check:
       uid: SEAF-TA-NETWORK-COMP-CONN-001
       title: Проверка корректности связи Сетевого устройства с сетями
       description: |

@@ -1,6 +1,6 @@
 rules:
   validators:
-    seaf.validation.ta.monitoring_connection_check:
+    seaf.validation.ta.services.monitoring_connection_check:
       uid: SEAF-TA-MONITORING-CONN-001
       title: Проверка корректности связи Сервиса мониторинга с сетями
       description: |

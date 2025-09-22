@@ -1,6 +1,6 @@
 rules:
   validators:
-    seaf.validation.ta.compute_service_connection_check:
+    seaf.validation.ta.services.compute_service_connection_check:
       uid: SEAF-TA-COMPUTE-SVC-CONN-001
       title: Проверка корректности связи Вычислительного сервиса с сетями
       description: |
