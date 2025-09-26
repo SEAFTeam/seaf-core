@@ -1,6 +1,6 @@
 rules:
   validators:
-    seaf.validation.ta.network_segment_parent_check:
+    seaf.validation.ta.services.network_segment_parent_check:
       uid: SEAF-TA-NETWORK-SEGMENT-PARENT-001
       title: Проверка корректности связи Сети с сетевым сегментом
       description: |

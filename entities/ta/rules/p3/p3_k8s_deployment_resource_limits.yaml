@@ -1,0 +1,44 @@
+rules:
+  validators:
+    seaf.validation.ta.p3.k8s_deployment_resource_limits:
+      uid: SEAF-TA-P3-K8S-DEP-LIMITS
+      title: "[TACSA_4-P3-32-04] Проверка лимитов CPU/RAM для контейнеров Deployment"
+      description: |
+        Проверяет, что в каждом `seaf.ta.components.k8s_deployment` для всех контейнеров
+        заполнены `resources.limits.cpu` и `resources.limits.ram`.
+        Требование: TACSA_4-P3-32-04 — В манифестах должны быть определены лимиты потребления CPU/RAM.
+        
+        Требование (цитата):
+        В платформе контейнерной оркестрации имеются механизмы и активированы настройки лимитов и запросов на ресурсы CPU/RAM.
+      correction: |
+        Для всех контейнеров Deployment заполните `resources.limits.cpu` и `resources.limits.ram`.
+      source: |
+        ([
+          $each($."seaf.ta.components.k8s_deployment", function($d, $d_key){
+            (
+              $cs := $d.containers;
+              ($not($exists($cs)) or $count($cs)=0) ? {
+                "uid": "seaf.validation.ta.p3.k8s_deployment_resource_limits.no_containers." & $d_key,
+                "deviation_id": "TACSA_4-P3-32-04:" & "seaf.validation.ta.p3.k8s_deployment_resource_limits.no_containers." & $d_key,
+                "title": "Deployment '" & $d.title & "' не содержит контейнеров",
+                "correction": "Добавьте хотя бы один контейнер с лимитами ресурсов",
+                "description": "Deployment (" & $d_key & ") не имеет containers\n\nТребование (цитата):\nВ платформе контейнерной оркестрации имеются механизмы и активированы настройки лимитов и запросов на ресурсы CPU/RAM."
+              } : (
+                $viol := $map($cs, function($c, $idx){
+                  (
+                    $limits := $c.resources.limits;
+                    $cpu := $limits.cpu; $ram := $limits.ram;
+                    ($not($exists($limits)) or $not($exists($cpu)) or $cpu="" or $not($exists($ram)) or $ram="") ? {
+                      "uid": "seaf.validation.ta.p3.k8s_deployment_resource_limits.missing." & $d_key & "." & $string($idx),
+                      "deviation_id": "TACSA_4-P3-32-04:" & "seaf.validation.ta.p3.k8s_deployment_resource_limits.missing." & $d_key & "." & $string($idx),
+                      "title": "Deployment '" & $d.title & "' контейнер '" & $c.name & "' без лимитов CPU/RAM",
+                      "correction": "Заполните resources.limits.cpu и resources.limits.ram",
+                      "description": "Отсутствуют или пустые limits для контейнера index=" & $string($idx) & "\n\nТребование (цитата):\nВ платформе контейнерной оркестрации имеются механизмы и активированы настройки лимитов и запросов на ресурсы CPU/RAM."
+                    }
+                  )
+                });
+                $filter($viol, function($v){ $exists($v) })
+              )
+            )
+          })
+        ])

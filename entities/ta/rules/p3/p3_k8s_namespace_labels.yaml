@@ -1,0 +1,42 @@
+rules:
+  validators:
+    seaf.validation.ta.p3.k8s_namespace_labels:
+      uid: SEAF-TA-P3-K8S-NS-LABELS
+      title: "[TACSA_4-P3-29-04 (частично)] Наличие меток (labels) у Namespace, используемых Deployment"
+      description: |
+        Частичная проверка разграничения через namespace: для каждого Deployment проверяется,
+        что его namespace_ref указывает на Namespace с непустыми labels.
+        
+        Требование (цитата):
+        Все встроенные сервисы платформы должны устанавливаться в отдельном пространстве имён (namespace) для каждого компонента; 
+        соответствующие операторы этих сервисов располагаются в специально выделенных namespace.
+      correction: |
+        Добавьте в используемые Namespace хотя бы одну метку (labels).
+      source: |
+        ([
+          (
+            $req := "Все встроенные сервисы платформы должны устанавливаться в отдельном пространстве имён (namespace) для каждого компонента; соответствующие операторы этих сервисов располагаются в специально выделенных namespace.";
+            $code := "TACSA_4-P3-29-04";
+            $each($."seaf.ta.components.k8s_deployment", function($d, $d_key){
+              (
+                $ns_key := $d.namespace_ref;
+                ($exists($ns_key) and $ns_key != "") ? (
+                  $ns := $lookup($."seaf.ta.components.k8s_namespace", $ns_key);
+                  ($not($exists($ns)) or $not($exists($ns.labels)) or $count($ns.labels)=0) ? {
+                    "uid": "seaf.validation.ta.p3.k8s_namespace_labels.missing." & $d_key,
+                    "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_namespace_labels.missing." & $d_key,
+                    "title": "Deployment '" & $d.title & "' использует Namespace без labels",
+                    "correction": "Добавьте labels в Namespace '" & $ns_key & "'",
+                    "description": "Namespace (" & $ns_key & ") отсутствует или не содержит labels\n\nТребование (цитата):\n" & $req
+                  }
+                ) : {
+                  "uid": "seaf.validation.ta.p3.k8s_namespace_labels.ns_empty." & $d_key,
+                  "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_namespace_labels.ns_empty." & $d_key,
+                  "title": "Deployment '" & $d.title & "' не указан namespace_ref",
+                  "correction": "Укажите namespace_ref и обеспечьте наличие labels у Namespace",
+                  "description": "Deployment (" & $d_key & ") не содержит namespace_ref\n\nТребование (цитата):\n" & $req
+                }
+              )
+            })
+          )
+        ])

@@ -1,0 +1,46 @@
+rules:
+  validators:
+    seaf.validation.ta.p3.k8s_backup_service:
+      uid: SEAF-TA-P3-K8S-BACKUP-SVC
+      title: "[TACSA_4-P3-33-04] Наличие связи с сервисом резервного копирования (backup)"
+      description: |
+        Проверяет, что для `seaf.ta.services.k8s` задана связь `backup` хотя бы с одним
+        сервисом резервного копирования.
+
+        Требование (цитата):
+        Необходимо обеспечить резервное копирование конфигурации платформы контейнерной оркестрации.
+      correction: |
+        Укажите в `backup` кластеров k8s ссылку на сервис резервного копирования.
+      source: |
+        ([
+          (
+            $code := "TACSA_4-P3-33-04";
+            $each($."seaf.ta.services.k8s", function($k, $k_key){
+              (
+                $b := $k.backup;
+                ($not($exists($b)) or $count($b)=0) ? {
+                  "uid": "seaf.validation.ta.p3.k8s_backup_service.missing." & $k_key,
+                  "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_backup_service.missing." & $k_key,
+                  "title": "K8s '" & $k.title & "' не задана связь с сервисом backup",
+                  "correction": "Добавьте ссылку на сервис резервного копирования",
+                  "description": "Отсутствует поле backup"
+                } : (
+                  $defs := $."seaf.ta.services.backup";
+                  $issues := $map($b, function($ref_key, $i){
+                    (
+                      $ref := $lookup($defs, $ref_key);
+                      $not($exists($ref)) ? {
+                        "uid": "seaf.validation.ta.p3.k8s_backup_service.notfound." & $k_key & "." & $string($i),
+                        "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_backup_service.notfound." & $k_key & "." & $string($i),
+                        "title": "K8s '" & $k.title & "' backup[" & $string($i) & "] указывает на несуществующий сервис",
+                        "correction": "Исправьте ключ в backup[" & $string($i) & "]",
+                        "description": "Ключ='" & $ref_key & "' отсутствует в seaf.ta.services.backup"
+                      }
+                    )
+                  });
+                  $filter($issues, function($v){ $type($v) = 'object' })
+                )
+              )
+            })
+          )
+        ])

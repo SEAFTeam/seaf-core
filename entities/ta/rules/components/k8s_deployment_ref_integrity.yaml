@@ -1,0 +1,50 @@
+rules:
+  validators:
+    seaf.validation.ta.components.k8s_deployment_ref_integrity:
+      uid: SEAF-TA-K8S-REF-DEP
+      title: Проверка корректности связи Deployment с Namespace и K8s
+      description: |
+        Проверяет, что у каждого seaf.ta.components.k8s_deployment поля namespace_ref и cluster_ref
+        указывают на существующие объекты в seaf.ta.components.k8s_namespace и seaf.ta.services.k8s соответственно.
+      correction: |
+        Убедитесь, что namespace_ref и cluster_ref соответствуют существующим ключам
+        в соответствующих сущностях (k8s_namespace и k8s), и при необходимости исправьте значения или создайте недостающие объекты.
+      source: |
+        ([
+          $each($."seaf.ta.components.k8s_deployment", function($d, $d_key){
+            (
+              $defined_ns := $keys($."seaf.ta.components.k8s_namespace");
+              $defined_k8s := $keys($."seaf.ta.services.k8s");
+              $nsr := $d.namespace_ref;
+              $cr := $d.cluster_ref;
+              ($not($exists($nsr)) or $nsr = "") ? {
+                "uid": "seaf.validation.ta.k8s_deployment_ref_integrity.ns.empty." & $d_key,
+                "title": "Deployment '" & $d.title & "' не содержит namespace_ref",
+                "correction": "Укажите существующий Namespace (ключ из seaf.ta.components.k8s_namespace)",
+                "description": "Deployment (" & $d_key & ") не содержит ссылку namespace_ref"
+              } : (
+                $not($nsr in $defined_ns) ? {
+                  "uid": "seaf.validation.ta.k8s_deployment_ref_integrity.ns.notfound." & $d_key,
+                  "title": "Deployment '" & $d.title & "' ссылается на несуществующий Namespace",
+                  "correction": "Исправьте namespace_ref на существующий ключ из seaf.ta.components.k8s_namespace",
+                  "description": "namespace_ref='" & $nsr & "' отсутствует"
+                } : (
+                  ($not($exists($cr)) or $cr = "") ? {
+                    "uid": "seaf.validation.ta.k8s_deployment_ref_integrity.k8s.empty." & $d_key,
+                    "title": "Deployment '" & $d.title & "' не содержит cluster_ref",
+                    "correction": "Укажите существующий кластер (ключ из seaf.ta.services.k8s)",
+                    "description": "Deployment (" & $d_key & ") не содержит ссылку cluster_ref"
+                  } : (
+                    $not($cr in $defined_k8s) ? {
+                      "uid": "seaf.validation.ta.k8s_deployment_ref_integrity.k8s.notfound." & $d_key,
+                      "title": "Deployment '" & $d.title & "' ссылается на несуществующий кластер",
+                      "correction": "Исправьте cluster_ref на существующий ключ из seaf.ta.services.k8s",
+                      "description": "cluster_ref='" & $cr & "' отсутствует"
+                    }
+                  )
+                )
+              )
+            )
+          })
+        ])
+

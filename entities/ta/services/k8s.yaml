@@ -10,6 +10,14 @@ entities:
         seaf.ta.services.k8s:
           $ref: "#/$defs/seaf.ta.services.base.entity"
           properties:
+            fqdn:
+              title: FQDN кластера k8s
+              type: string
+            # nodes:
+            #  title: Ноды кластера
+            #  type: array
+            #  items:
+            #    $ref: "#/$rels/seaf.ta.components.k8s_node.node"
             availabilityzone:
               title: В какие зоны доступности входит
               type: array
@@ -28,12 +36,12 @@ entities:
             software:
               title: ПО реализующее Kubernetes кластер
               type: string
-            master_qty:
-              title: Количество мастер нод кластера
-              type: integer
-            worker_qty:
-              title: Количество воркер нод кластера
-              type: integer
+            # master_qty:
+            #  title: Количество мастер нод кластера
+            #  type: integer
+            #worker_qty:
+            #  title: Количество воркер нод кластера
+            #  type: integer
             cni:
               title: CNI плагин
               type: string
@@ -46,26 +54,69 @@ entities:
             keys:
               title: Хранилище секретов кластера
               type: string
+              $ref: "#/$rels/seaf.ta.services.kb.kb"
+            idm:
+              title: Сервис управления учетными записями (IdM)
+              type: string
+              $ref: "#/$rels/seaf.ta.services.kb.kb"
             policy:
               title: ПО для реализации управления политиками
               type: string
+              $ref: "#/$rels/seaf.ta.services.kb.kb"
             auth:
               title: ПО для реализации внешней системой аутентификации
               type: string
+              $ref: "#/$rels/seaf.ta.services.kb.kb"
+            pam:
+              title: Сервис управления привилегированным доступом (PAM)
+              type: string
+              $ref: "#/$rels/seaf.ta.services.kb.kb"
+            ca:
+              title: Центр управления сертификатами (CMC)
+              type: string
+              $ref: "#/$rels/seaf.ta.services.kb.kb"
+            audit:
+              title: Сервис аудита/журналирования (SIEM/Log)
+              type: string
+              $ref: "#/$rels/seaf.ta.services.kb.kb"
+            audit_policy:
+              title: Политика аудита (логов)
+              type: string
+              $ref: "#/$rels/seaf.ta.services.kb.kb"
+            monitoring:
+              title: Сервисы мониторинга/журналирования
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.monitoring.monitoring"
+            backup:
+              title: Сервисы резервного копирования
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.backup.backup"
             network_connection:
               title: Перечисление связанных сетей
               type: array
               items:
                 $ref: "#/$rels/seaf.ta.services.network.network"
-          required:
-            - software
-            - master_qty
-            - worker_qty
-            - auth
-            - cni
-            - is_own
-            - network_connection
-            - availabilityzone
+            registries:
+              title: Разрешенные реестры/репозитории ПО
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.kb.kb"
+            management_networks:
+              title: Управляющие сети (Management)
+              type: array
+              items:
+                $ref: "#/$rels/seaf.ta.services.network.network"
+          required: # почистил для ванильного k8s
+            # - software
+            # - master_qty #вычисляется
+            # - worker_qty #вычисляется
+            # - auth
+            # - cni
+            # - is_own
+            #- network_connection
+            # - availabilityzone
       type: object
       patternProperties:
         "^[a-zA-Z0-9_\\.]*$":

@@ -1,0 +1,54 @@
+rules:
+  validators:
+    seaf.validation.ta.p3.k8s_logging_service:
+      uid: SEAF-TA-P3-K8S-LOGGING-SVC
+      title: "[TACSA_4-P3-31-04] Централизованное логирование во внешней системе (monitoring)"
+      description: |
+        Проверяет, что для `seaf.ta.services.k8s` задана связь `monitoring` хотя бы с одним
+        сервисом мониторинга, имеющим роль "Журналирование".
+
+        Требование (цитата):
+        Журналы платформы контейнерной оркестрации должны централизованно храниться во внешней системе сбора и анализа логов (вне самой платформы).
+      correction: |
+        Укажите в `monitoring` кластеров k8s ссылку на сервис мониторинга с ролью "Журналирование".
+      source: |
+        ([
+          (
+            $code := "TACSA_4-P3-31-04";
+            $each($."seaf.ta.services.k8s", function($k, $k_key){
+              (
+                $mons := $k.monitoring;
+                ($not($exists($mons)) or $count($mons)=0) ? {
+                  "uid": "seaf.validation.ta.p3.k8s_logging_service.missing." & $k_key,
+                  "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_logging_service.missing." & $k_key,
+                  "title": "K8s '" & $k.title & "' не задана связь с сервисом логирования",
+                  "correction": "Укажите monitoring для кластера",
+                  "description": "Отсутствует поле monitoring"
+                } : (
+                  $mon_defs := $."seaf.ta.services.monitoring";
+                  $issues := $map($mons, function($m, $i){
+                    (
+                      $ref := $lookup($mon_defs, $m);
+                      $not($exists($ref)) ? {
+                        "uid": "seaf.validation.ta.p3.k8s_logging_service.notfound." & $k_key & "." & $string($i),
+                        "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_logging_service.notfound." & $k_key & "." & $string($i),
+                        "title": "K8s '" & $k.title & "' monitoring[" & $string($i) & "] указывает на несуществующий сервис",
+                        "correction": "Исправьте ключ в monitoring[" & $string($i) & "]",
+                        "description": "Ключ='" & $m & "' отсутствует в seaf.ta.services.monitoring"
+                      } : (
+                        ($not($exists($ref.role)) or $count($ref.role)=0 or $count($filter($ref.role, function($r){ $lowercase($r) = "журналирование" }))=0) ? {
+                          "uid": "seaf.validation.ta.p3.k8s_logging_service.role." & $k_key & "." & $string($i),
+                          "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_logging_service.role." & $k_key & "." & $string($i),
+                          "title": "Сервис мониторинга '" & $ref.title & "' не имеет роли 'Журналирование'",
+                          "correction": "Укажите сервис с ролью 'Журналирование'",
+                          "description": "Роли сервиса: " & $join($ref.role, ", ")
+                        }
+                      )
+                    )
+                  });
+                  $filter($issues, function($v){ $type($v) = 'object' })
+                )
+              )
+            })
+          )
+        ])

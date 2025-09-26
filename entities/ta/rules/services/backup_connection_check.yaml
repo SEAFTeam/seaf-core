@@ -1,6 +1,6 @@
 rules:
   validators:
-    seaf.validation.ta.backup_connection_check:
+    seaf.validation.ta.services.backup_connection_check:
       uid: SEAF-TA-BACKUP-CONN-001
       title: Проверка корректности связи Сервиса резервного копирования с сетями
       description: |

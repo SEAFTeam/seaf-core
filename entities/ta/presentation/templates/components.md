@@ -7,6 +7,9 @@
 ## Network Appliance
 ![Hardware Network Appliance](@entity/seaf.ta.components.network/table?domain={{domain}})
 
+## K8s Namespace
+![K8s Namespace](@entity/seaf.ta.components.k8s_namespace/table)
+
 ## K8s Deployment
 ![K8s Deployment](@entity/seaf.ta.components.k8s_deployment/table?domain={{domain}})
 
@@ -24,3 +27,10 @@
 
 ## User device
 ![User device](@entity/seaf.ta.components.user_device/table?domain={{domain}})
+
+## K8s HPA
+![K8s HPA](@entity/seaf.ta.components.k8s_hpa/table?domain={{domain}})
+
+## User device
+![User device](@entity/seaf.ta.components.user_device/table?domain={{domain}})
+

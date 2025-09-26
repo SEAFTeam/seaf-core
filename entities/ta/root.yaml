@@ -8,3 +8,5 @@ imports:
   - environments/root.yaml
   # Технологический компонент
   - components/root.yaml
+  # Подключение правил проверки ТА
+  - rules/root.yaml

@@ -1,0 +1,44 @@
+rules:
+  validators:
+    seaf.validation.ta.p3.k8s_multi_az_distribution:
+      uid: SEAF-TA-P3-K8S-MULTIAZ
+      title: "[TACSA_4-P9-47-04 (частично)] Распределение узлов по нескольким зонам доступности"
+      description: |
+        Проверяет, что узлы кластера распределены минимум по двум зонам (по полю node.zone)
+        и что значения zone входят в перечень k8s.availabilityzone. Частичная проверка, без стойко-уровня.
+        
+        Требование (цитата):
+        Платформа контейнерной оркестрации должна иметь в резервных зонах доступности вычислительные мощности, обеспечивающие резервирование в соответствии с уровнями, указанными в Приложении 1
+      correction: |
+        Обеспечьте наличие узлов минимум в двух зонах; если у узлов zone не входит в availabilityzone кластера — исправьте значения.
+      source: |
+        ([
+          (
+            $req := "Платформа контейнерной оркестрации должна иметь в резервных зонах доступности вычислительные мощности, обеспечивающие резервирование в соответствии с уровнями, указанными в Приложении 1";
+            $code := "TACSA_4-P9-47-04";
+            $each($."seaf.ta.services.k8s", function($k, $k_key){
+              (
+                $nodes := $filter($."seaf.ta.components.k8s_node", function($n){ $n.cluster_ref = $k_key });
+                $zones := $map($nodes, function($n){ $n.zone });
+                $uniq_zones := $distinct($filter($zones, function($z){ $exists($z) and $z != "" }));
+                ($count($uniq_zones) < 2) ? {
+                  "uid": "seaf.validation.ta.p3.k8s_multi_az_distribution.not_enough." & $k_key,
+                  "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_multi_az_distribution.not_enough." & $k_key,
+                  "title": "Кластер '" & $k.title & "' не распределён по минимум двум зонам",
+                  "correction": "Распределите узлы по >=2 зонам",
+                  "description": "Найдено уникальных зон: " & $string($count($uniq_zones)) & "\n\nТребование (цитата):\n" & $req
+                } : (
+                  $allowed := $k.availabilityzone;
+                  $bad := $filter($uniq_zones, function($z){ $not($z in $allowed) });
+                  ($count($bad) > 0) ? {
+                    "uid": "seaf.validation.ta.p3.k8s_multi_az_distribution.out_of_list." & $k_key,
+                    "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_multi_az_distribution.out_of_list." & $k_key,
+                    "title": "Кластер '" & $k.title & "' содержит зоны вне k8s.availabilityzone",
+                    "correction": "Приведите zone узлов к значениям из availabilityzone",
+                    "description": "Зоны вне списка: " & $join($bad, ", ") & "\n\nТребование (цитата):\n" & $req
+                  }
+                )
+              )
+            })
+          )
+        ])

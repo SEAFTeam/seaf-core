@@ -1,6 +1,6 @@
 rules:
   validators:
-    seaf.validation.ta.dc_region_parent_check:
+    seaf.validation.ta.services.dc_region_parent_check:
       uid: SEAF-TA-DC-REGION-PARENT-001
       title: Проверка корректности связи Зоны доступности с регионом
       description: |
