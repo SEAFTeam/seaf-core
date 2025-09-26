@@ -1,6 +1,22 @@
 # ??????????? ??????????? ? ????????? ????
 entities:
-  seaf.ta.components.k8s_namespace:
+  components:
+    presentations:
+      list:
+        title: Прикладной компонент
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации
+              type: string
+              required:
+                - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ({'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
+  seaf.ta.components.server:
     presentations:
       table:
         type: table
@@ -24,11 +40,13 @@ entities:
             width: 50%
         source: >
           (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.components.k8s_namespace"}, $]);
+            $base := $split($self."$base", "/")[2];
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":$base}, $]);
             $get_link := $.functions."seaf.ta".get_link;
-            [[$."seaf.ta.components.k8s_namespace".$spread().(
-              $COMPONENT_ID := $keys()[0];
-              $.*.{
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
+             $COMPONENT_ID := $keys()[0];
+             $.*.{
                 "title": title,
                 "cluster_ref": cluster_ref,
                 "labels": $join(labels, ", ") ,
@@ -101,9 +119,11 @@ entities:
             width: 15%
         source: >
           (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.components.k8s_node"}, $]);
+            $base := $split($self."$base", "/")[2];
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":$base}, $]); 
             $get_link := $.functions."seaf.ta".get_link;
-            [[$."seaf.ta.components.k8s_node".$spread().(
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
               $COMPONENT_ID := $keys()[0];
               $.*.{
                 "title": title,
@@ -168,9 +188,11 @@ entities:
             width: 30%
         source: >
           (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.components.k8s_deployment"}, $]);
+            $base := $split($self."$base", "/")[2];
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"base"}, $]);
             $get_link := $.functions."seaf.ta".get_link;
-            [[$."seaf.ta.components.k8s_deployment".$spread().(
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
               $COMPONENT_ID := $keys()[0];
               $containers := ($.containers ? [$.containers] : []);
               $.*.{
@@ -235,11 +257,10 @@ entities:
             link: target_link
         source: >
           (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.components.k8s_hpa"}, $]);
-            $get_link := $.functions."seaf.ta".get_link;
-            [[$."seaf.ta.components.k8s_hpa".$spread().(
-              $COMPONENT_ID := $keys()[0];
-              $.*.{
+            $base := $split($self."$base", "/")[2];
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
+             $.*.{
                 "title": title,
                 "cluster_ref": cluster_ref,
                 "min": min,
@@ -306,10 +327,12 @@ entities:
 
         source: >
           (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.components.server"}, $]);
+            $base := $split($self."$base", "/")[2];
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c": $base}, $]);
             $get_link := $.functions."seaf.ta".get_link;
-            [[$."seaf.ta.components.server".$spread().(
-             $COMPONENT_ID := $keys()[0]; 
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
+              $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": title,
                 "description": description,
@@ -372,9 +395,11 @@ entities:
 
         source: >
           (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.components.hw_storage"}, $]); 
+            $base := $split($self."$base", "/")[2];
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":$base}, $]);
             $get_link := $.functions."seaf.ta".get_link;
-            [[$."seaf.ta.components.hw_storage".$spread().(
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": title,
@@ -437,9 +462,11 @@ entities:
 
         source: >
           (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.components.network"}, $]);
+            $base := $split($self."$base", "/")[2];
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":$base}, $]);
             $get_link := $.functions."seaf.ta".get_link;
-            [[$."seaf.ta.components.network".$spread().(
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": title,
@@ -467,9 +494,9 @@ entities:
         type: markdown
         template: templates/list.md
         source: >
-          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
+          ({'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2] }; )
 
-  seaf.ta.components.user_device:
+  seaf.ta.components.k8s_container:
     presentations:
       table:
         type: table
@@ -487,8 +514,42 @@ entities:
             align: left
             width: 20%
 
-          - value: device_type
-            text: Тип пользовательского устройства
+        source: >
+          (
+            $base := $split($self."$base", "/")[2];
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
+              $COMPONENT_ID := $keys()[0];
+             $.*.{
+                "title": title,
+                "description": description,
+                "link": '/entities/seaf.ta.components.k8s_container/list?ta-component-id=' & $COMPONENT_ID
+              }
+            )]^(title)]
+          )
+
+      list:
+        title: Карточка спецификации контейнера k8s
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
+
+  seaf.ta.components.k8s_image:
+    presentations:
+      table:
+        type: table
+        headers:
+          - value: title
+            text: Наименование
             sortable: true
             align: left
             width: 20%
@@ -496,7 +557,9 @@ entities:
 
         source: >
           (
-            [[$."seaf.ta.components.user_device".$spread().(
+            $base := $split($self."$base", "/")[2];
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": title,

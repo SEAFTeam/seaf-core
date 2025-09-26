@@ -1,0 +1,15 @@
+entities:
+  menu.kadzo.v2023.enterprise.ta_components:
+    menu: >
+      (
+          sber.kadzo.enterprise_mode ?
+            sber.domains.$spread().( 
+                $domain := $keys();
+                $title := $lookup($$.companies, $domain) ? $lookup($$.companies, $domain).title : $.*.title;
+                { 
+                    "domain": $domain,
+                    "location": "ДЗО/" & $title & "/Данные архитектуры/Техническая архитектура/Технические компоненты (TA SEAF)",
+                    "link": "entities/seaf.ta/components_md??domain=" & $domain
+                }
+            );
+      )
