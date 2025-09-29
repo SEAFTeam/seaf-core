@@ -199,7 +199,9 @@ entities:
 
         source: >
           (
-            [[$."seaf.ta.services.dc_region".$spread().(
+            $base := $split($self."$base", "/")[2];
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
               $COMPONENT_ID := $keys()[0];
                $.*.{
               "title": title,
@@ -256,8 +258,10 @@ entities:
             link: r_link
         source: >
           (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.dc_az"}, $]);
-            [[$."seaf.ta.services.dc_az".$spread().(
+            $base := $split($self."$base", "/")[2];
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":$base}, $]);
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
               $COMPONENT_ID := $keys()[0];
                $.*.{
               "title": title,
@@ -265,7 +269,7 @@ entities:
               "vendor": vendor,
               "region": region,
               "link": '/entities/seaf.ta.services.dc_az/list?ta-component-id=' & $COMPONENT_ID,
-              "r_link" : "/entities/"& $refs."region" &"/list?ta-component-id=" & region_id
+              "r_link" : "/entities/"& $refs."region" &"/list?ta-component-id=" & region
                 }
             )]^(title)]
           )
@@ -316,9 +320,11 @@ entities:
             link: avail_link
 
         source: >
-          (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.dc"}, $]);          
-            [[$."seaf.ta.services.dc".$spread().(
+          (     
+            $base := $split($self."$base", "/")[2];
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":$base}, $]);
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": title,
@@ -326,7 +332,7 @@ entities:
                 "vendor": vendor,
                 "availabilityzone": availabilityzone,
                 "link": '/entities/seaf.ta.services.dc/list?ta-component-id=' & $COMPONENT_ID,
-                "avail_link" : "/entities/"& $refs."availabilityzone_id" &"/list?ta-component-id=" & availabilityzone_id
+                "avail_link" : "/entities/"& $refs."availabilityzone" &"/list?ta-component-id=" & availabilityzone
               }
             )]^(title)]
           )
@@ -377,7 +383,10 @@ entities:
 
         source: >
           (          
-            [[$."seaf.ta.services.office".$spread().(
+            $base := $split($self."$base", "/")[2];
+            /*$refs := $eval($.functions."seaf.ta".get_refs, [{"c":$base}, $]);*/          
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);          
+            [[$scope.$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": title,
@@ -443,9 +452,10 @@ entities:
 
         source: >
           (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.cluster"}, $]);
-            $get_link := $.functions."seaf.ta".get_link;
-            [[$."seaf.ta.services.cluster".$spread().(
+            $base := $split($self."$base", "/")[2];
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":$base}, $]);
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": title,                
@@ -474,7 +484,6 @@ entities:
         template: templates/list.md
         source: >
           ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
-
 
   seaf.ta.services.compute_service:
     presentations:
@@ -509,9 +518,11 @@ entities:
 
         source: >
           (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.compute_service"}, $]);
             $get_link := $.functions."seaf.ta".get_link;
-            [[$."seaf.ta.services.compute_service".$spread().(
+            $base := $split($self."$base", "/")[2];
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":$base}, $]);
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": title,                
@@ -574,9 +585,11 @@ entities:
 
         source: >
           (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.storage"}, $]);
             $get_link := $.functions."seaf.ta".get_link;
-            [[$."seaf.ta.services.storage".$spread().(
+            $base := $split($self."$base", "/")[2];
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":$base}, $]);
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": title,
@@ -629,10 +642,12 @@ entities:
             link: avail_link
 
         source: >
-          ( 
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.cluster_virtualization"}, $]);
+          (
             $get_link := $.functions."seaf.ta".get_link;
-            [[$."seaf.ta.services.cluster_virtualization".$spread().(
+            $base := $split($self."$base", "/")[2];
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":$base}, $]);
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": title,
@@ -687,15 +702,17 @@ entities:
 
         source: >
           (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.k8s"}, $]);
             $get_link := $.functions."seaf.ta".get_link;
-            [[$."seaf.ta.services.k8s".$spread().(
+            $base := $split($self."$base", "/")[2];
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":$base}, $]);
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": title,
                 "description": description,
                 "availabilityzone": availabilityzone,
-                "avail_link" :  $eval($get_link,{"hr":$refs."availabilityzone_id","val":availabilityzone_id}),
+                "avail_link" :  $eval($get_link,{"hr":$refs."availabilityzone","val":availabilityzone}),
                 "link": '/entities/seaf.ta.services.k8s/list?ta-component-id=' & $COMPONENT_ID
               }
             )]^(title)]
@@ -749,14 +766,12 @@ entities:
             sortable: true
             align: left
             width: 20%
-            link: o_link
 
           - value: wan_ip
             text: WAN Адрес
             sortable: true
             align: left
             width: 20%
-            link: o_link
 
           - value: segment
             text: Сетевой сегмент
@@ -767,9 +782,11 @@ entities:
 
         source: >
           (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.network"}, $]);
             $get_link := $.functions."seaf.ta".get_link;
-            [[$."seaf.ta.services.network".$spread().(
+            $base := $split($self."$base", "/")[2];
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":$base}, $]);
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": title,
@@ -780,10 +797,7 @@ entities:
                 "wan_ip": wan_ip,
                 "segment": segment,
                 "link": '/entities/seaf.ta.services.network/list?ta-component-id=' & $COMPONENT_ID,
-                "dc_link" :  $eval($get_link,{"hr":$refs."dc_id","val":dc_id}),
-                "o_link" :  $eval($get_link,{"hr":$refs."office_id","val":office_id}),
-                "avail_link" :  $eval($get_link,{"hr":$refs."availabilityzone_id","val":availabilityzone_id}),
-                "segment_link" :  $eval($get_link,{"hr":$refs."segment","val":segment[0]})
+                "segment_link" :  $eval($get_link,{"hr":$refs."segment","val":segment})
               }
             )]^(title)]
           )
@@ -840,9 +854,10 @@ entities:
 
         source: >
           (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.network_links"}, $]);
-            $get_link := $.functions."seaf.ta".get_link;
-            [[$."seaf.ta.services.network_links".$spread().(
+            $base := $split($self."$base", "/")[2];
+            /*$refs := $eval($.functions."seaf.ta".get_refs, [{"c":$base}, $]);*/
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": title,
@@ -896,9 +911,11 @@ entities:
 
         source: >
           (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.backup"}, $]);
             $get_link := $.functions."seaf.ta".get_link;
-            [[$."seaf.ta.services.backup".$spread().(
+            $base := $split($self."$base", "/")[2];
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":$base}, $]);
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": title,
@@ -957,9 +974,11 @@ entities:
 
         source: >
           (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.monitoring"}, $]);
             $get_link := $.functions."seaf.ta".get_link;
-            [[$."seaf.ta.services.monitoring".$spread().(
+            $base := $split($self."$base", "/")[2];
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":$base}, $]);
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": title,
@@ -1013,7 +1032,10 @@ entities:
 
         source: >
           (
-            [[$."seaf.ta.services.software".$spread().(
+            $base := $split($self."$base", "/")[2];
+            /*$refs := $eval($.functions."seaf.ta".get_refs, [{"c":$base}, $]);*/
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": title,
@@ -1059,9 +1081,10 @@ entities:
 
         source: >
           (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.network_segment"}, $]);
-            $get_link := $.functions."seaf.ta".get_link;
-            [[$."seaf.ta.services.network_segment".$spread().(
+            $base := $split($self."$base", "/")[2];
+            /*$refs := $eval($.functions."seaf.ta".get_refs, [{"c":$base}, $]);*/
+             $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+             [[$scope.$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": title,
@@ -1096,6 +1119,7 @@ entities:
             sortable: true
             align: left
             width: 20%
+            link: link
 
           - value: description
             text: Описание
@@ -1105,13 +1129,16 @@ entities:
 
         source: >
           (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.environment"}, $]); 
             $get_link := $.functions."seaf.ta".get_link;
-            [[$."seaf.ta.services.environment".$spread().(
+            $base := $split($self."$base", "/")[2];
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":$base}, $]);
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": title,
-                "description": description
+                "description": description,
+                "link": '/entities/seaf.ta.services.environment/list?ta-component-id=' & $COMPONENT_ID
               }
             )]^(title)]
           )
@@ -1141,6 +1168,7 @@ entities:
             sortable: true
             align: left
             width: 20%
+            link: link
 
           - value: description
             text: Описание
@@ -1156,15 +1184,18 @@ entities:
             link: env_link
         source: >
           (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.services.stand"}, $]); 
             $get_link := $.functions."seaf.ta".get_link;
-            [[$."seaf.ta.services.stand".$spread().(
+            $base := $split($self."$base", "/")[2];
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":$base}, $]);
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": title,
                 "description": description,
                 "env": env,
-                "env_link": $eval($get_link,{"hr":$refs."env","val":env[0]})
+                "link": '/entities/seaf.ta.services.stand/list?ta-component-id=' & $COMPONENT_ID,
+                "env_link" : "/entities/"& $refs."env" &"/list?ta-component-id=" & env
               }
             )]^(title)]
           )
