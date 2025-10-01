@@ -1,4 +1,2 @@
 imports:
-  - menu.yaml
-  - ta_components.yaml
-  - ta_services.yaml
+#  - menu.yaml

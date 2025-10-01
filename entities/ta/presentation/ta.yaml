@@ -6,15 +6,10 @@ entities:
       components_md:
         type: markdown
         template: templates/components.md
-        source: >
-          ( ({'domain':$params."domain"};))
 
       services_md:
         type: markdown
         template: templates/services.md
-        source: >
-          ( ({'domain':$params."domain"};))
-
 
       list:
         params:
