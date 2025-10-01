@@ -1,0 +1,30 @@
+entities:
+  seaf.ta.components.k8s_hpa:
+    title: K8s Namespace
+    objects:
+      item:
+        route: "/"
+        title: K8s Namespace
+    schema:
+      $defs:
+        seaf.ta.components.k8s_hpa:
+          type: object
+          $ref: "#/$defs/seaf.ta.components.base.entity"
+          properties:
+            cluster_ref:
+              title: Ссылка на кластер
+              $ref: "#/$rels/seaf.ta.services.k8s.k8s"
+            min:
+              title: минимальное количество реплик
+              type: integer
+            max:
+              title: максимальное количество реплик
+              type: integer
+            target_ref:
+              title: объект автомасштабирования
+              oneOf:
+                - $ref: "#/$rels/seaf.ta.components.k8s_deployment.deployment"
+      type: object
+      patternProperties:
+        "^[a-zA-Z0-9_\\.]*$":
+          $ref: "#/$defs/seaf.ta.components.k8s_hpa"

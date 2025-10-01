@@ -1,0 +1,19 @@
+rules:
+  validators:
+    seaf.validation.ta.components.server_existence:
+      uid: SEAF-TA-EXIST-SERVER
+      title: Проверка наличия Сервера (server)
+      description: |
+        Проверяет, что в архитектуре описан хотя бы один Сервер (seaf.ta.components.server).
+      correction: |
+        Убедитесь, что в файлах архитектуры (`/architecture/ta/`) создан
+        хотя бы один объект типа `seaf.ta.components.server`.
+      source: |
+        ([
+          $count($."seaf.ta.components.server") = 0 ? {
+              "uid": "seaf.validation.ta.existence.server",
+              "title": "Отсутствует описание Сервера (server)",
+              "correction": "Необходимо описать хотя бы один Сервер (seaf.ta.components.server) в архитектуре.",
+              "description": "В архитектуре не описано ни одного Сервера."
+          }
+        ])

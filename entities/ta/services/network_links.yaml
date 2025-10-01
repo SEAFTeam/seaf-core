@@ -1,0 +1,58 @@
+entities:
+  seaf.ta.services.network_links:
+      title: Network Links
+      objects:
+        network_links:
+          route: "/"
+          title: Сетевые связанности
+      schema: # JSON Schema контролирующая описание объекта сущности
+        $defs:
+          seaf.ta.services.network_links:
+            $ref: "#/$defs/seaf.ta.services.base.entity"
+            properties:
+              network_connection:
+                title: Перечисление связей
+                type: array
+                maxItems: 2
+                items:
+                  anyOf:
+                    - $ref: "#/$rels/seaf.ta.services.network.network"
+                    - $ref: "#/$rels/seaf.ta.components.network.network"
+              typeL1:
+                title: Протокол сигнального уровня (L1)
+                type: string
+                enum: [SONET/SDH,DWDM,Ethernet(over Dark Fiber),WIFI,Other_broadband]
+              typeL2:
+                title: Проткол канального уровня (L2)
+                type: string
+                enum: [Ethernet,HDLC,IEEE 802.11 wireless LAN,MPLS,STP]
+              routing:
+                  title: Протокол маршрутизации
+                  type: string
+                  enum: [static,ospf,ebgp,ibgp,eigrp,IGMP,bgpevpn]
+              encryption:
+                  title: Тип шифрования канала
+                  type: string
+                  enum: [none,ipsec,ipsec_GOST,wireguard,openvpn]
+              encapsulation:
+                  title: Инкапсуляция и туннелирвоание
+                  type: string
+                  enum: [none,GRE,IPoE,VXLAN,GENEVE,L2TP,PPTP,pppoe]
+              technology:
+                  title: Технология коммуникации
+                  type: string
+                  enum: [directlink,vpls,sdwan,dmvpn,s2svpn,c2svpn]
+              sla:
+                  title: Тип SLA
+                  type: string
+                  enum: [none,ipsla,provider,other_monitored]
+          required:
+              - network_connection
+        type: object
+        patternProperties:
+          "^[a-zA-Z0-9_\\.]*$":
+            $ref: "#/$defs/seaf.ta.services.network_links"
+
+
+
+

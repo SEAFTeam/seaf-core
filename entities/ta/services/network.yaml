@@ -1,0 +1,92 @@
+entities:
+  seaf.ta.services.network:
+    title: Network
+    objects:
+      network:
+        route: "/"
+        title: Компьютерная сеть
+    schema: # JSON Schema контролирующая описание объекта сущности
+      $defs:
+        seaf.ta.services.network:
+          $ref: "#/$defs/seaf.ta.services.base.entity"
+          oneOf:
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum: [WAN]
+                location:
+                  title: ID ЦОД или Офиса
+                  type: array
+                  items:
+                    anyOf:
+                      - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                      - $ref: "#/$rels/seaf.ta.services.office.office"
+                wan_ip:
+                  title: Внешняя сеть\IP
+                  type: string
+                provider:
+                  title: Оператор связи
+                  type: string
+                segment:
+                  title: Вхождение в сетевые сегменты сети
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.network_segment.network_segment"
+                VRF:
+                  title: VRF
+                  type: string
+                autonomus_system:
+                  title: Автономная система
+                  type: string
+                ip_version:
+                  title: Версия IP
+                  type: string
+                  enum: [v4,v6]
+              required:
+                - wan_ip
+                - type
+                - provider
+              additionalProperties: false
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum: [LAN]
+                location:
+                  title: ID ЦОД или Офиса
+                  type: array
+                  items:
+                    anyOf:
+                      - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                      - $ref: "#/$rels/seaf.ta.services.office.office"
+                lan_type:
+                  title: Тип LAN
+                  type: string
+                  enum: [Проводная, Беспроводная]
+                segment:
+                  title: Вхождение в сетевые сегменты сети
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.network_segment.network_segment"
+                vlan:
+                  title: Имя виртуальной сети (VLAN)
+                  type: integer
+                ipnetwork:
+                  title: IP-сеть и маска
+                  type: string
+                purpose:
+                  title: Назначение
+                  type: string
+                VRF:
+                  title: VRF
+                  type: string
+              required:
+                - type
+                - lan_type
+                - ipnetwork
+              additionalProperties: false
+      type: object
+      patternProperties:
+        "^[a-zA-Z0-9_\\.]*$":
+          $ref: "#/$defs/seaf.ta.services.network"

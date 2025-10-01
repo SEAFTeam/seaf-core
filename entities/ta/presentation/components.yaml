@@ -1,18 +1,305 @@
-# Презентация компонентов в табличном виде
+# ??????????? ??????????? ? ????????? ????
 entities:
+  components:
+    presentations:
+      list:
+        title: Прикладной компонент
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор спецификации
+              type: string
+              required:
+                - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ({'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
   seaf.ta.components.server:
     presentations:
       table:
         type: table
         headers:
-          - value: fqdn_name
+          - value: title
+            text: Namespace
+            sortable: true
+            align: left
+            width: 25%
+            link: link
+          - value: cluster_ref
+            text: Кластер
+            sortable: true
+            align: left
+            width: 25%
+            link: cluster_link
+          - value: labels
+            text: Labels
+            sortable: false
+            align: left
+            width: 50%
+        source: >
+          (
+            $base := $split($self."$base", "/")[2];
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":$base}, $]);
+            $get_link := $.functions."seaf.ta".get_link;
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
+             $COMPONENT_ID := $keys()[0];
+             $.*.{
+                "title": title,
+                "cluster_ref": cluster_ref,
+                "labels": $join(labels, ", ") ,
+                "cluster_link": $eval($get_link,{"hr":$refs."cluster_ref","val":cluster_ref}),
+                "link": '/entities/seaf.ta.components.k8s_namespace/list?ta-component-id=' & $COMPONENT_ID
+              }
+            )]^(title)]
+          )
+      list:
+        title: K8s Namespace
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор компонента
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
+
+  seaf.ta.components.k8s_node:
+    presentations:
+      table:
+        type: table
+        headers:
+          - value: title
+            text: K8s Узел
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+          - value: cluster_ref
+            text: Кластер
+            sortable: true
+            align: left
+            width: 15%
+            link: cluster_link
+          - value: version
+            text: Версия kubelet
+            sortable: true
+            align: left
+            width: 10%
+          - value: architecture
+            text: Архитектура CPU
+            sortable: true
+            align: left
+            width: 10%
+          - value: cpu
+            text: CPU
+            sortable: true
+            align: left
+            width: 10%
+          - value: ram
+            text: RAM (ГБ)
+            sortable: true
+            align: left
+            width: 10%
+          - value: zone
+            text: Зона
+            sortable: true
+            align: left
+            width: 10%
+          - value: labels
+            text: Метки
+            sortable: false
+            align: left
+            width: 15%
+        source: >
+          (
+            $base := $split($self."$base", "/")[2];
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":$base}, $]); 
+            $get_link := $.functions."seaf.ta".get_link;
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
+              $COMPONENT_ID := $keys()[0];
+              $.*.{
+                "title": title,
+                "cluster_ref": cluster_ref,
+                "version": version,
+                "architecture": architecture,
+                "cpu": cpu,
+                "ram": ram,
+                "zone": zone,
+                "labels": $join(labels, ", "),
+                "cluster_link": $eval($get_link,{"hr":$refs."cluster_ref","val":cluster_ref}),
+                "link": '/entities/seaf.ta.components.k8s_node/list?ta-component-id=' & $COMPONENT_ID
+              }
+            )]^(title)]
+          )
+      list:
+        title: K8s Узел
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: ????????????? ??????????
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
+  seaf.ta.components.k8s_deployment:
+    presentations:
+      table:
+        type: table
+        headers:
+          - value: title
+            text: Deployment
+            sortable: true
+            align: left
+            width: 20%
+            link: link
+          - value: namespace_ref
+            text: Namespace
+            sortable: true
+            align: left
+            width: 15%
+            link: ns_link
+          - value: cluster_ref
+            text: Кластер
+            sortable: true
+            align: left
+            width: 15%
+            link: cluster_link
+          - value: labels
+            text: Labels
+            sortable: false
+            align: left
+            width: 20%
+          - value: containers
+            text: Контейнеры
+            sortable: false
+            align: left
+            width: 30%
+        source: >
+          (
+            $base := $split($self."$base", "/")[2];
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"base"}, $]);
+            $get_link := $.functions."seaf.ta".get_link;
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
+              $COMPONENT_ID := $keys()[0];
+              $containers := ($.containers ? [$.containers] : []);
+              $.*.{
+                "title": title,
+                "namespace_ref": namespace_ref,
+                "cluster_ref": cluster_ref,
+                "labels": $join(labels, ", "),
+                "containers": $join($map(containers, function($v){$v.name & " (" & $v.image & ") CPU=" & $v.resources.limits.cpu & ", RAM=" & $v.resources.limits.ram}), "; ") ,
+                "ns_link": $eval($get_link,{"hr":$refs."namespace_ref","val":namespace_ref}),
+                "cluster_link": $eval($get_link,{"hr":$refs."cluster_ref","val":cluster_ref}),
+                "link": '/entities/seaf.ta.components.k8s_deployment/list?ta-component-id=' & $COMPONENT_ID
+              }
+            )]^(title)]
+          )
+      list:
+        title: K8s Deployment
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор компонента
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
+
+  seaf.ta.components.k8s_hpa:
+    presentations:
+      table:
+        type: table
+        headers:
+          - value: title
+            text: HPA
+            sortable: true
+            align: left
+            width: 30%
+            link: link
+          - value: cluster_ref
+            text: Кластер
+            sortable: true
+            align: left
+            width: 20%
+            link: cluster_link
+          - value: min
+            text: Min
+            sortable: true
+            align: left
+            width: 10%
+          - value: max
+            text: Max
+            sortable: true
+            align: left
+            width: 10%
+          - value: target_ref
+            text: Target
+            sortable: true
+            align: left
+            width: 30%
+            link: target_link
+        source: >
+          (
+            $base := $split($self."$base", "/")[2];
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
+             $.*.{
+                "title": title,
+                "cluster_ref": cluster_ref,
+                "min": min,
+                "max": max,
+                "target_ref": target_ref,
+                "cluster_link": $eval($get_link,{"hr":$refs."cluster_ref","val":cluster_ref}),
+                "target_link": $eval($get_link,{"hr":$refs."target_ref","val":target_ref}),
+                "link": '/entities/seaf.ta.components.k8s_hpa/list?ta-component-id=' & $COMPONENT_ID
+              }
+            )]^(title)]
+          )
+      list:
+        title: K8s HPA
+        params:
+          type: object
+          properties:
+            seaf-ta-component-id:
+              title: Идентификатор компонента
+              type: string
+          required:
+            - ta-component-id
+        type: markdown
+        template: templates/list.md
+        source: >
+          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
+
+  seaf.ta.components.server:
+    presentations:
+      table:
+        type: table
+        headers:
+          - value: fqdn
             text: Имя сервера FQDN
             sortable: true
             align: left
             width: 20%
             link: link
 
-          - value: title
+          - value: type
             text: Тип
             sortable: true
             align: left
@@ -24,46 +311,49 @@ entities:
             align: left
             width: 20%
 
-          - value: dc_id
-            text: ЦОД
+          - value: location
+            text: Размещение
             sortable: true
             align: left
             width: 20%
             link: dc_link
 
-          - value: office
-            text: ID Офиса где установлено оборудование
+          - value: virtualization
+            text: Среда виртуализации
             sortable: true
             align: left
             width: 20%
+            link: dc_link
 
         source: >
           (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.components.server"}, $]);
+            $base := $split($self."$base", "/")[2];
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c": $base}, $]);
             $get_link := $.functions."seaf.ta".get_link;
-            [[$."seaf.ta.components.server".$spread().(
-             $COMPONENT_ID := $keys()[0]; 
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
+              $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": title,
                 "description": description,
                 "type": type,      
-                "dc_id": dc_id,         
-                "office": office,
-                "fqdn_name": fqdn_name,
+                "location": location,
+                "virtualization": virtualization,
+                "fqdn": fqdn,
                 "link": '/entities/seaf.ta.components.server/list?ta-component-id=' & $COMPONENT_ID,
-                "dc_link" :  $eval($get_link,{"hr":$refs."dc_id","val":dc_id})
+                "dc_link" :  $eval($get_link,{"hr":$refs."dc","val":dc})
               }
             )]^(title)]
           )
           
 
       list:
-        title: Карточка спецификации сервера
+        title: Перечень компонент
         params:
           type: object
           properties:
             seaf-ta-component-id:
-              title: Идентификатор спецификации
+              title: Идентификатор компонента
               type: string
           required:
             - ta-component-id
@@ -90,30 +380,32 @@ entities:
             align: left
             width: 20%
 
-          - value: dc_id
-            text: ЦОД
+          - value: vendor
+            text: Производитель
             sortable: true
             align: left
             width: 20%
-            link: dc_link
 
-          - value: office
-            text: ID Офиса где установлено оборудование
+          - value: location
+            text: Размещение
             sortable: true
             align: left
             width: 20%
+
 
         source: >
           (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.components.hw_storage"}, $]); 
+            $base := $split($self."$base", "/")[2];
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":$base}, $]);
             $get_link := $.functions."seaf.ta".get_link;
-            [[$."seaf.ta.components.hw_storage".$spread().(
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
-                "title": storage_id,
+                "title": title,
                 "description": description,
-                "dc_id": dc_id,
-                "office": office,
+                "vendor": vendor,
+                "location": location,
                 "link": '/entities/seaf.ta.components.hw_storage/list?ta-component-id=' & $COMPONENT_ID,
                 "dc_link" :  $eval($get_link,{"hr":$refs."dc_id","val":dc_id})
               }
@@ -123,12 +415,12 @@ entities:
           
 
       list:
-        title: Карточка спецификации системы хранения данных
+        title: Перечень компонент аппаратного хранения данных
         params:
           type: object
           properties:
             seaf-ta-component-id:
-              title: Идентификатор спецификации
+              title: Идентификатор компонента
               type: string
           required:
             - ta-component-id
@@ -161,31 +453,26 @@ entities:
             align: left
             width: 20%
 
-          - value: dc_id
-            text: ЦОД
+          - value: location
+            text: Размещение
             sortable: true
             align: left
             width: 20%
-            link: dc_link
 
-          - value: office
-            text: ID Офиса где установлено оборудование
-            sortable: true
-            align: left
-            width: 20%
 
         source: >
           (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.components.network"}, $]);
+            $base := $split($self."$base", "/")[2];
+            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":$base}, $]);
             $get_link := $.functions."seaf.ta".get_link;
-            [[$."seaf.ta.components.network".$spread().(
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": title,
                 "description": description,
-                "dc_id": dc_id,
+                "location": location,
                 "ip": address,
-                "office": office,
                 "model": model,
                 "link": '/entities/seaf.ta.components.network/list?ta-component-id=' & $COMPONENT_ID,
                 "dc_link" :  $eval($get_link,{"hr":$refs."dc_id","val":dc_id})
@@ -195,253 +482,12 @@ entities:
           
 
       list:
-        title: Карточка спецификации сети
+        title: Перечень сетевых устройств
         params:
           type: object
           properties:
             seaf-ta-component-id:
-              title: Идентификатор спецификации
-              type: string
-          required:
-            - ta-component-id
-        type: markdown
-        template: templates/list.md
-        source: >
-          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
-
-  seaf.ta.components.user_device:
-    presentations:
-      table:
-        type: table
-        headers:
-          - value: title
-            text: Наименование
-            sortable: true
-            align: left
-            width: 20%
-            link: link
-
-          - value: description
-            text: Описание
-            sortable: true
-            align: left
-            width: 20%
-
-          - value: device_type
-            text: Тип устройства относительно среды использования
-            sortable: true
-            align: left
-            width: 20%
-
-
-        source: >
-          (
-            [[$."seaf.ta.components.user_device".$spread().(
-              $COMPONENT_ID := $keys()[0];
-             $.*.{
-                "title": title,
-                "description": description,
-                "device_type": device_type,    
-                "link": '/entities/seaf.ta.components.user_device/list?ta-component-id=' & $COMPONENT_ID
-              }
-            )]^(name)]
-          )
-      list:
-        title: Карточка спецификации пользовательского устройства
-        params:
-          type: object
-          properties:
-            seaf-ta-component-id:
-              title: Идентификатор спецификации
-              type: string
-          required:
-            - ta-component-id
-        type: markdown
-        template: templates/list.md
-        source: >
-          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
-
-  seaf.ta.components.k8s_deployment:
-    presentations:
-      table:
-        type: table
-        headers:
-          - value: title
-            text: Наименование
-            sortable: true
-            align: left
-            width: 20%
-            link: link
-
-          - value: description
-            text: Описание
-            sortable: true
-            align: left
-            width: 20%
-
-          - value: availabilityzone_id
-            text: Availability Zone ID
-            sortable: true
-            align: left
-            width: 20%
-            link: avail_link
-
-          - value: kubernetes_id
-            text:  Kubernetes cluster ID
-            sortable: true
-            align: left
-            width: 20%
-            link: k_link
-
-        source: >
-          (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.components.k8s_deployment"}, $]);
-            $get_link := $.functions."seaf.ta".get_link;
-            [[$."seaf.ta.components.k8s_deployment".$spread().(
-              $COMPONENT_ID := $keys()[0];
-             $.*.{
-                "title": title,
-                "description": description,
-                "kubernetes_id": kubernetes_id,
-                "availabilityzone_id": availabilityzone_id,
-                "link": '/entities/seaf.ta.components.k8s_deployment/list?ta-component-id=' & $COMPONENT_ID,
-                "avail_link" :  $eval($get_link,{"hr":$refs."availabilityzone_id","val":availabilityzone_id}),
-                "k_link" :  $eval($get_link,{"hr":$refs."kubernetes_id","val":kubernetes_id})
-              }
-            )]^(title)]
-          )
-          
-
-      list:
-        title: Карточка спецификации
-        params:
-          type: object
-          properties:
-            seaf-ta-component-id:
-              title: Идентификатор спецификации k8s deployment
-              type: string
-          required:
-            - ta-component-id
-        type: markdown
-        template: templates/list.md
-        source: >
-          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
-
-  seaf.ta.components.k8s_statefulset:
-    presentations:
-      table:
-        type: table
-        headers:
-          - value: title
-            text: Наименование
-            sortable: true
-            align: left
-            width: 20%
-            link: link
-
-          - value: description
-            text: Описание
-            sortable: true
-            align: left
-            width: 20%
-
-          - value: availabilityzone_id
-            text: Availability Zone ID
-            sortable: true
-            align: left
-            width: 20%
-            link: avail_link
-
-          - value: kubernetes_id
-            text:  Kubernetes cluster ID
-            sortable: true
-            align: left
-            width: 20%
-            link: k_link
-
-        source: >
-          (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.components.k8s_statefulset"}, $]);
-            $get_link := $.functions."seaf.ta".get_link;
-            [[$."seaf.ta.components.k8s_statefulset".$spread().(
-              $COMPONENT_ID := $keys()[0];
-             $.*.{
-                "title": title,
-                "description": description,
-                "kubernetes_id": kubernetes_id,
-                "availabilityzone_id": availabilityzone_id,
-                "link": '/entities/seaf.ta.components.k8s_statefulset/list?ta-component-id=' & $COMPONENT_ID,
-                "avail_link" :  $eval($get_link,{"hr":$refs."availabilityzone_id","val":availabilityzone_id}),
-                "k_link" :  $eval($get_link,{"hr":$refs."kubernetes_id","val":kubernetes_id})
-              }
-            )]^(title)]
-          )
-          
-
-      list:
-        title: Карточка спецификации
-        params:
-          type: object
-          properties:
-            seaf-ta-component-id:
-              title: Идентификатор спецификации k8s statefulset
-              type: string
-          required:
-            - ta-component-id
-        type: markdown
-        template: templates/list.md
-        source: >
-          ( {'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2]};)
-
-  seaf.ta.components.k8s_pod:
-    presentations:
-      table:
-        type: table
-        headers:
-          - value: title
-            text: Наименование
-            sortable: true
-            align: left
-            width: 20%
-            link: link
-
-          - value: description
-            text: Описание
-            sortable: true
-            align: left
-            width: 20%
-
-          - value: container_id
-            text:  Какие контейнеры включает
-            sortable: true
-            align: left
-            width: 20%
-            link: k_link
-
-        source: >
-          (
-            $refs := $eval($.functions."seaf.ta".get_refs, [{"c":"seaf.ta.components.k8s_pod"}, $]);
-            $get_link := $.functions."seaf.ta".get_link;
-            [[$."seaf.ta.components.k8s_pod".$spread().(
-              $COMPONENT_ID := $keys()[0];
-             $.*.{
-                "title": title,
-                "description": description,
-                "container_id": container_id,
-                "link": '/entities/seaf.ta.components.k8s_pod/list?ta-component-id=' & $COMPONENT_ID,
-                "k_link" :  $eval($get_link,{"hr":$refs."container_id","val":container_id })
-              }
-            )]^(title)]
-          )
-          
-
-      list:
-        title: Карточка спецификации k8s POD
-        params:
-          type: object
-          properties:
-            seaf-ta-component-id:
-              title: Идентификатор спецификации k8s POD
+              title: Идентификатор компонента
               type: string
           required:
             - ta-component-id
@@ -449,7 +495,6 @@ entities:
         template: templates/list.md
         source: >
           ({'title': $self.title, 'id':$params."ta-component-id", "base-name":$split($self."$base", "/")[2] }; )
-
 
   seaf.ta.components.k8s_container:
     presentations:
@@ -471,8 +516,9 @@ entities:
 
         source: >
           (
-            
-            [[$."seaf.ta.components.k8s_container".$spread().(
+            $base := $split($self."$base", "/")[2];
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": title,
@@ -507,34 +553,29 @@ entities:
             sortable: true
             align: left
             width: 20%
-            link: link
 
-          - value: description
-            text: Описание
-            sortable: true
-            align: left
-            width: 20%
 
         source: >
           (
-            [[$."seaf.ta.components.k8s_image".$spread().(
+            $base := $split($self."$base", "/")[2];
+            $scope := $eval($.functions."seaf.ta".get_list, [{"s": $base, "d":$params."domain"}, $]);
+            [[$scope.$spread().(
               $COMPONENT_ID := $keys()[0];
              $.*.{
                 "title": title,
                 "description": description,
-                "link": '/entities/seaf.ta.components.k8s_image/list?ta-component-id=' & $COMPONENT_ID
+                "device_type": device_type,    
+                "link": '/entities/seaf.ta.components.user_device/list?ta-component-id=' & $COMPONENT_ID
               }
             )]^(title)]
           )
-          
-
       list:
-        title: Карточка спецификации k8s_image
+        title: Перечень пользовательских устройств
         params:
           type: object
           properties:
             seaf-ta-component-id:
-              title: Идентификатор спецификации
+              title: Идентификатор компонента
               type: string
           required:
             - ta-component-id

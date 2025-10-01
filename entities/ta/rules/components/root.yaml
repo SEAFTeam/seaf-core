@@ -1,0 +1,10 @@
+imports:
+  - hw_storage_existence.yaml
+  - network_existence.yaml
+  - server_existence.yaml
+  - user_device_existence.yaml
+  - network_connection_check.yaml
+  - user_device_connection_check.yaml
+  - k8s_namespace_ref_integrity.yaml
+  - k8s_deployment_ref_integrity.yaml
+  - k8s_hpa_ref_integrity.yaml

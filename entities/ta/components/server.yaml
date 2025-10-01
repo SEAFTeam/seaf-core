@@ -1,0 +1,269 @@
+entities:
+  seaf.ta.components.server:
+    title: Server
+    objects:
+      server:
+        route: "/"
+        title: Сервер
+    schema: # JSON Schema контролирующая описание объекта сущности
+      $defs:
+        seaf.ta.components.server:
+          $ref: "#/$defs/seaf.ta.components.base.entity"
+          oneOf:
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum: [Виртуальный]
+                fqdn:
+                  title: Имя сервера FQDN
+                  type: string
+                os:
+                  title: Операционная система
+                  type: object
+                  properties:
+                    type:
+                      title: Тип ОС
+                      type: string
+                      minlength: 1
+                    bit:
+                      title: Битность ОС
+                      type: string
+                      minLength: 2
+                cpu:
+                  title: Процессор
+                  type: object
+                  properties:
+                    cores:
+                      title: Ядра
+                      type: integer
+                      minlength: 1
+                    frequency:
+                      title: Частота
+                      type: integer
+                      minLength: 0
+                ram:
+                  title: Количество RAM, GB
+                  type: integer
+                disks:
+                  title: Диски
+                  type: array
+                  minItems: 1
+                  items:
+                    patternProperties:
+                      "^[a-zA-Z0-9_\\.]*$":
+                        type: object
+                        properties:
+                          az:
+                            title: Зона доступности диска
+                            type: string
+                          size:
+                            title: Размер диска
+                            type: integer
+                          type:
+                            title: Тип диска (SAS, SATA, SSD)
+                            type: string
+                          device:
+                            title: Точка монтирования
+                            type: string
+                            minLength: 1
+                nic_qty:
+                  title: Количество NIC
+                  type: integer
+                az:
+                  title: В какие зоны доступности входит
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.dc_az.dc_az"
+                virtualization:
+                  title: Кластер виртуализации
+                  $ref: "#/$rels/seaf.ta.services.cluster_virtualization.cluster_virtualization"
+                subnets:
+                  title: Подсети
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.network.network"
+                is_part_of_compute_service:
+                  title: Какие сервисы вычислений реализует
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.compute_service.compute_service"
+                is_part_of_cluster_virtualization:
+                  title: Какие кластеры виртуализации реализует
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.cluster_virtualization.cluster_virtualization"
+                is_part_of_k8s_cluster:
+                  title: Какие кластеры Kubernetes реализует
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.k8s.k8s"
+                is_part_of_cluster:
+                  title: Какие кластеры вычислений реализует
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.cluster.cluster"
+                is_monitoring_connected:
+                  title: Какие технические сервисы мониторинга реализует (т.е. является узлом хранения или управления)
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.monitoring.monitoring"
+                is_backup_connected:
+                  title: Какие технические сервисы резервного копирования реализует (т.е. является узлом хранения или управления)
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.backup.backup"
+                sw_storage_connected:
+                  title: Какие технические сервисы СХД реализует (т.е. является узлом хранения или управления в составе SDS)
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.storage.storage"
+              software:
+                title: Какое ПО и лицезии установлены
+                type: array
+                items:
+                  $ref: "#/$rels/seaf.ta.services.software.software"
+              required:
+                - type
+                - fqdn
+                - os
+                - disks
+                - cpu
+                - ram
+                - nic_qty
+                - virtualization
+              additionalProperties: false
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum: [Физический]
+                vendor:
+                  title: Производитель
+                  type: string
+                model:
+                  title: Модель
+                  type: string
+                fqdn:
+                  title: Имя сервера FQDN
+                  type: string
+                os:
+                  title: Операционная система
+                  type: object
+                  properties:
+                    type:
+                      title: Тип ОС
+                      type: string
+                      minlength: 1
+                    bit:
+                      title: Битность ОС
+                      type: string
+                      minLength: 2
+                cpu:
+                  title: Процессор
+                  type: object
+                  properties:
+                    cores:
+                      title: Ядра
+                      type: integer
+                      minlength: 1
+                    frequency:
+                      title: Частота
+                      type: integer
+                      minLength: 0
+                ram:
+                  title: Количество RAM, GB
+                  type: integer
+                disks:
+                  title: Диски
+                  type: array
+                  minItems: 1
+                  items:
+                    .*:
+                      type: object
+                      properties:
+                        size:
+                          title: Размер диска
+                          type: integer
+                        type:
+                          title: Тип диска (SAS, SATA, SSD)
+                          type: string
+                storage:
+                  title: Подключенные СХД
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.components.hw_storage.hw_storage"
+                nic_qty:
+                  title: Количество NIC
+                  type: integer
+                vlan:
+                  title: Подключенные VLAN
+                  type: array
+                location:
+                  title: ID ЦОД или Офиса
+                  type: array
+                  items:
+                    anyOf:
+                      - $ref: "#/$rels/seaf.ta.services.dc.dc"
+                      - $ref: "#/$rels/seaf.ta.services.office.office"
+                subnets:
+                  title: Перечисление связанных сетей
+                  type: string
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.network.network"
+                is_part_of_compute_service:
+                  title: Какие сервисы вычислений реализует
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.compute_service.compute_service"
+                is_part_of_cluster_virtualization:
+                  title: Какие кластеры виртуализации реализует
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.cluster_virtualization.cluster_virtualization"
+                is_part_of_k8s_cluster:
+                  title: Какие кластеры Kubernetes реализует
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.k8s.k8s"
+                is_part_of_cluster:
+                  title: Какие кластеры вычислений реализует
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.cluster.cluster"
+                is_monitoring_connected:
+                  title: Какие технические сервисы мониторинга реализует (т.е. является узлом хранения или управления)
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.monitoring.monitoring"
+                is_backup_connected:
+                  title: Какие технические сервисы резервного копирования реализует (т.е. является узлом хранения или управления)
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.backup.backup"
+                sw_storage_connected:
+                  title: Какие технические сервисы СХД реализует (т.е. является узлом хранения или управления в составе SDS)
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.storage.storage"
+                software:
+                  title: Какое ПО и лицезии установлены
+                  type: array
+                  items:
+                    $ref: "#/$rels/seaf.ta.services.software.software"
+              required:
+                - type
+                - vendor
+                - model
+                - fqdn
+                - os
+                - cpu
+                - disks
+                - ram
+                - nic_qty
+                - location
+              additionalProperties: false
+      type: object
+      patternProperties:
+        "^[a-zA-Z0-9_\\.]*$":
+          $ref: "#/$defs/seaf.ta.components.server"

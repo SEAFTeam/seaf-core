@@ -1,0 +1,19 @@
+rules:
+  validators:
+    seaf.validation.ta.services.backup_existence:
+      uid: SEAF-TA-EXIST-BACKUP
+      title: Проверка наличия Сервиса резервного копирования (backup)
+      description: |
+        Проверяет, что в архитектуре описан хотя бы один Сервис резервного копирования (seaf.ta.services.backup).
+      correction: |
+        Убедитесь, что в файлах архитектуры (`/architecture/ta/`) создан
+        хотя бы один объект типа `seaf.ta.services.backup`.
+      source: |
+        ([
+          $count($."seaf.ta.services.backup") = 0 ? {
+              "uid": "seaf.validation.ta.existence.backup",
+              "title": "Отсутствует описание Сервиса резервного копирования (backup)",
+              "correction": "Необходимо описать хотя бы один Сервис резервного копирования (seaf.ta.services.backup) в архитектуре.",
+              "description": "В архитектуре не описано ни одного Сервиса резервного копирования."
+          }
+        ])

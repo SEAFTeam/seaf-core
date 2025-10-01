@@ -1,10 +1,12 @@
 imports:
-
-  # Технологический компонент
-  - components.yaml
-  # Технологический сервис
-  - services.yaml
-  - environments.yaml
+  # Служебные подключения меню
   - presentation/root.yaml
   - menu/root.yaml
   - functions/root.yaml
+  # Технологический сервис
+  - services/root.yaml
+  - environments/root.yaml
+  # Технологический компонент
+  - components/root.yaml
+  # Подключение правил проверки ТА
+  - rules/root.yaml

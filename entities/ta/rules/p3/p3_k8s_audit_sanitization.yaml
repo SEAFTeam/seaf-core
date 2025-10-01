@@ -1,0 +1,49 @@
+rules:
+  validators:
+    seaf.validation.ta.p3.k8s_audit_sanitization:
+      uid: SEAF-TA-P3-K8S-AUDIT-POL
+      title: "[TACCS_1-P10-24-04] Аудит: защита/санитизация событий (audit_policy)"
+      description: |
+        Проверяет, что для `seaf.ta.services.k8s` задано поле `audit_policy`, ссылка указывает на существующий
+        объект `seaf.ta.services.kb` (как правило, тот же Log), и при наличии сетей они пересекаются.
+        Требование (цитата): TACCS_1-P10-24 04 — Должен быть предусмотрен механизм защиты, исключающий передачу конфиденциальных данных в событиях аудита
+      correction: |
+        Укажите `audit_policy` (ключ КБ) и обеспечьте сетевую достижимость при необходимости.
+      source: |
+        ([
+          (
+          $code := "TACCS_1-P10-24-04";
+          $each($."seaf.ta.services.k8s", function($k, $k_key){
+            (
+              $kb := $."seaf.ta.services.kb"; $nets := $k.network_connection; $val := $k.audit_policy;
+              ($not($exists($val)) or $val="") ? {
+                "uid": "seaf.validation.ta.p3.k8s_audit_sanitization.missing." & $k_key,
+                "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_audit_sanitization.missing." & $k_key,
+                "title": "K8s '" & $k.title & "' не задан audit_policy",
+                "correction": "Укажите ключ КБ с политикой аудита",
+                "description": "Отсутствует ссылка на политику аудита в поле audit_policy"
+              } : (
+                $ref := $kb[$val];
+                $not($exists($ref)) ? {
+                  "uid": "seaf.validation.ta.p3.k8s_audit_sanitization.notfound." & $k_key,
+                  "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_audit_sanitization.notfound." & $k_key,
+                  "title": "K8s '" & $k.title & "' audit_policy указывает на несуществующий КБ",
+                  "correction": "Исправьте ключ КБ в audit_policy",
+                  "description": "Ключ='" & $val & "' отсутствует в seaf.ta.services.kb"
+                } : (
+                  ($exists($nets) and $exists($ref.network_connection)) ? (
+                    $common := $filter($nets, function($n){ $n in $ref.network_connection });
+                    ($count($common)=0) ? {
+                      "uid": "seaf.validation.ta.p3.k8s_audit_sanitization.reach." & $k_key,
+                      "deviation_id": $code & ":" & "seaf.validation.ta.p3.k8s_audit_sanitization.reach." & $k_key,
+                      "title": "K8s '" & $k.title & "' и audit_policy не имеют общих сетей",
+                      "correction": "Добавьте пересечение в network_connection",
+                      "description": "Нет общих сетей между K8s и audit_policy"
+                    }
+                  )
+                )
+              )
+            )
+          })
+          )
+        ])
