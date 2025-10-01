@@ -2,16 +2,15 @@ entities:
   # Структура меню
   seaf.ta.menu:
     menu: >
-     ($not($exists(base.sber.kadzo.enterprise_mode)) or $.sber.kadzo.enterprise_mode = false)? 
       (
           [
               {
                   'location': 'Архитектура/Техническая/Технические компоненты',
-                  'link': 'entities/seaf.ta/components_md?domain='
+                  'link': 'entities/seaf.ta/components_md'
               },
               {
                   'location': 'Архитектура/Техническая/Технические сервисы',
-                  'link': 'entities/seaf.ta/services_md?domain='
+                  'link': 'entities/seaf.ta/services_md'
               }
           ]
       )
